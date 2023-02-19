@@ -58,7 +58,7 @@
                                     <td><?= $num + 1 ?></td>
                                     <td><?= $once['username'] ?></td>
                                     <td><?= $once['rname'] ?></td>
-                                    <?php if ($once['user_state'] == 1) { ?>
+                                    <?php if ($once['userstate'] == 1) { ?>
                                         <td style="color: green">正常</td>
                                     <?php } else { ?>
                                         <td style="color: red">禁用</td>

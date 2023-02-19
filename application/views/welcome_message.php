@@ -25,75 +25,79 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 		<div class="layui-col-md12">
 			<div class="layui-card">
-				<div class="layui-card-header">系统用户统计</div>
+				<div class="layui-card-header">提现审核统计</div>
 				<div class="layui-card-body ">
 					<ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
-						<li class="layui-col-md4">
+						<li class="layui-col-md6">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>系统用户量</h3>
+								<h3>提现申请待审核数量（单位：个）</h3>
 								<p>
-									<cite><?=$yonghunum;?></cite> 人</p>
+									<cite>100</cite></p>
 							</a>
 						</li>
-						<li class="layui-col-md4">
+						<li class="layui-col-md6">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>商家开通量</h3>
+								<h3>提现申请已审核数量（单位：个）</h3>
 								<p>
-									<cite><?=$shangjianum;?></cite> 家</p>
-							</a>
-						</li>
-						<li class="layui-col-md4">
-							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>现有骑手</h3>
-								<p>
-									<cite><?=$qishounum;?></cite> 人</p>
+									<cite>200</cite></p>
 							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-
 
 		<div class="layui-col-md12">
 			<div class="layui-card">
-				<div class="layui-card-header">回收量统计</div>
+				<div class="layui-card-header">数据统计</div>
 				<div class="layui-card-body ">
 					<ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
-						<li class="layui-col-md3">
+						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>总订单统计</h3>
+								<h3>项目数量1（单位：个）</h3>
 								<p>
-									<cite><?=$zongnum;?></cite> 单</p>
+									<cite>456</cite></p>
 							</a>
 						</li>
-												<li class="layui-col-md3">
+						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>当日订单量</h3>
+								<h3>项目数量2（单位：个）</h3>
 								<p>
-									<cite><?=$dingdannum;?></cite> 单</p>
+									<cite>456</cite></p>
 							</a>
 						</li>
-						<li class="layui-col-md3">
+						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>当日订单总重量</h3>
+								<h3>项目数量3（单位：个）</h3>
 								<p>
-									<cite><?=$zhongliangnum;?></cite> KG</p>
+									<cite>432</cite></p>
 							</a>
-						</li>						
-						<li class="layui-col-md3">
+						</li>
+						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>当日需取货商家</h3>
+								<h3>项目数量4（单位：个）</h3>
 								<p>
-									<cite><?=$quhuonum;?></cite> 家</p>
+									<cite>345</cite></p>
+							</a>
+						</li>
+						<li class="layui-col-md2">
+							<a href="javascript:;" class="x-admin-backlog-body">
+								<h3>项目数量5（单位：个）</h3>
+								<p>
+									<cite>321</cite></p>
+							</a>
+						</li>
+						<li class="layui-col-md2">
+							<a href="javascript:;" class="x-admin-backlog-body">
+								<h3>项目数量6（单位：个）</h3>
+								<p>
+									<cite>123</cite></p>
 							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-
-	
 
 		<div class="layui-col-md12">
 			<div class="layui-card">
@@ -103,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<tbody>
 						<tr>
 							<th>开发者</th>
-							<td>大连微服科技有限公司</td></tr>
+							<td>Gary(zhaoyue_gary@163.com)</td></tr>
 						</tbody>
 					</table>
 				</div>

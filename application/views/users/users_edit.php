@@ -21,36 +21,33 @@
     <div class="layui-row">
         <form method="post" class="layui-form" action="" name="basic_validate" id="tab">
             <div class="layui-form-item">
-                <label for="L_pass" class="layui-form-label" style="width: 30%;">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
                     <span class="x-red">*</span>账号
                 </label>
-                <div class="layui-input-inline" style="width: 300px;">
+                <div class="layui-input-inline" style="width: 70%;">
                     <input type="text" id="user_name" name="user_name" lay-verify="user_name"
                            autocomplete="off" value="<?php echo $user_namenew ?>" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label for="L_pass" class="layui-form-label" style="width: 30%;">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
                     <span class="x-red">*</span>密码
                 </label>
-                <div class="layui-input-inline" style="width: 300px;">
+                <div class="layui-input-inline" style="width: 70%;">
                     <input type="password" id="user_pass" name="user_pass" lay-verify="user_pass"
                            autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label for="L_pass" class="layui-form-label" style="width: 30%;">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
                     <span class="x-red">*</span>权限
                 </label>
                 <div class="layui-input-inline layui-show-xs-block">
-                    <div style="width: 300px" class="layui-input-inline layui-show-xs-block">
+                    <div style="width: 610px" class="layui-input-inline layui-show-xs-block">
                         <select name="rid" id="rid" lay-verify="rid">
                             <?php if (isset($ridlist) && !empty($ridlist)) { ?>
-                                <option value="">请选择</option>
                                 <?php foreach ($ridlist as $k => $v) : ?>
-									<?php if ( $v['rid'] != 1){ ?>
 										<option value="<?= $v['rid'] ?>" <?php echo $ridnew == $v['rid'] ? 'selected' : '' ?>><?= $v['rname'] ?></option>
-									<?php } ?>
                                 <?php endforeach; ?>
                             <?php } ?>
                         </select>
@@ -77,7 +74,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label for="L_repass" class="layui-form-label" style="width: 30%;">
+                <label for="L_repass" class="layui-form-label" style="width: 45%;">
                 </label>
                 <button class="layui-btn" lay-filter="add" lay-submit="">
                     确认提交

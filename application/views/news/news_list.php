@@ -2,7 +2,7 @@
 <html class="x-admin-sm">
 <head>
 	<meta charset="UTF-8">
-	<title>我的管理后台-爱回收</title>
+	<title>我的管理后台</title>
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport"
@@ -18,7 +18,7 @@
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a>
-              <cite>商家管理</cite></a>
+              <cite>项目分类管理</cite></a>
           </span>
 </div>
 <div class="layui-fluid">
@@ -26,45 +26,46 @@
 		<div class="layui-col-md12">
 			<div class="layui-card">
 				<div class="layui-card-body ">
-					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/news/news_list' ?>">
+					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/news/news_list/'.$type ?>">
 						<div class="layui-inline layui-show-xs-block">
-							<input type="text" name="user_name" id="user_name" value="<?php echo $user_name1 ?>"
+							<input type="text" name="gongsi" id="gongsi" value="<?=$gongsiv;?>"
 								   placeholder="信息名" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-inline layui-show-xs-block">
 							<button class="layui-btn" lay-submit="" lay-filter="sreach"><i
-										class="layui-icon">&#xe615;</i></button>
+									class="layui-icon">&#xe615;</i></button>
 						</div>
 					</form>
 				</div>
 				<button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;"
-						onclick="xadmin.open('添加','<?= RUN . '/news/news_add' ?>',900,600)"><i
-							class="layui-icon"></i>添加
+						onclick="xadmin.open('添加','<?= RUN . '/news/news_add/'.$type ?>')"><i
+						class="layui-icon"></i>添加
 				</button>
 				<div class="layui-card-body ">
 					<table class="layui-table layui-form">
 						<thead>
 						<tr>
-							<th style="width: 5%">序号</th>
-							<th style="width: 10%">信息名称</th>
-							<th style="width: 20%">信息链接</th>
-							<th style="width: 40%">内容</th>
-							<th style="width: 10%">添加时间</th>
+							<th style="width: 3%">序号</th>
+							<th style="width: 15%">信息标题</th>
+							<th style="width: 60%">信息内容</th>
+							<th style="width: 7%">发布时间</th>
 							<th style="width: 15%">操作</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
-								<tr id="p<?= $once['nid'] ?>" sid="<?= $once['nid'] ?>">
+								<tr id="p<?= $once['inid'] ?>" sid="<?= $once['inid'] ?>">
 									<td><?= $num + 1 ?></td>
-									<td><?=  $once['ntitle'];?></td>
-									<td><?=  $once['url'];?></td>
-									<td><?=  $once['contents'];?></td>
+									<td><?= $once['news_title'] ?></td>
+									<td><?= $once['news_contents']?></td>
 									<td><?= date("Y-m-d",$once['addtime']) ?></td>
 									<td class="td-manage">
 										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/news/news_edit?id=' ?>'+<?= $once['nid'] ?>,900,700)">
+												onclick="xadmin.open('编辑','<?= RUN . '/news/news_edit?id=' ?>'+<?= $once['inid'] ?>)">
 											<i class="layui-icon">&#xe642;</i>编辑
+										</button>
+										<button class="layui-btn layui-btn-danger"
+												onclick="news_delete('<?= $once['inid'] ?>')"><i class="layui-icon">&#xe640;</i>删除
 										</button>
 									</td>
 								</tr>
@@ -91,36 +92,36 @@
 <script>
 	function news_delete(id) {
 		layer.confirm('您是否确认删除？', {
-					title: '温馨提示',
-					btn: ['确认', '取消']
-					// 按钮
-				},
-				function (index) {
-					$.ajax({
-						type: "post",
-						data: {"id": id},
-						dataType: "json",
-						url: "<?= RUN . '/news/news_delete' ?>",
-						success: function (data) {
-							if (data.success) {
-								$("#p" + id).remove();
-								layer.alert(data.msg, {
-											title: '温馨提示',
-											icon: 6,
-											btn: ['确认']
-										},
-								);
-							} else {
-								layer.alert(data.msg, {
-											title: '温馨提示',
-											icon: 5,
-											btn: ['确认']
-										},
-								);
-							}
-						},
-					});
+				title: '温馨提示',
+				btn: ['确认', '取消']
+				// 按钮
+			},
+			function (index) {
+				$.ajax({
+					type: "post",
+					data: {"id": id},
+					dataType: "json",
+					url: "<?= RUN . '/news/news_delete' ?>",
+					success: function (data) {
+						if (data.success) {
+							$("#p" + id).remove();
+							layer.alert(data.msg, {
+									title: '温馨提示',
+									icon: 6,
+									btn: ['确认']
+								},
+							);
+						} else {
+							layer.alert(data.msg, {
+									title: '温馨提示',
+									icon: 5,
+									btn: ['确认']
+								},
+							);
+						}
+					},
 				});
+			});
 	}
 </script>
 </html>

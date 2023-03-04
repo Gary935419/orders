@@ -110,7 +110,7 @@
 					<span class="x-red">*</span>指导价：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<input type="text" id="gmoney" name="gmoney" value=""
+					<input type="text" id="gmoney" name="gmoney"
 						   autocomplete="off" class="layui-input" placeholder="0" value="<?=$orderlsit['product_zmoney'];?>">
 				</div>
 			</div>
@@ -120,7 +120,9 @@
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
 					<button type="button" class="layui-btn" id="upload1">上传文件</button> &nbsp;&nbsp;
+					<a href="<?=$orderlsit['product_specification1'];?>" target="downloadFile">
 					<input type="text" readonly id="pdfurl" name="pdfurl" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M" value="<?=$orderlsit['product_specification1'];?>">
+					</a>
 				</div>
 			</div>
 			<div class="layui-form-item">

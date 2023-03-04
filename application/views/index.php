@@ -2,7 +2,7 @@
 <html class="x-admin-sm">
 <head>
 	<meta charset="UTF-8">
-	<title>我的管理后台-爱回收</title>
+	<title>我的管理后台-加工来了</title>
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport"
@@ -21,7 +21,7 @@
 <!-- 顶部开始 -->
 <div class="container">
 	<div class="logo">
-		<a href="<?= RUN . '/admin/index' ?>"> 我的管理后台-爱收帮 </a>
+		<a href="<?= RUN . '/admin/index' ?>"> 加工来了管理后台 </a>
 	</div>
 
 	<div class="left_open">
@@ -242,7 +242,7 @@
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/statistics/statistics_gongyingshang_list' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>客户量统计</cite>
+								<cite>供应商量统计</cite>
 							</a>
 						</li>
 					</ul>

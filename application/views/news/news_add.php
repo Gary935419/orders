@@ -44,10 +44,10 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red"></span>分类说明：
+					<span class="x-red"></span>详细内容：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<textarea id="gcontent" name="gcontent" placeholder="请输入内容" lay-verify="gcontent" class="layui-textarea"></textarea>
+					<textarea id="gcontent" name="gcontent" placeholder="请输入内容" lay-verify="gcontent" class="layui-textarea" style="height:300px"></textarea>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -68,16 +68,7 @@
 		</form>
 	</div>
 </div>
-<script>
-	layui.use(['laydate', 'form'],
-		function() {
-			var laydate = layui.laydate;
-			//执行一个laydate实例
-			laydate.render({
-				elem: '#starttime' //指定元素
-			});
-		});
-</script>
+
 <script>
 	layui.use('upload', function(){
 		var $ = layui.jquery
@@ -154,9 +145,7 @@
 					type: 'post',
 				}
 			});
-			var editIndex1 = layedit.build('gcontent', {
-				height: 300,
-			});
+	
 			//自定义验证规则
 			form.verify({
 				title: function (value) {

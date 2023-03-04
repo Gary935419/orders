@@ -17,9 +17,9 @@ class ProClass_model extends CI_Model
 	{
 		$sqlw = " where 1=1 ";
 		if (!empty($user_name)) {
-			$sqlw .= " and ( industry_class_name like '%" . $user_name . "%' ) ";
+			$sqlw .= " and ( product_class_name like '%" . $user_name . "%' ) ";
 		}
-		$sql = "SELECT count(1) as number FROM `industry_classification` " . $sqlw;
+		$sql = "SELECT count(1) as number FROM `product_classification` " . $sqlw;
 		$number = $this->db->query($sql)->row()->number;
 		return ceil($number / 10) == 0 ? 1 : ceil($number / 10);
 	}
@@ -29,20 +29,12 @@ class ProClass_model extends CI_Model
 	{
 		$sqlw = " where 1=1";
 		if (!empty($user_name)) {
-			$sqlw .= " and ( class_title like '%" . $user_name . "%' ) ";
+			$sqlw .= " and ( product_class_name like '%" . $user_name . "%' ) ";
 		}
 		$start = ($pg - 1) * 10;
 		$stop = 10;
-		$sql = "SELECT * FROM `industry_classification` " . $sqlw . " order by iid desc LIMIT $start, $stop";
+		$sql = "SELECT * FROM `product_classification` " . $sqlw . " order by pid desc LIMIT $start, $stop";
 		return $this->db->query($sql)->result_array();
-	}
-
-	//标签delete
-	public function proclass1_delete($id)
-	{
-		$id = $this->db->escape($id);
-		$sql = "DELETE FROM industry_classification WHERE co_id = $id";
-		return $this->db->query($sql);
 	}
 
 	//----------------------------一级分类add添加-------------------------------------
@@ -51,7 +43,7 @@ class ProClass_model extends CI_Model
 	public function getProClassName($user_name)
 	{
 		$user_name = $this->db->escape($user_name);
-		$sql = "SELECT * FROM `industry_classification` where industry_class_name = $user_name ";
+		$sql = "SELECT * FROM `product_classification` where product_class_name = $user_name ";
 		return $this->db->query($sql)->row_array();
 	}
 
@@ -63,7 +55,7 @@ class ProClass_model extends CI_Model
 		$gimg = $this->db->escape($gimg);
 		$datetime = $this->db->escape($datetime);
 
-		$sql = "INSERT INTO `industry_classification` (industry_class_name,industry_class_img,industry_class_desc,add_time) VALUES ($name,$gimg,$desc,$datetime)";
+		$sql = "INSERT INTO `product_classification` (product_class_name,product_woimg,product_desc,add_time) VALUES ($name,$gimg,$desc,$datetime)";
 		//return $sql;
 		return $this->db->query($sql);
 	}
@@ -74,7 +66,7 @@ class ProClass_model extends CI_Model
 	public function getProClassEdit($id)
 	{
 		$id = $this->db->escape($id);
-		$sql = "SELECT * FROM `industry_classification` where iid=$id ";
+		$sql = "SELECT * FROM `product_classification` where pid=$id ";
 		return $this->db->query($sql)->row_array();
 	}
 
@@ -87,7 +79,7 @@ class ProClass_model extends CI_Model
 		$gimg = $this->db->escape($gimg);
 		$datetime = $this->db->escape($datetime);
 
-		$sql = "UPDATE `industry_classification` SET industry_class_name=$name,industry_class_desc=$desc,industry_class_img=$gimg,add_time=$datetime WHERE iid = $uid";
+		$sql = "UPDATE `product_classification` SET product_class_name=$name,product_desc=$desc,product_woimg=$gimg,add_time=$datetime WHERE pid = $uid";
 		//return $sql;
 		return $this->db->query($sql);
 	}
@@ -96,7 +88,7 @@ class ProClass_model extends CI_Model
 	public function proclass_delete($id)
 	{
 		$id = $this->db->escape($id);
-		$sql = "DELETE FROM industry_classification WHERE iid = $id";
+		$sql = "DELETE FROM product_classification WHERE pid = $id";
 		return $this->db->query($sql);
 	}
 
@@ -105,6 +97,14 @@ class ProClass_model extends CI_Model
 	{
 		$sql = "SELECT * FROM `role` order by rid desc";
 		return $this->db->query($sql)->result_array();
+	}
+
+	//获取角色列表
+	public function getProClassgys($id)
+	{
+	    $id = $this->db->escape($id);
+		$sql = "SELECT count(*) as number FROM `member`where identity=1 and find_in_set($id,business_type)";
+		return $this->db->query($sql)->row()->number;
 	}
 
 }

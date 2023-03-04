@@ -7,9 +7,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="viewport" content="width=1300, maximum-scale=1.0, user-scalable=yes" />
 	<meta name="description" content="Free HTML5 Website Template" />
-	<title>爱回收后台管理系统</title>
-	<meta name="keywords" content="爱回收后台管理系统" />
-	<meta name="description" content="爱回收后台管理系统" />
+	<title>加工来了后台管理系统</title>
+	<meta name="keywords" content="加工来了后台管理系统" />
+	<meta name="description" content="加工来了后台管理系统" />
 	<link rel="stylesheet" type="text/css" href="<?= STA ?>/css/StyleSheet.css" />
 	<link rel="stylesheet" type="text/css" href="<?= STA ?>/css/index.css" />
 	<script type="text/javascript" src="<?= STA ?>/js/jquery.min.js"></script>
@@ -23,7 +23,7 @@
 <div class="max">
 	<div class="login">
 		<div class="login_section">
-			<span class="login_title">爱回收后台管理系统</span>
+			<span class="login_title">加工来了后台管理系统</span>
 			<form method="post" class="layui-form" action="<?= RUN ?>/login/login">
 				<div class="login_box">
 					<img src="<?= STA ?>/images/ico1.png" alt="" />

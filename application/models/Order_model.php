@@ -290,7 +290,9 @@ class Order_model extends CI_Model
 		$sqlw = " where b.prid=$id";
 		$start = ($pg - 1) * 10;
 		$stop = 10;
-		$sql = "SELECT b.*,a.company_name FROM `delivery` b, `application_orders` a where b.aftid=a.aftid and b.prid=$id order by did desc LIMIT $start, $stop";
+		//$sql = "SELECT b.*,a.company_name FROM `delivery` b, `application_orders` a where b.prid=a.prid and b.prid=$id order by did desc LIMIT $start, $stop";
+		$sql = "SELECT b.*,a.company_name as khname,c.company_name as gysname from `delivery` b, `product_release` a,member c where b.prid=a.prid and b.prid=$id and a.product_signmemberid=c.mid order by did desc LIMIT $start, $stop";
+		
 		return $this->db->query($sql)->result_array();
 	}
 

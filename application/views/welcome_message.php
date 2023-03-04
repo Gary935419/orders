@@ -18,80 +18,117 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="layui-col-md12">
 			<div class="layui-card">
 				<div class="layui-card-body ">
-					<blockquote class="layui-elem-quote">欢迎您登录爱回收后台管理系统
+					<blockquote class="layui-elem-quote">欢迎您登录加工来了后台管理系统
 					</blockquote>
 				</div>
 			</div>
 		</div>
 		<div class="layui-col-md12">
 			<div class="layui-card">
-				<div class="layui-card-header">提现审核统计</div>
+				<div class="layui-card-header">平台用户量：</div>
 				<div class="layui-card-body ">
 					<ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
-						<li class="layui-col-md6">
+						<li class="layui-col-md4">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>提现申请待审核数量（单位：个）</h3>
+								<h3>入住平台发包方</h3>
 								<p>
-									<cite>100</cite></p>
+									<cite><?=$kehunum;?></cite></p>
 							</a>
 						</li>
-						<li class="layui-col-md6">
+						<li class="layui-col-md4">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>提现申请已审核数量（单位：个）</h3>
+								<h3>入住平台供应商</h3>
 								<p>
-									<cite>200</cite></p>
+									<cite><?=$gysnum;?></cite></p>
+							</a>
+						</li>
+												<li class="layui-col-md4">
+							<a href="javascript:;" class="x-admin-backlog-body">
+								<h3>当日新注册用户</h3>
+								<p>
+									<cite><?=$datenum;?></cite></p>
 							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-
 		<div class="layui-col-md12">
 			<div class="layui-card">
-				<div class="layui-card-header">数据统计</div>
+				<div class="layui-card-header">平台任务订单量统计：</div>
 				<div class="layui-card-body ">
 					<ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+						<li class="layui-col-md4">
+							<a href="javascript:;" class="x-admin-backlog-body">
+								<h3>平台需求发布量</h3>
+								<p>
+									<cite><?=$ordersnum;?></cite></p>
+							</a>
+						</li>
+						<li class="layui-col-md4">
+							<a href="javascript:;" class="x-admin-backlog-body">
+								<h3>平台完成订单量</h3>
+								<p>
+									<cite><?=$orderendnum;?></cite></p>
+							</a>
+						</li>
+												<li class="layui-col-md4">
+							<a href="javascript:;" class="x-admin-backlog-body">
+								<h3>当日新发布需求</h3>
+								<p>
+									<cite><?=$orderdatenum;?></cite></p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">订单分类统计</div>
+				<div class="layui-card-body ">
+					<ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+						
 						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>项目数量1（单位：个）</h3>
+								<h3>铸造项目数量（发布量/完成量）</h3>
 								<p>
-									<cite>456</cite></p>
+									<cite><?=$proclass1;?>/<?=$proclass1end;?></cite></p>
 							</a>
 						</li>
 						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>项目数量2（单位：个）</h3>
+								<h3>铆焊项目数量（发布量/完成量）</h3>
 								<p>
-									<cite>456</cite></p>
+									<cite><?=$proclass2;?>/<?=$proclass2end;?></cite></p>
 							</a>
 						</li>
 						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>项目数量3（单位：个）</h3>
+								<h3>夹具设计项目数量（发布量/完成量）</h3>
 								<p>
-									<cite>432</cite></p>
+									<cite><?=$proclass3;?>/<?=$proclass3end;?></cite></p>
 							</a>
 						</li>
 						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>项目数量4（单位：个）</h3>
+								<h3>伺服机器人项目数量（发布量/完成量）</h3>
 								<p>
-									<cite>345</cite></p>
+									<cite><?=$proclass4;?>/<?=$proclass4end;?></cite></p>
 							</a>
 						</li>
 						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>项目数量5（单位：个）</h3>
+								<h3>机床设计项目数量（发布量/完成量）</h3>
 								<p>
-									<cite>321</cite></p>
+									<cite><?=$proclass5;?>/<?=$proclass5end;?></cite></p>
 							</a>
 						</li>
 						<li class="layui-col-md2">
 							<a href="javascript:;" class="x-admin-backlog-body">
-								<h3>项目数量6（单位：个）</h3>
+								<h3>机器人项目说明（发布量/完成量）</h3>
 								<p>
-									<cite>123</cite></p>
+									<cite><?=$proclass6;?>/<?=$proclass6end;?></cite></p>
 							</a>
 						</li>
 					</ul>
@@ -107,7 +144,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<tbody>
 						<tr>
 							<th>开发者</th>
-							<td>Gary(zhaoyue_gary@163.com)</td></tr>
+							<td>大连微服科技有限公司-18698693593</td></tr>
 						</tbody>
 					</table>
 				</div>

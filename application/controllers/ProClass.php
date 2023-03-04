@@ -6,7 +6,7 @@
  * 作成者        ： Gary
  * **********************************************************************
  */
-class ProClass extends CI_Controller
+class Proclass extends CI_Controller
 {
 	public function __construct()
 	{
@@ -33,10 +33,15 @@ class ProClass extends CI_Controller
 		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
 		$data["page"] = $page;
 		$data["allpage"] = $allpage;
-		$data["list"] = $this->proclass->getProClassAll($page, $gongsi,$status);
+		$list = $this->proclass->getProClassAll($page, $gongsi,$status);
+		foreach ($list as $k=>$v){
+		    $list[$k]['gysclass']=$this->proclass->getProClassgys($v['pid']);
+		}
 		$data["gongsiv"] = $gongsi;
 		$data["userv"] = $user;
 		$data["status"] = $status;
+		$data["list"]=$list; 
+		//$data["gysnum"] = $gysnum;		
 		$this->display("proclass/proclass_list", $data);
 	}
 

@@ -23,7 +23,7 @@ class Statistics_model extends CI_Model
 	public function getorders($start,$end,$sort)
 	{
 		$sqlw=" where add_time>=$start and add_time<=$end";
-		if($sort>=0){
+		if($sort){
 			$sqlw=$sqlw." and product_sort=$sort";
 		}
 		$sql = "SELECT count(*) as num FROM `product_release` ".$sqlw;
@@ -57,6 +57,24 @@ class Statistics_model extends CI_Model
 		}
 		$sql = "SELECT count(*) as num FROM `comment` ".$sqlw;
 		return $this->db->query($sql)->row()->num;
+	}
+	
+		//统计订单当月发布
+	public function getcommentshow($mid,$gongsi)
+	{
+		if (!empty($gongsi)) {
+			$sqlw= " where  a.product_name like '%" . $gongsi . "%'";
+		}
+		$sql = "SELECT * FROM `product_release` a,`comment` b where a.prid=b.prid and a.mid=$mid ".$sqlw;
+		return $this->db->query($sql)->result_array();
+	}
+	
+	//获取用户姓名
+	public function getmembername($mid)
+	{
+		$sqlw=" where 1=1";
+		$sql = "SELECT company_name as name FROM `member` where mid=$mid";
+		return $this->db->query($sql)->row()->name;
 	}
 
 }

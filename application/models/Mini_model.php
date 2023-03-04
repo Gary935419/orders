@@ -117,10 +117,13 @@ class Mini_model extends CI_Model
         if (!empty($keyword)) {
             $sqlw.=" and (u.product_name like '%".$keyword."%' or u.product_class_name like '%".$keyword."%' ) ";
         }
-        $start = ($pg - 1) * 6;
-        $stop = 6;
+        $start = ($pg - 1) * 5;
+        $stop = 5;
 
         $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc LIMIT $start, $stop";
+        
+        // return $sql;
+        // print_r($sql);die;
         return $this->db->query($sql)->result_array();
     }
     public function fabu_xiangqing($prid)
@@ -129,6 +132,9 @@ class Mini_model extends CI_Model
         $sql = "SELECT * FROM `product_release` where prid=$prid ";
         return $this->db->query($sql)->row_array();
     }
+    
+
+    
     public function getMemberInfotoken($token)
     {
         $token = $this->db->escape($token);
@@ -194,14 +200,15 @@ class Mini_model extends CI_Model
         return $this->db->query($sql);
     }
 
-    public function memberinfo_edit($mid,$truename,$email,$nickname,$sex)
+    public function memberinfo_edit($mid,$truename,$email,$nickname,$company_address,$company_name)
     {
         $mid = $this->db->escape($mid);
         $truename = $this->db->escape($truename);
         $email = $this->db->escape($email);
         $nickname = $this->db->escape($nickname);
-        $sex = $this->db->escape($sex);
-        $sql = "UPDATE `member` SET truename=$truename,email=$email,nickname=$nickname,sex=$sex WHERE mid = $mid";
+        $company_address = $this->db->escape($company_address);
+        $company_name = $this->db->escape($company_name);
+        $sql = "UPDATE `member` SET truename=$truename,email=$email,nickname=$nickname,company_address=$company_address,company_name=$company_name WHERE mid = $mid";
         return $this->db->query($sql);
     }
 
@@ -258,7 +265,7 @@ class Mini_model extends CI_Model
         $mid = $this->db->escape($mid);
         $product_sort = $this->db->escape($product_sort);
 
-        $sqlw = " ao.mid=$mid and pr.product_sort=$product_sort ";
+        $sqlw = " ao.mid=$mid and pr.product_sort=$product_sort and ao.order_state!=1 ";
 
         $start = ($pg - 1) * 10;
         $stop = 10;
@@ -267,9 +274,33 @@ class Mini_model extends CI_Model
         return $this->db->query($sql)->result_array();
     }
 
+    public function supplier_orders_list($pg,$prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sqlw = " 1=1 and u.prid=".$prid;
+
+        $start = ($pg - 1) * 10;
+        $stop = 10;
+
+        $sql = "SELECT *,u.mid as smid,u.company_name as gysname FROM `application_orders` u  left join `product_release` pr on pr.prid=u.prid  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
+        return $this->db->query($sql)->result_array();
+    }
+
+    public function supplier_orders_listg($pg,$prid,$mid)
+    {
+        $prid = $this->db->escape($prid);
+        $sqlw = " 1=1 and u.prid= ".$prid." and u.mid= ".$mid;
+
+        $start = ($pg - 1) * 10;
+        $stop = 10;
+
+        $sql = "SELECT *,u.mid as smid,u.company_name as gysname FROM `application_orders` u  left join `product_release` pr on pr.prid=u.prid  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
+        return $this->db->query($sql)->result_array();
+    }
+
     public function order_gongyingshang_list_new1($pg,$mid,$product_sort)
     {
-         $mid = $this->db->escape($mid);
+        $mid = $this->db->escape($mid);
         $product_sort = $this->db->escape($product_sort);
 
         $sqlw = " ao.mid=$mid and ao.order_state=$product_sort ";
@@ -289,16 +320,12 @@ class Mini_model extends CI_Model
         return $this->db->query($sql);
     }
 
-    public function supplier_orders_list($pg,$prid)
+    public function member_select_suppliernew($prid,$order_state_new)
     {
         $prid = $this->db->escape($prid);
-        $sqlw = " 1=1 and u.prid=".$prid;
-
-        $start = ($pg - 1) * 10;
-        $stop = 10;
-
-        $sql = "SELECT u.* FROM `application_orders` u  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
-        return $this->db->query($sql)->result_array();
+        $order_state_new = $this->db->escape($order_state_new);
+        $sql = "UPDATE `product_release` SET order_state_new=$order_state_new WHERE prid = $prid";
+        return $this->db->query($sql);
     }
 
     public function supplier_select_member($prid,$product_signtime,$product_signmemberid)
@@ -484,15 +511,33 @@ class Mini_model extends CI_Model
         $sql = "UPDATE `comment` SET kehu_num=$kehu_num,kehu_id=$kehu_id,kehu_desc=$kehu_desc,kehu_addtime=$kehu_addtime WHERE prid = $prid";
         return $this->db->query($sql);
     }
-    public function delivery_count($prid)
+    public function delivery_count1($prid)
     {
         $prid = $this->db->escape($prid);
-        $sqlw = " where identity=1 or identity=0 and prid = " . $prid;
+        $sqlw = " where prid=$prid and identity=1 ";
         $sql = "SELECT count(1) as number FROM `delivery` " . $sqlw;
         $number = $this->db->query($sql)->row()->number;
         return $number;
     }
 
+    public function delivery_count2($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sqlw = " where prid=$prid and identity=0 ";
+        $sql = "SELECT count(1) as number FROM `delivery` " . $sqlw;
+        $number = $this->db->query($sql)->row()->number;
+        return $number;
+    }
+
+    public function delivery_count3($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sqlw = " where prid=$prid and identity=1 ";
+        $sql = "SELECT sum(delivery_number) as number FROM `delivery` " . $sqlw;
+        $number = $this->db->query($sql)->row()->number;
+        return $number;
+    }
+    
     public function supplier_modify_order_price($aftid,$bidding_cost)
     {
         $aftid = $this->db->escape($aftid);
@@ -500,4 +545,82 @@ class Mini_model extends CI_Model
         $sql = "UPDATE `application_orders` SET bidding_cost=$bidding_cost WHERE aftid = $aftid";
         return $this->db->query($sql);
     }
+    public function pingjia_info($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sql = "SELECT * FROM `comment` where prid=$prid ";
+        return $this->db->query($sql)->row_array();
+    }
+    public function getpingjialistinfo($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sql = "SELECT * FROM `comment` where prid = $prid";
+        return $this->db->query($sql)->row_array();
+    }
+    public function member_info($mid)
+    {
+        $mid = $this->db->escape($mid);
+        $sql = "SELECT * FROM `member` where mid = $mid";
+        return $this->db->query($sql)->row_array();
+    }
+    public function getnews($id)
+    {
+        $id = $this->db->escape($id);
+        $sql = "SELECT news_contents as con FROM `industry_news` where inid =$id ";
+        return $this->db->query($sql)->row()->con;
+    }
+    public function getfabuliang()
+    {
+        $sqlw = " where audit_status=1 ";
+        $sql = "SELECT count(1) as number FROM `product_release` " . $sqlw;
+        $number = $this->db->query($sql)->row()->number;
+        return $number;
+    }
+    public function getyonghuliang()
+    {
+        $sqlw = " where 1=1 ";
+        $sql = "SELECT count(1) as number FROM `member` " . $sqlw;
+        $number = $this->db->query($sql)->row()->number;
+        return $number;
+    }
+    public function setliulanliangbianhua($liulanliang)
+    {
+        $liulanliang = $this->db->escape($liulanliang);
+        $sql = "UPDATE `setting` SET liulanliang=$liulanliang WHERE sid = 1";
+        return $this->db->query($sql);
+    }
+    
+    //获取投标价格
+    public function selectapplicationorders($prid,$mid)
+    {
+        $prid = $this->db->escape($prid);
+        $mid = $this->db->escape($mid);
+        $sql = "select * from `application_orders` WHERE prid = $prid and mid=$mid";
+        return $this->db->query($sql)->row();
+    }
+    
+    //获取异常信息list
+    public function geterrorlist()
+    {
+        $sql = "SELECT * FROM `error_news`";
+        return $this->db->query($sql)->result_array();
+    }
+    
+    //保存异常信息
+    public function error_update($prid,$errorid,$errordesc,$addtime,$identity,$mid)
+    {
+        $prid = $this->db->escape($prid);
+        $errorid = $this->db->escape($errorid);
+        $errordesc = $this->db->escape($errordesc);
+        $addtime = $this->db->escape($addtime);
+        $identity = $this->db->escape($identity);
+        $mid = $this->db->escape($mid);
+        $sqli = "INSERT INTO `product_abnormal` (prid,errorid,error_desc,error_addtime,error_identity,error_userid) VALUES ($prid,$errorid,$errordesc,$addtime,$identity,$mid)";
+        $this->db->query($sqli);
+        
+        $sqlu = "UPDATE `product_release` SET product_sort=4 WHERE prid = $prid";
+        return $this->db->query($sqlu);
+        
+    }
+
 }

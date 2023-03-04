@@ -367,6 +367,8 @@ class Order extends CI_Controller
 		$data["allpage"] = $allpage;
 		$data["id"] = $id;
 		$data["list"]= $this->order->getOrderSignSendAll($page, $id);
+
+		
 		$this->display("order/order_sign_send_list", $data);
 	}
 

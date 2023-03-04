@@ -55,6 +55,7 @@
 							<th style="">2星评价</th>
 							<th style="">1星评价</th>
 							<th style="">平均分数</th>
+							<th style="">查看详情</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
@@ -68,6 +69,12 @@
 									<td><?= $once['num2']; ?>次</td>
 									<td><?= $once['num1']; ?>次</td>
 									<td><?= $once['nums']; ?>分</td>
+									<td class="td-manage">
+										<button class="layui-btn layui-btn-normal"
+												onclick="xadmin.open('查看评价','<?= RUN . '/statistics/statistics_show?mid=' ?>'+<?=$once['mid'];?>+'&sort='+<?=$sort;?>+'&pingjia=0')">
+											查看评价
+										</button>
+									</td>	
 								</tr>
 							<?php endforeach; ?>
 						<?php } else { ?>

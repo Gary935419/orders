@@ -66,16 +66,17 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>图标
+					<span class="x-red"></span>审核信息：
 				</label>
 				<div class="layui-input-inline" style="width: 300px;">
-					<button type="button" class="layui-btn" id="upload1">上传图片</button>
-					<div class="layui-upload-list">
-						<input type="hidden" name="gimg" value="<?php echo $gimg ?>" id="gimg" lay-verify="gimg" autocomplete="off"
-							   class="layui-input">
-						<img class="layui-upload-img" src="<?php echo $gimg ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
-						<p id="demoText"></p>
-					</div>
+					<a href='<?php echo $gimg1 ?>' download="<?=$gongsi;?>资料1">
+					    <img class="layui-upload-img" src="<?php echo $gimg1 ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
+					</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+					<? if($gimg2){?>
+    					<a href='<?php echo $gimg2 ?>' download="<?=$gongsi;?>资料2">
+    					    <img class="layui-upload-img" src="<?php echo $gimg2 ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
+    					</a>
+					<? }?>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -85,8 +86,8 @@
 				<div class="layui-input-inline" style="width: 70%;">
 					<?php foreach ($list as $num => $once): ?>
 						<input type="checkbox" name="type[]" lay-skin="primary"
-							   title="<?=$once['industry_class_name']?>" value="<?=$once['iid']?>"
-							<?php if(in_array($once['iid'],$type)){echo 'checked';}?>>
+							   title="<?=$once['product_class_name']?>" value="<?=$once['pid']?>"
+							<?php if(in_array($once['pid'],$type)){echo 'checked';}?>>
 					<?php endforeach; ?>
 				</div>
 			</div>
@@ -98,7 +99,9 @@
 					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
 						<select name="status" id="status" lay-verify="sort">
 							<option value="0" <?php if($status=='0'){echo 'selected';}?>>普通供应商</option>
+							<option value="1" <?php if($status=='1'){echo 'selected';}?>>待审核供应商</option>
 							<option value="2" <?php if($status=='2'){echo 'selected';}?>>高级供应商</option>
+							<option value="1" <?php if($status=='3'){echo 'selected';}?>>审核未通过供应商</option>
 							<option value="4" <?php if($status=='4'){echo 'selected';}?>>暂停使用</option>
 						</select>
 					</div>

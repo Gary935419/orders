@@ -53,15 +53,15 @@ class Member_model extends CI_Model
 	//获取供应商信息
 	public function getProclassAll()
 	{
-		$sql = "SELECT * FROM `industry_classification`";
+		$sql = "SELECT * FROM `product_classification`";
 		return $this->db->query($sql)->result_array();
 	}
 
 	//获取分类标签名称
 	public function getProclassName($id)
 	{
-		$sql = "SELECT industry_class_name FROM `industry_classification` where iid=$id";
-		return $this->db->query($sql)->row_array();
+		$sql = "SELECT product_class_name as proname FROM `product_classification` where pid=$id";
+		return $this->db->query($sql)->row()->proname;
 	}
 
 
@@ -263,6 +263,30 @@ class Member_model extends CI_Model
 		$sql = "UPDATE `member` SET audit_status=$check WHERE mid = $id";
 		return $this->db->query($sql);
 	}
+	
+		//----------------------------供应商列表-------------------------------------
+
+	//获取订单页数
+	public function getgysshowAllPage($id)
+	{
+		$sqlw = " where identity=1 and find_in_set($id,business_type)";
+		$sql = "SELECT count(1) as number FROM `member` " . $sqlw;
+
+		$number = $this->db->query($sql)->row()->number;
+		return ceil($number / 10) == 0 ? 1 : ceil($number / 10);
+	}
+
+	//获取供应商信息
+	public function getgysshowAll($pg, $id)
+	{
+		$sqlw = " where identity=1 and find_in_set($id,business_type)";
+		$start = ($pg - 1) * 10;
+		$stop = 10;
+		$sql = "SELECT * FROM `member` " . $sqlw . " order by mid desc LIMIT $start, $stop";
+		return $this->db->query($sql)->result_array();
+	}
+
+	
 
 
 }

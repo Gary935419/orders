@@ -30,11 +30,12 @@
 						<thead>
 						<tr>
 							<th>序号</th>
-							<th>发货公司</th>
-							<th>发货时间</th>
+							<th>服务</th>
+							<th>公司名</th>
+							<th>上传时间</th>
 							<th>发货量</th>
 							<th>快递记录</th>
-							<th>打款记录</th>
+							<th>下载</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -46,19 +47,21 @@
 								?>
 								<tr id="p<?= $once['prid'] ?>" sid="<?= $once['prid'] ?>">
 									<td><?= $num + 1 ?></td>
-									<td><?= $once['company_name'] ?></td>
+									<td><? if($once['identity']==0){echo '打款记录';}else{echo '发货记录';};?></td>
+									<td><? if($once['identity']==0){echo $once['khname'];}else{echo $once['gysname'];};?></td>
 									<td><?= date("Y-m-d",$once['delivery_time']) ?></td>
 									<td><?= $once['delivery_number'] ?></td>
-									<td><?= $once['express_img'] ?></td>
-									<td><?= $once['bank_payment_img'] ?></td>
+									<td><img class="layui-upload-img" src="<?php echo $once['express_img'] ?>" style="height: 50px;" >
+									    </td>
+									<td><a href="<?= $once['express_img'] ?>" target="downloadFile">查看</a></td>
 								</tr>
 							<?php endforeach; ?>
 							<tr>
-								<td colspan="6" style="text-align: center;">合计：<?=$snum;?>件</td>
+								<td colspan="7" style="text-align: center;">合计：<?=$snum;?>件</td>
 							</tr>
 						<?php } else { ?>
 							<tr>
-								<td colspan="6" style="text-align: center;">暂无数据</td>
+								<td colspan="7" style="text-align: center;">暂无数据</td>
 							</tr>
 						<?php } ?>
 						</tbody>

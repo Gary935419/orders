@@ -13,19 +13,45 @@ class Welcome_model extends CI_Model
 	//----------------------------商家列表-------------------------------------
 	
 	//获取用户数
-	public function getyonghunum()
+	public function getyonghunum($type)
 	{
-		$sqlw = " where 1=1 ";
+	    $sqlw = " where company_stop=0 ";
+		if($type==2){
+		    $sqlw.= " and to_days(add_time) = to_days(now())";
+		}else{
+		    $sqlw.= " and identity=$type";
+		}
 		$sql = "SELECT count(1) as number FROM `member` " . $sqlw;
 		$number = $this->db->query($sql)->row()->number;
 		return $number;
 	}
 	
-	//获取商家数
-	public function getshangjianum()
+	//获取发布量
+	public function getordernum($type)
 	{
-		$sqlw = " where 1=1 ";
-		$sql = "SELECT count(1) as number FROM `merchants` " . $sqlw;
+	    if($type==1){
+	        $sqlw = " where product_sort<5 ";	        
+	    }elseif($type==2){
+	        $sqlw = " where product_sort=4 ";	 	        
+	    }else{
+		    $sqlw= " where product_sort<5 and to_days(add_time) = to_days(now())";	        
+	    }
+
+		$sql = "SELECT count(1) as number FROM `product_release` " . $sqlw;
+		$number = $this->db->query($sql)->row()->number;
+		return $number;
+	}
+	
+	//获取商家数
+	public function getproclassnum($pcname,$type)
+	{
+		$sqlw = " where product_class_name='".$pcname."'";
+		if(!$type){
+	        $sqlw.= " and product_sort<5 ";
+		}else{
+		    $sqlw.= " and product_sort=4 "; 
+		}
+		$sql = "SELECT count(1) as number FROM `product_release` " . $sqlw;
 		$number = $this->db->query($sql)->row()->number;
 		return $number;
 	}

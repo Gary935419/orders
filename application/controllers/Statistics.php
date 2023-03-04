@@ -135,6 +135,7 @@ class Statistics extends CI_Controller
 
 		$memberlist=$this->statistics->getmemberp($gongsi,$sort);
 		foreach ($memberlist as $k=>$v){
+		    $list[$k]['mid']=$v['mid'];
 			$list[$k]['name']=$v['company_name'];
 			$list[$k]['snum']=$this->statistics->getpingjia($sort,$v['mid'],0);
 			$list[$k]['num5']=$this->statistics->getpingjia($sort,$v['mid'],5);
@@ -154,5 +155,31 @@ class Statistics extends CI_Controller
 		$data["sort"] = $sort;
 		$data["list"] = $list;
 		$this->display("statistics/statistics_pingjia_list", $data);
+	}
+	
+
+	public function statistics_show()
+	{
+		$mid = $_GET['mid'];
+		$sort = $_GET['sort'];
+		$pingjia = $_GET['pingjia'];
+		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+
+		$showlist=$this->statistics->getcommentshow($mid,$gongsi);
+		foreach ($showlist as $k=>$v){
+    		$list[$k]['proname']= $v['product_name']; 
+    		$list[$k]['kname']=$this->statistics->getmembername($v['kehu_id']);
+    		$list[$k]['knum']=$v['kehu_num'];  
+    		$list[$k]['ktime']=$v['kehu_addtime'];  
+    		$list[$k]['kdesc']=$v['kehu_desc']; 	    		
+    		$list[$k]['gname']=$this->statistics->getmembername($v['gongyingshang_id']);
+    		$list[$k]['gnum']=$v['gongyingshang_num'];  
+    		$list[$k]['gtime']=$v['gongyingshang_addtime'];  
+    		$list[$k]['gdesc']=$v['gongyingshang_desc'];      		
+        }
+		$data["list"] = $list;
+		$data["pingjia"] = $pingjia;
+		$data["gongsiv"] = $gongsi;
+		$this->display("statistics/statistics_show", $data);
 	}
 }

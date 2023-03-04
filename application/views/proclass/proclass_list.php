@@ -45,29 +45,33 @@
 					<table class="layui-table layui-form">
 						<thead>
 						<tr>
-							<th style="width: 10%">序号</th>
-							<th style="width: 10%">分类名称</th>
-							<th style="width: 10%">分类图片</th>
-							<th style="width: 25%">分类说明</th>
-							<th style="width: 25%">供应商</th>
-							<th style="width: 20%">操作</th>
+							<th style="">序号</th>
+							<th style="">分类名称</th>
+							<th style="">分类图片</th>
+							<th style="">分类说明</th>
+							<th style="">供应商</th>
+							<th style="">操作</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
-								<tr id="p<?= $once['iid'] ?>" sid="<?= $once['iid'] ?>">
+								<tr id="p<?= $once['pid'] ?>" sid="<?= $once['pid'] ?>">
 									<td><?= $num + 1 ?></td>
-									<td><?= $once['industry_class_name'] ?></td>
-									<td><img class="layui-upload-img" src="<?php echo $once['industry_class_img'] ?>" style="height: 50px;" ></td>
-									<td><?= $once['industry_class_desc'] ?></td>
-									<td><?= $once['industry_class_desc'] ?></td>
+									<td><?= $once['product_class_name'] ?></td>
+									<td><img class="layui-upload-img" src="<?php echo $once['product_woimg'] ?>" style="height: 50px;" ></td>
+									<td><?= $once['product_desc'] ?></td>
+									<td><?= $once['gysclass'] ?>家</td>
 									<td class="td-manage">
+									    <button class="layui-btn layui-btn-normal"
+												onclick="xadmin.open('查看供应商','<?= RUN . '/member/gongyingshang_show?id=' ?>'+<?= $once['pid'] ?>)">
+											<i class="layui-icon">&#xe615;</i>查看供应商
+										</button>
 										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/proclass/proclass_edit?id=' ?>'+<?= $once['iid'] ?>,900,600)">
+												onclick="xadmin.open('编辑','<?= RUN . '/proclass/proclass_edit?id=' ?>'+<?= $once['pid'] ?>,900,600)">
 											<i class="layui-icon">&#xe642;</i>编辑
 										</button>
 										<button class="layui-btn layui-btn-danger"
-												onclick="proclass_delete('<?= $once['iid'] ?>')"><i class="layui-icon">&#xe640;</i>删除
+												onclick="proclass_delete('<?= $once['pid'] ?>')"><i class="layui-icon">&#xe640;</i>删除
 										</button>
 									</td>
 								</tr>

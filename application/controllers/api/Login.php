@@ -90,13 +90,20 @@ class Login extends CI_Controller
         $identity = empty($_POST['identity']) ? 0 : 1;
         // 取得信息
         $loginCode = $_POST['loginCode'];
-        //获得昵称
-        $nickname = "我是微信用户";
+        $abc=substr($mobile,-4);
+        if (empty($identity)){
+            //获得昵称
+            $nickname = "我是用户".$abc;
+        }else{
+            //获得昵称
+            $nickname = "我是供应商".$abc;
+        }
+
         //获得图像
         $avatarurl = "https://or.dltqwy.com/static/images/a2.png";
 
+        $member_info_one = $this->mini->getMemberInfomobile($mobile,$identity);
         if (empty($is_login)){
-            $member_info_one = $this->mini->getMemberInfomobile($mobile,$identity);
             if (!empty($member_info_one)){
                 $this->back_json(205, '当前手机号已经注册了，请更换手机号。',array());
             }
@@ -107,7 +114,6 @@ class Login extends CI_Controller
             }
             $openid = $resultnew['openid'];
         }else{
-            $member_info_one = $this->mini->getMemberInfomobile($mobile,$identity);
             $openid = $member_info_one['openid'];
         }
 
@@ -116,7 +122,8 @@ class Login extends CI_Controller
 
         $company_name = empty($_POST['company_name'])?'':$_POST['company_name'];
         $company_address = empty($_POST['company_address'])?'':$_POST['company_address'];
-        $truename = empty($_POST['truename'])?'':$_POST['truename'];
+        $nickname = empty($_POST['nickname'])?'':$_POST['nickname'];
+        $truename = empty($_POST['nickname'])?'':$_POST['nickname'];
         $email = empty($_POST['email'])?'':$_POST['email'];
 
 
@@ -133,7 +140,8 @@ class Login extends CI_Controller
             $this->back_json(201, '验证码错误');
         }
         //用户是否注册判断
-        $member_info_one = $this->mini->getMemberInfo($openid,$identity);
+//        $member_info_one = $this->mini->getMemberInfo($mobile,$identity);
+//        $member_info_one = $this->mini->getMemberInfomobile($mobile,$identity);
         //验证会员
         if (empty($member_info_one)) {
             if (empty($is_login)){
@@ -147,8 +155,11 @@ class Login extends CI_Controller
                 $business_typenames = '';
                 // 注册操作
                 $this->mini->register($identity,$openid,$mobile,$truename,$company_address,$company_name,$email,$sex,$business_typenames,$avater,$nickname,$token,$add_time,$audit_status,$business_license,$review_data,$business_type);
-                $member_newinfo = $this->mini->getMemberInfo($openid,$identity);
+                $member_newinfo = $this->mini->getMemberInfomobile($mobile,$identity);
                 $member_newinfo['session_key'] = $resultnew['session_key'];
+                $liulanliangold = $this->mini->getsettinginfo();
+                $liulanliang = $liulanliangold['liulanliang'] + 1;
+                $this->mini->setliulanliangbianhua($liulanliang);
                 $this->back_json(200, '操作成功',$member_newinfo);
             }else{
                 $this->back_json(205, '当前账户未注册，请先去完成注册。',array());
@@ -157,7 +168,10 @@ class Login extends CI_Controller
             /**登录操作*/
             $token = $this->_get_token($member_info_one['mid']);
             $this->mini->member_edit($member_info_one['mid'], $token);
-            $member_info_one = $this->mini->getMemberInfo($openid,$identity);
+            $member_info_one = $this->mini->getMemberInfomobile($mobile,$identity);
+            $liulanliangold = $this->mini->getsettinginfo();
+            $liulanliang = $liulanliangold['liulanliang'] + 1;
+            $this->mini->setliulanliangbianhua($liulanliang);
             $this->back_json(200, '操作成功',$member_info_one);
         }
     }

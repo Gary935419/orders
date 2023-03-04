@@ -146,7 +146,8 @@ class Member extends CI_Controller
 		$data['tel'] = $member_info['mobile'];
 		$data['mail'] = $member_info['email'];
 		$data['address'] = $member_info['company_address'];
-		$data['gimg'] = $member_info['business_license'];
+		$data['gimg1'] = $member_info['business_license'];
+		$data['gimg2'] = $member_info['review_data'];
 		$data['type'] = explode(",",$member_info['business_type']);
 		$data['status'] = $member_info['audit_status'];
 		$data['sort'] = $member_info['identity'];
@@ -179,9 +180,10 @@ class Member extends CI_Controller
 		if($type){
 			foreach ($type as $num => $once) {
 				$typename= $this->member->getProclassName($once);
-				$typenames=$typenames.",".$typename['industry_class_name'];
+				$typenames=$typenames.",".$typename;
 			}
 		}
+		
 		$type =implode($type,",");
 		$status = $_POST["status"];
 		$typenames=substr($typenames,1);
@@ -389,7 +391,7 @@ class Member extends CI_Controller
 	}
 
 	/**
-	 * 账号审核
+	 * 账号审核1111
 	 */
 	public function kehu_check()
 	{
@@ -401,6 +403,20 @@ class Member extends CI_Controller
 			echo json_encode(array('success' => false, 'msg' => "操作失败"));
 		}
 	}
+	
+	public function gongyingshang_show()
+	{
+	    $id = isset($_GET['id']) ? $_GET['id'] : 0;
+		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
+		$allpage = $this->member->getgysshowAllPage($id);
+		$page = $allpage > $page ? $page : $allpage;
+		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
+		$data["page"] = $page;
+		$data["allpage"] = $allpage;
+		$data["list"] = $this->member->getgysshowAll($page,$id);
+		$this->display("member/gongyingshang_show", $data);
+	}
+
 
 
 

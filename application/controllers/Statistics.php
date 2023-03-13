@@ -43,7 +43,7 @@ class Statistics extends CI_Controller
 			$list[$i]['snum']=$this->statistics->getmembers($start,$end,0,0);
 			$list[$i]['tnum']=$this->statistics->getmembers($start,$end,2,0);
 			$list[$i]['knum']=$this->statistics->getmembers($start,$end,3,0);
-			$list[$i]['hnum']=$this->statistics->getorders($start,$end,"");
+			$list[$i]['hnum']=$this->statistics->getkhorders($start,$end);
 		}
 		//print_r($yearlist);exit();
 
@@ -79,7 +79,6 @@ class Statistics extends CI_Controller
 			$list[$i]['jnum']=$this->statistics->getmembers($start,$end,1,1);
 			$list[$i]['tnum']=$this->statistics->getmembers($start,$end,2,1);
 			$list[$i]['wnum']=$this->statistics->getmembers($start,$end,3,1);
-			$list[$i]['snum']=$this->statistics->getorders($start,$end,"");
 		}
 
 		$data["yearv"] = $year;
@@ -115,7 +114,7 @@ class Statistics extends CI_Controller
 			$list[$i]['num3']=$this->statistics->getorders($start,$end,2);
 			$list[$i]['num4']=$this->statistics->getorders($start,$end,3);
 			$list[$i]['num5']=$this->statistics->getorders($start,$end,4);
-			$list[$i]['num6']=$this->statistics->getorders($start,$end,54);
+			$list[$i]['num6']=$this->statistics->getorders($start,$end,5);
 		}
 
 		$data["yearv"] = $year;
@@ -160,11 +159,9 @@ class Statistics extends CI_Controller
 
 	public function statistics_show()
 	{
-		$mid = $_GET['mid'];
-		$sort = $_GET['sort'];
-		$pingjia = $_GET['pingjia'];
-		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
-
+        $mid = isset($_GET['mid']) ? $_GET['mid'] : '';
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
+        $gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$showlist=$this->statistics->getcommentshow($mid,$gongsi);
 		foreach ($showlist as $k=>$v){
     		$list[$k]['proname']= $v['product_name']; 
@@ -177,9 +174,43 @@ class Statistics extends CI_Controller
     		$list[$k]['gtime']=$v['gongyingshang_addtime'];  
     		$list[$k]['gdesc']=$v['gongyingshang_desc'];      		
         }
+        if(!$showlist){
+            $list="";
+        }
 		$data["list"] = $list;
-		$data["pingjia"] = $pingjia;
+		$data["mid"] = $mid;
+		$data["sort"] = $sort;
 		$data["gongsiv"] = $gongsi;
 		$this->display("statistics/statistics_show", $data);
 	}
+	
+	//项目分类查询
+		public function statistics_orderlist_show()
+	{
+		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+		$sort = $_GET["sort"];
+		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
+		$allpage = $this->statistics->getorderlistAllPage($gongsi,$sort);
+		$page = $allpage > $page ? $page : $allpage;
+		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
+		$data["page"] = $page;
+		$data["allpage"] = $allpage;
+		$list = $this->statistics->getorderlistAll($page, $gongsi,$sort);
+		foreach ($list as $k=>$v){
+		    $list[$k]['addtime']=date('Y-m-d',$v['add_time']);
+		    if($sort>1){
+		        $gysname= $this->statistics->getgysmember($v['product_signmemberid']);
+    		    $list[$k]['gysname']=$gysname['company_name'];
+    		    $list[$k]['gysusername']=$gysname['truename']."-".$gysname['mobile'];
+		    }else{
+		        $list[$k]['gysname']="";
+		        $list[$k]['gysusername']="";		        
+		    }
+        }
+		$data["gongsiv"] = $gongsi;
+		$data["sort"] = $sort;
+		$data["list"]=$list;
+		$this->display("statistics/statistics_orderlist_show", $data);
+	}
+	
 }

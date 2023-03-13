@@ -25,7 +25,7 @@ class Order extends CI_Controller
 	 */
 	public function order_list($status,$sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-d'));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -68,7 +68,7 @@ class Order extends CI_Controller
 			$list[$k]['endtimetype']=$endtimetype;
 		}
 
-		$data["start"] = date("Y-m-d",$start);
+		$data["start"] = date('Y-m-d',$start);
 		if($end) {
 			$data["end"] = date("Y-m-d", $end);
 		}else{
@@ -224,7 +224,7 @@ class Order extends CI_Controller
 	 */
 	public function order_bid_list($sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-d'));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -305,7 +305,7 @@ class Order extends CI_Controller
 	 */
 	public function order_sign_list($sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-d'));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -424,7 +424,7 @@ class Order extends CI_Controller
 	 */
 	public function order_del_list($sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-d'));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;

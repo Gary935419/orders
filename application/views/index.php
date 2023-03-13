@@ -144,7 +144,7 @@
 				<li>
 					<a href="javascript:;">
 						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
-						<cite>采购订单管理</cite>
+						<cite>订单管理</cite>
 						<i class="iconfont nav_right">&#xe697;</i></a>
 					<ul class="sub-menu">
 						<li>
@@ -206,28 +206,6 @@
 				<li>
 					<a href="javascript:;">
 						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
-						<cite>订单数据管理</cite>
-						<i class="iconfont nav_right">&#xe697;</i></a>
-					<ul class="sub-menu">
-						<li>
-							<a onclick="changeSrc('<?= RUN . '/abnormal/abnormal_list' ?>')">
-								<i class="iconfont">&#xe6a7;</i>
-								<cite>异常错误信息管理</cite>
-							</a>
-						</li>
-					</ul>
-					<ul class="sub-menu">
-						<li>
-							<a onclick="changeSrc('<?= RUN . '/proclass/proclass_list' ?>')">
-								<i class="iconfont">&#xe6a7;</i>
-								<cite>采购项目分类管理</cite>
-							</a>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<a href="javascript:;">
-						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
 						<cite>订单统计管理</cite>
 						<i class="iconfont nav_right">&#xe697;</i></a>
 					<ul class="sub-menu">
@@ -259,6 +237,28 @@
 							<a onclick="changeSrc('<?= RUN . '/statistics/statistics_pingjia_list' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
 								<cite>客户评价统计</cite>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:;">
+						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
+						<cite>系统数据管理</cite>
+						<i class="iconfont nav_right">&#xe697;</i></a>
+					<ul class="sub-menu">
+						<li>
+							<a onclick="changeSrc('<?= RUN . '/abnormal/abnormal_list' ?>')">
+								<i class="iconfont">&#xe6a7;</i>
+								<cite>异常错误信息管理</cite>
+							</a>
+						</li>
+					</ul>
+					<ul class="sub-menu">
+						<li>
+							<a onclick="changeSrc('<?= RUN . '/proclass/proclass_list' ?>')">
+								<i class="iconfont">&#xe6a7;</i>
+								<cite>采购项目分类管理</cite>
 							</a>
 						</li>
 					</ul>

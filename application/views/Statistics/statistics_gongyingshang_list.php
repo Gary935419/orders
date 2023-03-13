@@ -48,12 +48,11 @@
 					<table class="layui-table layui-form">
 						<thead>
 						<tr>
-							<th style="">月份</th>
-							<th style="">注册供应商量</th>
-							<th style="">提交审核供应商量</th>
-							<th style="">通过审核供应商量</th>
-							<th style="">未通过供应商量</th>
-							<th style="">总投标量</th>
+							<th style="width:8%">月份</th>
+							<th style="width:23%">注册供应商量</th>
+							<th style="width:23%">提交审核供应商量</th>
+							<th style="width:23%">通过审核供应商量</th>
+							<th style="width:23%">未通过供应商量</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
@@ -64,7 +63,6 @@
 									<td><?= $once['jnum']; ?>人</td>
 									<td><?= $once['tnum'];?>人</td>
 									<td><?= $once['wnum'];?>人</td>
-									<td><?= $once['snum']; ?>次</td>
 								</tr>
 							<?php endforeach; ?>
 						<?php } else { ?>

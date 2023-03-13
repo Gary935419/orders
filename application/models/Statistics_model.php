@@ -19,13 +19,20 @@ class Statistics_model extends CI_Model
 		$sql = "SELECT count(*) as num FROM `member` ".$sqlw;
 		return $this->db->query($sql)->row()->num;
 	}
+	
+		//统计订单当月发布
+	public function getkhorders($start,$end)
+	{
+		$sqlw=" where add_time>=$start and add_time<=$end";
+		$sql = "SELECT count(*) as num FROM `product_release` ".$sqlw;
+		return $this->db->query($sql)->row()->num;
+	}
+	
 	//统计订单当月发布
 	public function getorders($start,$end,$sort)
 	{
 		$sqlw=" where add_time>=$start and add_time<=$end";
-		if($sort){
-			$sqlw=$sqlw." and product_sort=$sort";
-		}
+		$sqlw=$sqlw." and product_sort=$sort";
 		$sql = "SELECT count(*) as num FROM `product_release` ".$sqlw;
 		return $this->db->query($sql)->row()->num;
 	}
@@ -62,8 +69,9 @@ class Statistics_model extends CI_Model
 		//统计订单当月发布
 	public function getcommentshow($mid,$gongsi)
 	{
+	    $sqlw="";
 		if (!empty($gongsi)) {
-			$sqlw= " where  a.product_name like '%" . $gongsi . "%'";
+			$sqlw.=" and a.product_name like '%" . $gongsi . "%'";
 		}
 		$sql = "SELECT * FROM `product_release` a,`comment` b where a.prid=b.prid and a.mid=$mid ".$sqlw;
 		return $this->db->query($sql)->result_array();
@@ -75,6 +83,44 @@ class Statistics_model extends CI_Model
 		$sqlw=" where 1=1";
 		$sql = "SELECT company_name as name FROM `member` where mid=$mid";
 		return $this->db->query($sql)->row()->name;
+	}
+	
+		//----------------------------供应商列表-------------------------------------
+
+	//获取订单页数
+	public function getorderlistAllPage($gongsi,$sort)
+	{
+		$sqlw = " where 1=1";
+		$sqlw .= " and product_sort=$sort";
+		if (!empty($gongsi)) {
+			$sqlw .= " and ( product_name like '%" . $gongsi . "%' ) ";
+		}
+		$sql = "SELECT count(1) as number FROM `product_release` " . $sqlw;
+
+		$number = $this->db->query($sql)->row()->number;
+		return ceil($number / 10) == 0 ? 1 : ceil($number / 10);
+	}
+
+	//获取供应商信息
+	public function getorderlistAll($pg, $gongsi,$sort)
+	{
+		$sqlw = " where 1=1";
+		$sqlw .= " and product_sort=$sort";
+		if (!empty($gongsi)) {
+			$sqlw .= " and ( product_name like '%" . $gongsi . "%' ) ";
+		}
+		$start = ($pg - 1) * 10;
+		$stop = 10;
+		$sql = "SELECT * FROM `product_release` " . $sqlw . " order by prid desc LIMIT $start, $stop";
+		return $this->db->query($sql)->result_array();
+	}
+
+	//获取gys信息
+	public function getgysmember($mid)
+	{
+		$sqlw=" where 1=1";
+		$sql = "SELECT * FROM `member` where mid=$mid";
+		return $this->db->query($sql)->row_array();
 	}
 
 }

@@ -42,7 +42,7 @@
 					</form>
 				</div>
 				<button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;"
-						onclick="xadmin.open('添加','<?= RUN . '/order/order_add/'.$status ?>',900,600)"><i
+						onclick="xadmin.open('添加','<?= RUN . '/order/order_add/'.$status ?>')"><i
 							class="layui-icon"></i>添加
 				</button>
 				<div class="layui-card-body ">

@@ -26,11 +26,13 @@
 		<div class="layui-col-md12">
 			<div class="layui-card">
 				<div class="layui-card-body ">
-					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/statistics/statistics_show' ?>">
+					<form class="layui-form layui-col-space5" method="get" action="<?= RUN . '/statistics/statistics_show?mid=' ?>'+<?=$mid;?>+'&sort='+<?=$sort;?>)">
 						<div class="layui-inline layui-show-xs-block">
 							<input type="text" name="gongsi" id="gongsi" value="<?=$gongsiv;?>"
 								   placeholder="项目名" autocomplete="off" class="layui-input">
 						</div>
+						<input type="hidden" id="mid" name="mid" value="<?=$mid;?>">
+						<input type="hidden" id="sort" name="sort" value="<?=$sort;?>">
 						<div class="layui-inline layui-show-xs-block">
 							<button class="layui-btn" lay-submit="" lay-filter="sreach"><i
 									class="layui-icon">&#xe615;</i></button>
@@ -68,9 +70,6 @@
                                     <td><?= $once['gnum'];?></td>
                                     <td><?= $once['gdesc'];?></td>
                                   </tr>
-								
-								
-								
 							<?php endforeach; ?>
 						<?php } else { ?>
 							<tr>

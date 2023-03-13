@@ -48,11 +48,11 @@
 					<table class="layui-table layui-form">
 						<thead>
 						<tr>
-							<th style="">月份</th>
-							<th style="">注册客户量</th>
-							<th style="">通过审核客户量</th>
-							<th style="">未通过审核量</th>
-							<th style="">活跃客户量</th>
+							<th style="width:8%">月份</th>
+							<th style="width:23%">注册客户量</th>
+							<th style="width:23%">通过审核客户量</th>
+							<th style="width:23%">未通过审核量</th>
+							<th style="width:23%">项目发布量</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>

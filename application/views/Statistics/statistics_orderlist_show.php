@@ -26,18 +26,12 @@
 		<div class="layui-col-md12">
 			<div class="layui-card">
 				<div class="layui-card-body ">
-					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/statistics/statistics_kehu_list' ?>">
-						<!--div class="layui-inline layui-show-xs-block">
-							<input type="text" name="gongsi" id="gongsi" value="<?=$yearv;?>"
-								   placeholder="年查询" autocomplete="off" class="layui-input">
-						</div-->
+					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/statistics/statistics_orderlist_show' ?>">
 						<div class="layui-inline layui-show-xs-block">
-							<select name="year" id="year">
-								<?php foreach ($yearlist as $k => $v): ?>
-								<option value="<?=$v;?>" <? if($yearv==$v){echo 'selected';}?>><?=$v;?>年</option>
-								<? endforeach;?>
-							</select>
+							<input type="text" name="gongsi" id="gongsi" value="<?=$gongsiv;?>"
+								   placeholder="项目名" autocomplete="off" class="layui-input">
 						</div>
+						<input type="hidden" id="sort" name="sort" value="<?=$sort?>">
 						<div class="layui-inline layui-show-xs-block">
 							<button class="layui-btn" lay-submit="" lay-filter="sreach"><i
 									class="layui-icon">&#xe615;</i></button>
@@ -48,25 +42,36 @@
 					<table class="layui-table layui-form">
 						<thead>
 						<tr>
-							<th style="">月份</th>
-							<th style="">以发布量</th>
-							<th style="">以投标量</th>
-							<th style="">以签约量</th>
-							<th style="">以完成量</th>
-							<th style="">异常项目量</th>
-							<th style="">取消项目量</th>
+							<th style="">编号</th>
+							<th style="">项目状态</th>	
+							<th style="">发布时间</th>								
+							<th style="">项目名称</th>
+							<th style="">发布企业</th>
+							<th style="">联系人</th>
+							<th style="">中标企业</th>
+							<th style="">发货数量</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr>
-									<td><?= $once['month'];?>月</td>
-									<td><a href="#" onclick="xadmin.open('订单详情','<?= RUN . '/statistics/statistics_orderlist_show?sort=0' ?>')"><?= $once['num1']; ?>次</a></td>
-									<td><a href="#" onclick="xadmin.open('订单详情','<?= RUN . '/statistics/statistics_orderlist_show?sort=1' ?>')"><?= $once['num2'];?>次</a></td>
-									<td><a href="#" onclick="xadmin.open('订单详情','<?= RUN . '/statistics/statistics_orderlist_show?sort=2' ?>')"><?= $once['num3']; ?>次</a></td>
-									<td><a href="#" onclick="xadmin.open('订单详情','<?= RUN . '/statistics/statistics_orderlist_show?sort=3' ?>')"><?= $once['num4']; ?>次</a></td>
-									<td><a href="#" onclick="xadmin.open('订单详情','<?= RUN . '/statistics/statistics_orderlist_show?sort=4' ?>')"><?= $once['num5']; ?>次</a></td>
-									<td><a href="#" onclick="xadmin.open('订单详情','<?= RUN . '/statistics/statistics_orderlist_show?sort=5' ?>')"><?= $once['num6']; ?>次</a></td>
+									<td><?= $num+1;?></td>
+									<td>
+									    <? 
+									    if($once['product_sort']==0){echo '以发布';}
+									        elseif($once['product_sort']==1){echo '以投标';}
+									        elseif($once['product_sort']==2){echo '以签约';}
+									        elseif($once['product_sort']==3){echo '以完成';}
+									        elseif($once['product_sort']==4){echo '异常订单';}
+									   ?>
+									</td>
+									<td><?=$once['addtime'];?></td>
+									<td><?=$once['product_name'];?></td>
+									<td><?=$once['company_name'];?></td>
+									<td><?=$once['contact_name'];?>-<?=$once['contact_tel'];?></td>
+									<td> <? if($once['product_sort']>1){echo $once['gysname'];}?> </td>
+									<td> <? if($once['product_sort']>1){echo $once['gysusername'];}?></td>
+
 								</tr>
 							<?php endforeach; ?>
 						<?php } else { ?>
@@ -76,6 +81,11 @@
 						<?php } ?>
 						</tbody>
 					</table>
+				</div>
+				<div class="layui-card-body ">
+					<div class="page">
+						<?= $pagehtml ?>
+					</div>
 				</div>
 			</div>
 		</div>

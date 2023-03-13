@@ -70,6 +70,7 @@ class Miniapi extends CI_Controller
         $page = isset($_POST["page"]) ? $_POST["page"] : 1;
         $keyword = isset($_POST["keyword"]) ? $_POST["keyword"] : '';
         $orderlist = $this->mini->fabu_list($page,time(),$keyword);
+        //$this->back_json(200, '操作成功', $orderlist);return;
         foreach ($orderlist as $k=>$v){
             $orderlist[$k]['add_time'] = empty($v['add_time'])?'':date('Y-m-d H:i:s',$v['add_time']);
             $orderlist[$k]['end_time']=empty($v['end_time'])?'':date('Y-m-d',$v['end_time']);
@@ -379,6 +380,8 @@ class Miniapi extends CI_Controller
 //        if ($member['audit_status'] != 2) {
 //            $this->back_json(205, '抱歉，供应商审核通过之后才能投标！');
 //        }
+        $delivery_time = empty($_POST['delivery_time'])?'':$_POST['delivery_time'];
+        $excel_url = empty($_POST['excel_url'])?'':$_POST['excel_url'];
         $contact_tel = empty($_POST['contact_tel'])?'':$_POST['contact_tel'];
         $description = empty($_POST['description'])?'':$_POST['description'];
         $bidding_cost = empty($_POST['bidding_cost'])?'':$_POST['bidding_cost'];
@@ -386,7 +389,7 @@ class Miniapi extends CI_Controller
         $company_name = empty($_POST['company_name'])?'':$_POST['company_name'];;
         $order_state = 0;
         $add_time = time();
-        $this->mini->supplier_bid_save($mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time);
+        $this->mini->supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time);
         $this->mini->supplier_product_release_edit($prid);
 
         $this->back_json(200, '操作成功', array());
@@ -564,7 +567,10 @@ class Miniapi extends CI_Controller
         }
         $prid = $_POST['prid'];
         $mid = $member['mid'];
-        $this->mini->supplier_select_member($prid,time(),$mid);
+        $supplier_select_member_new = $this->mini->supplier_select_member_new($prid,$mid);
+        $bidding_cost = $supplier_select_member_new['bidding_cost'];
+        $delivery_time = $supplier_select_member_new['delivery_time'];
+        $this->mini->supplier_select_member($prid,time(),$mid,$bidding_cost,$delivery_time);
         $this->mini->supplier_select_member1($prid,$mid);
         $this->back_json(200, '操作成功', array());
     }
@@ -623,9 +629,10 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['delivery_time']) || empty($_POST['delivery_time'])) {
             $this->back_json(205, '请您选择处理时间！');
         }
-        //验证avatarurl是否传递  0用户  1供应商
+        //验证是否传递  0用户  1供应商
         $identity = empty($member['identity']) ? 0 : 1;
         $prid = $_POST['prid'];
+        $payment_price = empty($_POST['payment_price'])?0.0:$_POST['payment_price'];
         $express_img = empty($_POST['express_img'])?'':$_POST['express_img'];
         $delivery_time = empty($_POST['delivery_time'])?'':strtotime($_POST['delivery_time']);
         $delivery_number = empty($_POST['delivery_number'])?0:$_POST['delivery_number'];
@@ -637,7 +644,7 @@ class Miniapi extends CI_Controller
             $jiaohuoshuliang = $this->mini->jiaohuoshuliang($prid);
             $batch_number = $jiaohuoshuliang + 1;
         }
-        $this->mini->delivery_save($identity,$prid,$batch_number,$delivery_time,$express_img,$add_time,$delivery_number);
+        $this->mini->delivery_save($payment_price,$identity,$prid,$batch_number,$delivery_time,$express_img,$add_time,$delivery_number);
         $this->back_json(200, '操作成功', array());
     }
     //查看当前发布有那些订单记录

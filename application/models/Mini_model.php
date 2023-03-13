@@ -109,7 +109,7 @@ class Mini_model extends CI_Model
     }
     public function fabu_list($pg,$date,$keyword)
     {
-        $sqlw = " 1=1 and u.audit_status=1 and u.product_sort=0 or u.product_sort=1";
+        $sqlw = " 1=1 and u.audit_status=1 and u.product_sort<2";
         if (!empty($date)) {
             $date = $this->db->escape($date);
             $sqlw .= " and u.end_time >=" . $date;
@@ -122,7 +122,7 @@ class Mini_model extends CI_Model
 
         $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc LIMIT $start, $stop";
         
-        // return $sql;
+         //return $sql;
         // print_r($sql);die;
         return $this->db->query($sql)->result_array();
     }
@@ -224,7 +224,7 @@ class Mini_model extends CI_Model
         return $this->db->query($sql);
     }
 
-    public function supplier_bid_save($mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)
+    public function supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)
     {
         $mid = $this->db->escape($mid);
         $add_time = $this->db->escape($add_time);
@@ -235,7 +235,9 @@ class Mini_model extends CI_Model
         $bidder = $this->db->escape($bidder);
         $prid = $this->db->escape($prid);
         $order_state = $this->db->escape($order_state);
-        $sql = "INSERT INTO `application_orders` (mid,contact_tel,description,bidding_cost,bidder,company_name,prid,order_state,add_time) VALUES ($mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)";
+        $delivery_time = $this->db->escape($delivery_time);
+        $excel_url = $this->db->escape($excel_url);
+        $sql = "INSERT INTO `application_orders` (excel_url,delivery_time,mid,contact_tel,description,bidding_cost,bidder,company_name,prid,order_state,add_time) VALUES ($excel_url,$delivery_time,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)";
         return $this->db->query($sql);
     }
 
@@ -328,12 +330,14 @@ class Mini_model extends CI_Model
         return $this->db->query($sql);
     }
 
-    public function supplier_select_member($prid,$product_signtime,$product_signmemberid)
+    public function supplier_select_member($prid,$product_signtime,$product_signmemberid,$bidding_cost,$delivery_time)
     {
         $prid = $this->db->escape($prid);
+        $bidding_cost = $this->db->escape($bidding_cost);
+        $delivery_time = $this->db->escape($delivery_time);
         $product_signmemberid = $this->db->escape($product_signmemberid);
         $product_signtime = $this->db->escape($product_signtime);
-        $sql = "UPDATE `product_release` SET product_signtime=$product_signtime,product_signmemberid=$product_signmemberid,product_sort=2 WHERE prid = $prid";
+        $sql = "UPDATE `product_release` SET delivery_time=$delivery_time,bidding_cost=$bidding_cost,product_signtime=$product_signtime,product_signmemberid=$product_signmemberid,product_sort=2 WHERE prid = $prid";
         return $this->db->query($sql);
     }
     public function supplier_select_member1($prid,$mid)
@@ -343,6 +347,15 @@ class Mini_model extends CI_Model
         $sql = "UPDATE `application_orders` SET order_state=2 WHERE prid = $prid and mid=$mid";
         return $this->db->query($sql);
     }
+
+    public function supplier_select_member_new($prid,$mid)
+    {
+        $prid = $this->db->escape($prid);
+        $mid = $this->db->escape($mid);
+        $sql = "SELECT * FROM `application_orders` where prid = $prid and mid = $mid";
+        return $this->db->query($sql)->row_array();
+    }
+
     public function supplier_cancel_member($prid,$mid)
     {
         $prid = $this->db->escape($prid);
@@ -372,8 +385,9 @@ class Mini_model extends CI_Model
         $number = $this->db->query($sql)->row()->number;
         return $number;
     }
-    public function delivery_save($identity,$prid,$batch_number,$delivery_time,$express_img,$add_time,$delivery_number)
+    public function delivery_save($payment_price,$identity,$prid,$batch_number,$delivery_time,$express_img,$add_time,$delivery_number)
     {
+        $payment_price = $this->db->escape($payment_price);
         $prid = $this->db->escape($prid);
         $identity = $this->db->escape($identity);
         $add_time = $this->db->escape($add_time);
@@ -381,7 +395,7 @@ class Mini_model extends CI_Model
         $delivery_time = $this->db->escape($delivery_time);
         $express_img = $this->db->escape($express_img);
         $delivery_number = $this->db->escape($delivery_number);
-        $sql = "INSERT INTO `delivery` (identity,prid,batch_number,delivery_time,express_img,add_time,delivery_number) VALUES ($identity,$prid,$batch_number,$delivery_time,$express_img,$add_time,$delivery_number)";
+        $sql = "INSERT INTO `delivery` (payment_price,identity,prid,batch_number,delivery_time,express_img,add_time,delivery_number) VALUES ($payment_price,$identity,$prid,$batch_number,$delivery_time,$express_img,$add_time,$delivery_number)";
         return $this->db->query($sql);
     }
 

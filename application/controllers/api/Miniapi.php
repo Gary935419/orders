@@ -839,8 +839,7 @@ class Miniapi extends CI_Controller
         $this->mini->supplier_modify_order_price($aftid,$bidding_cost);
         $this->back_json(200, '操作成功', array());
     }
-    
-        //异常信息分类
+    //异常信息分类
     public function geterrorlist()
     {
         $prid = $_POST['prid'];
@@ -849,8 +848,7 @@ class Miniapi extends CI_Controller
         
         $this->back_json(200, '操作成功', $data);
     }
-    
-            //异常信息保存
+    //异常信息保存
     public function error_update()
     {
         $prid = $_POST['prid'];
@@ -864,6 +862,62 @@ class Miniapi extends CI_Controller
         $mid = $member['mid'];
         
         $this->mini->error_update($prid,$errorid,$errordesc,$addtime,$identity,$mid);
+        $this->back_json(200, '操作成功', array());
+    }
+    //对账list
+    public function product_release_list(){
+        if (!isset($_POST['token']) || empty($_POST['token'])) {
+            $this->back_json(205, '请您先去授权登录！');
+        }
+        $token = $_POST['token'];
+        $member = $this->mini->getMemberInfotoken($token);
+        if (empty($member)){
+            $this->back_json(205, '请您先去授权登录！');
+        }
+        $mid = $member['mid'];
+        $identity = $member['identity'];
+        $page = isset($_POST["page"]) ? $_POST["page"] : 1;
+        if (empty($identity)){
+            $product_release_list = $this->mini->product_release_list1($page,$mid);
+        }else{
+            $product_release_list = $this->mini->product_release_list2($page,$mid);
+        }
+        foreach ($product_release_list as $k=>$v){
+            $prid = $v['prid'];
+            $is_receipt_invoice = $v['is_receipt_invoice'];
+            if (empty($is_receipt_invoice)){
+                $product_release_list[$k]['is_receipt_invoice'] = false;
+            }else{
+                $product_release_list[$k]['is_receipt_invoice'] = true;
+            }
+            $product_release_list[$k]['payment_price'] = $this->mini->delivery_count123($prid);
+            $product_release_list[$k]['delivery_number'] = $this->mini->delivery_count456($prid);
+            $product_signmemberid = $v['product_signmemberid'];
+            $select_product_signmemberid = $this->mini->select_product_signmemberid($product_signmemberid);
+            $product_release_list[$k]['company_name'] = $select_product_signmemberid['company_name'];
+            $product_release_list[$k]['delivery_time'] = empty($v['delivery_time'])?'':$v['delivery_time'];
+        }
+
+        $data['list'] = $product_release_list;
+        $this->back_json(200, '操作成功', $data);
+    }
+    //修改对账是否收到发票
+    public function modify_receipt_of_invoice(){
+        if (!isset($_POST['token']) || empty($_POST['token'])) {
+            $this->back_json(205, '请您先去授权登录！');
+        }
+        $token = $_POST['token'];
+        $member = $this->mini->getMemberInfotoken($token);
+        if (empty($member)){
+            $this->back_json(205, '请您先去授权登录！');
+        }
+        if (!isset($_POST['prid']) || empty($_POST['prid'])) {
+            $this->back_json(205, '请您填写prid！');
+        }
+        $prid = $_POST['prid'];
+        $is_receipt_invoice = empty($_POST['is_receipt_invoice'])?0:1;
+
+        $this->mini->modify_is_receipt_invoice($prid,$is_receipt_invoice);
         $this->back_json(200, '操作成功', array());
     }
 }

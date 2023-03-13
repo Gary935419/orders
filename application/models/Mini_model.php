@@ -637,4 +637,61 @@ class Mini_model extends CI_Model
         
     }
 
+    public function product_release_list1($pg,$mid)
+    {
+        $sqlw = " 1=1 and product_sort=3 and mid=$mid";
+
+        $start = ($pg - 1) * 5;
+        $stop = 5;
+
+        $sql = "SELECT prid,product_name,mid,product_signmemberid,bidding_cost,delivery_time,is_receipt_invoice FROM `product_release`  where " . $sqlw . " order by add_time desc LIMIT $start, $stop";
+
+        return $this->db->query($sql)->result_array();
+    }
+    public function product_release_list2($pg,$mid)
+    {
+        $sqlw = " 1=1 and product_sort=3 and product_signmemberid=$mid";
+
+        $start = ($pg - 1) * 5;
+        $stop = 5;
+
+        $sql = "SELECT prid,product_name,mid,product_signmemberid,bidding_cost,delivery_time,is_receipt_invoice FROM `product_release`  where " . $sqlw . " order by add_time desc LIMIT $start, $stop";
+
+        return $this->db->query($sql)->result_array();
+    }
+
+    public function select_product_signmemberid($product_signmemberid)
+    {
+        $mid = $this->db->escape($product_signmemberid);
+        $sql = "select * from `member` WHERE mid=$mid";
+        return $this->db->query($sql)->row_array();
+    }
+
+    public function delivery_count123($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sqlw = " where prid=$prid and identity=0 ";
+        $sql = "SELECT sum(payment_price) as number FROM `delivery` " . $sqlw;
+        $number = $this->db->query($sql)->row()->number;
+        return $number;
+    }
+
+    public function delivery_count456($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sqlw = " where prid=$prid and identity=1 ";
+        $sql = "SELECT sum(delivery_number) as number FROM `delivery` " . $sqlw;
+        $number = $this->db->query($sql)->row()->number;
+        return $number;
+    }
+
+    public function modify_is_receipt_invoice($prid,$is_receipt_invoice)
+    {
+        $prid = $this->db->escape($prid);
+        $is_receipt_invoice = $this->db->escape($is_receipt_invoice);
+
+        $sqlu = "UPDATE `product_release` SET is_receipt_invoice=$is_receipt_invoice WHERE prid = $prid";
+        return $this->db->query($sqlu);
+
+    }
 }

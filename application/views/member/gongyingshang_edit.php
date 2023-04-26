@@ -64,21 +64,37 @@
 						   autocomplete="off" class="layui-input" value="<?=$address;?>">
 				</div>
 			</div>
-			<div class="layui-form-item">
+									<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red"></span>审核信息：
+					<span class="x-red">*</span>供应商等级：
 				</label>
-				<div class="layui-input-inline" style="width: 300px;">
-					<a href='<?php echo $gimg1 ?>' download="<?=$gongsi;?>资料1">
-					    <img class="layui-upload-img" src="<?php echo $gimg1 ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
-					</a>&nbsp;&nbsp;&nbsp;&nbsp;   
-					<? if($gimg2){?>
-    					<a href='<?php echo $gimg2 ?>' download="<?=$gongsi;?>资料2">
-    					    <img class="layui-upload-img" src="<?php echo $gimg2 ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
-    					</a>
-					<? }?>
+				<div class="layui-input-inline layui-show-xs-block">
+					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
+						<select name="grade" id="grade" lay-verify="sort">
+						    <option value="一般供应商" <?php if($grade=='一般供应商'){echo 'selected';}?>>一般供应商</option>
+							<option value="优质供应商" <?php if($grade=='优质供应商'){echo 'selected';}?>>优质供应商</option>
+							<option value="优选供应商" <?php if($grade=='优选供应商'){echo 'selected';}?>>优选供应商</option>
+						</select>
+					</div>
 				</div>
 			</div>
+			<? if($gimg1){?>
+    			<div class="layui-form-item">
+    				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+    					<span class="x-red"></span>审核信息：
+    				</label>
+    				<div class="layui-input-inline" style="width: 300px;">
+    					<a href='<?php echo $gimg1 ?>' download="<?=$gongsi;?>资料1">
+    					    <img class="layui-upload-img" src="<?php echo $gimg1 ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
+    					</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+    					<? if($gimg2){?>
+        					<a href='<?php echo $gimg2 ?>' download="<?=$gongsi;?>资料2">
+        					    <img class="layui-upload-img" src="<?php echo $gimg2 ?>" style="width: 100px;height: 100px;" id="gimgimg" name="gimgimg">
+        					</a>
+    					<? }?>
+    				</div>
+    			</div>
+			<? }?>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red">*</span>所属分类：

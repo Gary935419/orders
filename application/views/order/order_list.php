@@ -90,7 +90,7 @@
 										</button>
 									<? }?>
 										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/order/order_edit?id=' ?>'+<?= $once['prid'] ?>,900,800)">
+												onclick="xadmin.open('编辑','<?= RUN . '/order/order_edit?id=' ?>'+<?= $once['prid'] ?>)">
 											<i class="layui-icon">&#xe642;</i>编辑
 										</button>
 										<button class="layui-btn layui-btn-danger"

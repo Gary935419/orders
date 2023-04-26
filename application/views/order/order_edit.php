@@ -45,7 +45,7 @@
 					<div style="width: 600px" class="layui-input-inline layui-show-xs-block">
 						<select name="proclass" id="proclass" lay-verify="proclass">
 							<?php foreach ($proclasslist as $num => $plist): ?>
-								<option value="<?=$plist['pid'];?>" <? if($orderlsit['product_class_name']==$plist['pid']){echo 'selected';}?>><?=$plist['product_class_name'];?></option>
+								<option value="<?=$plist['product_class_name'];?>" <? if($orderlsit['product_class_name']==$plist['product_class_name']){echo 'selected';}?>><?=$plist['product_class_name'];?></option>
 							<? endforeach;?>
 						</select>
 					</div>
@@ -127,29 +127,31 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red"></span>说明文件2（pdf）：
+					<span class="x-red"></span>说明文件2（压缩包）：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<button type="button" class="layui-btn" id="upload1">上传文件</button> &nbsp;&nbsp;
-					<input type="text" readonly id="pdfurl" name="pdfurl" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M" value="<?=$orderlsit['product_specification2'];?>">
+					<button type="button" class="layui-btn" id="upload2">上传文件</button> &nbsp;&nbsp;
+					<a href="<?=$orderlsit['product_specification2'];?>" target="downloadFile">
+					<input type="text" readonly id="pdfurl2" name="pdfurl2" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M" value="<?=$orderlsit['product_specification2'];?>">
+					</a>
 				</div>
 			</div>
-			<div class="layui-form-item">
+			<!--div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red"></span>说明文件3（pdf）：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<button type="button" class="layui-btn" id="upload1">上传文件</button> &nbsp;&nbsp;
-					<input type="text" readonly id="pdfurl" name="pdfurl" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M" value="<?=$orderlsit['product_specification3'];?>">
+					<button type="button" class="layui-btn" id="upload3">上传文件</button> &nbsp;&nbsp;
+					<input type="text" readonly id="pdfurl3" name="pdfurl3" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M" value="<?=$orderlsit['product_specification3'];?>">
 				</div>
-			</div>
+			</div-->
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red"></span>备注说明：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
 						<textarea placeholder="" id="desc" name="desc" class="layui-textarea"
-								  lay-verify="jianyi"><?=$orderlsit['product_desc'];?></textarea>
+								  lay-verify="jianyi"><?=$orderlsit['product_description'];?></textarea>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -261,6 +263,46 @@
 				}
 			}
 		});
+        upload.render({ //允许上传的文件后缀
+            elem: '#upload2'
+            ,url: '<?= RUN . '/upload/pushFIlePdf' ?>'
+            ,accept: 'file' //普通文件
+            ,exts: 'rar|zip|7z' //只允许上传压缩文件
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                console.log(res)
+                if(res.code == 200){
+                    console.log(res.src)
+                    $('#pdfurl2').val(res.src);
+                    return layer.msg('上传成功');
+                }else {
+                    return layer.msg('上传失败');
+                }
+            }
+        });
+        upload.render({ //允许上传的文件后缀
+            elem: '#upload3'
+            ,url: '<?= RUN . '/upload/pushFIlePdf' ?>'
+            ,accept: 'file' //普通文件
+            ,exts: 'pdf' //只允许上传压缩文件
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                console.log(res)
+                if(res.code == 200){
+                    console.log(res.src)
+                    $('#pdfurl3').val(res.src);
+                    return layer.msg('上传成功');
+                }else {
+                    return layer.msg('上传失败');
+                }
+            }
+        });
 		upload.render({
 			elem: '#test5'
 			,url: '/upload/'

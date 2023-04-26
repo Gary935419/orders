@@ -18,7 +18,7 @@
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a>
-              <cite>投标企业列表</cite></a>
+              <cite>报价企业列表</cite></a>
           </span>
 </div>
 <div class="layui-fluid">
@@ -29,7 +29,7 @@
 					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/order/order_toubiao_list/'.$id ?>">
 						<div class="layui-inline layui-show-xs-block">
 							<input type="text" name="gongsi" id="gongsi" value="<?php echo $gongsiv ?>"
-								   placeholder="投标企业名" autocomplete="off" class="layui-input">
+								   placeholder="报价企业名" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-inline layui-show-xs-block">
 							<button class="layui-btn" lay-submit="" lay-filter="sreach"><i
@@ -42,13 +42,18 @@
 						<thead>
 						<tr>
 							<th>序号</th>
-							<th>投标项目</th>
-							<th>投标企业名</th>
-							<th>投标时间</th>
-							<th>投标价格</th>
-							<th>是否中标</th>
+							<th>报价项目</th>
+							<th>报价企业名</th>
+							<th>报价时间</th>
+							<th>报价价格</th>
+						    <th>交货时间</th>
+						    <th>备注说明</th>
+							<th>是否选定</th>
 							<th>联系人</th>
 							<th>联系电话</th>
+							<th>报价查看</th>
+							<th>其他说明</th>
+							<th>选定供应商</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
@@ -59,9 +64,24 @@
 									<td><?= $once['company_name'] ?></td>
 									<td><?= date("Y-m-d",$once['add_time']) ?></td>
 									<td><?= $once['bidding_cost'] ?></td>
-									<td><?if($once['order_state']==1){echo '已中标';}else{echo '否';};?></td>
+									<td><?= $once['delivery_time'] ?></td>
+									<td><?= $once['description'] ?></td>
+									<td><?if($once['order_state']==1){echo '已选定';}elseif($once['order_state']==3){echo '供应商取消';}else{echo '否';};?></td>
 									<td><?= $once['bidder'] ?></td>
 									<td><?= $once['contact_tel'] ?></td>
+									<td><a href="<?= $once['pdf_url'] ?>" download>下载</a></td>
+									<td><a href="<?= $once['excel_url'] ?>" download>下载</a></a></td>
+									<td class="td-manage">
+									    <? if($toubiao==0){?>
+										<button class="layui-btn layui-btn-danger"
+												onclick="toubiao_edit('<?= $once['aftid'] ?>',1)"><i class="layui-icon">&#xe60e;</i>选择
+										</button>
+										<? }elseif($toubiao==$once['aftid']){?>
+										<button class="layui-btn layui-btn-normal"
+												onclick="toubiao_edit('<?= $once['aftid'] ?>',0)"><i class="layui-icon">&#xe60e;</i>取消
+										</button>
+										<? }?>
+									</td>
 								</tr>
 							<?php endforeach; ?>
 						<?php } else { ?>
@@ -84,8 +104,8 @@
 </div>
 </body>
 <script>
-	function order_update(id) {
-		layer.confirm('您是否确认恢复订单？', {
+	function toubiao_edit(id,str) {
+		layer.confirm('您是否确认选中供应商？', {
 				title: '温馨提示',
 				btn: ['确认', '取消']
 				// 按钮
@@ -93,12 +113,12 @@
 			function (index) {
 				$.ajax({
 					type: "post",
-					data: {"id": id},
+					data: {"id": id,"str":str},
 					dataType: "json",
-					url: "<?= RUN . '/order/order_del_update' ?>",
+					url: "<?= RUN . '/order/order_bid_toubiao_edit' ?>",
 					success: function (data) {
 						if (data.success) {
-							$("#p" + id).remove();
+							location.reload();
 							layer.alert(data.msg, {
 									title: '温馨提示',
 									icon: 6,

@@ -64,6 +64,20 @@
 						   autocomplete="off" class="layui-input">
 				</div>
 			</div>
+						<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>供应商等级：
+				</label>
+				<div class="layui-input-inline layui-show-xs-block">
+					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
+						<select name="grade" id="grade" lay-verify="sort">
+						    <option value="一般供应商">一般供应商</option>
+							<option value="优质供应商">优质供应商</option>
+							<option value="优选供应商">优选供应商</option>
+						</select>
+					</div>
+				</div>
+			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red">*</span>营业执照上传：

@@ -60,13 +60,13 @@
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/users/users_list' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>用户账号管理</cite>
+								<cite>管理员账号管理</cite>
 							</a>
 						</li>
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/users/role_list' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>角色管理</cite>
+								<cite>管理员角色管理</cite>
 							</a>
 						</li>
 					</ul>
@@ -74,7 +74,7 @@
 				<li>
 					<a href="javascript:;">
 						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
-						<cite>供应商管理</cite>
+						<cite>供应商账号管理</cite>
 						<i class="iconfont nav_right">&#xe697;</i></a>
 					<ul class="sub-menu">
 						<li>
@@ -112,7 +112,7 @@
 				<li>
 					<a href="javascript:;">
 						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
-						<cite>客户管理</cite>
+						<cite>客户账号管理</cite>
 						<i class="iconfont nav_right">&#xe697;</i></a>
 					<ul class="sub-menu">
 						<li>
@@ -144,13 +144,13 @@
 				<li>
 					<a href="javascript:;">
 						<i class="iconfont left-nav-li" lay-tips="系统管理">&#xe6ae;</i>
-						<cite>订单管理</cite>
+						<cite>发布订单管理</cite>
 						<i class="iconfont nav_right">&#xe697;</i></a>
 					<ul class="sub-menu">
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/order/order_list/0/0' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>采购订单审核管理</cite>
+								<cite>订单审核管理</cite>
 							</a>
 						</li>
 					</ul>
@@ -158,7 +158,7 @@
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/order/order_list/1/0' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>以发布订单管理</cite>
+								<cite>已发布订单管理</cite>
 							</a>
 						</li>
 					</ul>
@@ -166,7 +166,7 @@
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/order/order_bid_list/1' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>以投标订单管理</cite>
+								<cite>已报价订单管理</cite>
 							</a>
 						</li>
 					</ul>
@@ -174,7 +174,7 @@
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/order/order_sign_list/2' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>以签约订单管理</cite>
+								<cite>已签约订单管理</cite>
 							</a>
 						</li>
 					</ul>
@@ -182,7 +182,7 @@
 						<li>
 							<a onclick="changeSrc('<?= RUN . '/order/order_sign_list/3' ?>')">
 								<i class="iconfont">&#xe6a7;</i>
-								<cite>以完成订单管理</cite>
+								<cite>已完成订单管理</cite>
 							</a>
 						</li>
 					</ul>

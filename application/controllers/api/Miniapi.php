@@ -70,6 +70,7 @@ class Miniapi extends CI_Controller
         $page = isset($_POST["page"]) ? $_POST["page"] : 1;
         $keyword = isset($_POST["keyword"]) ? $_POST["keyword"] : '';
         $pagecount = isset($_POST["pagecount"]) ? $_POST["pagecount"] : '';
+
         $orderlist = $this->mini->fabu_list($page,time(),$keyword,$pagecount);
         foreach ($orderlist as $k=>$v){
             $orderlist[$k]['add_time'] = empty($v['add_time'])?'':date('Y-m-d H:i:s',$v['add_time']);
@@ -212,9 +213,9 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['product_specification2']) || empty($_POST['product_specification2'])) {
             $this->back_json(205, '请您填写产品规格2！');
         }
-        if (!isset($_POST['product_specification3']) || empty($_POST['product_specification3'])) {
-            $this->back_json(205, '请您填写产品规格3！');
-        }
+        //if (!isset($_POST['product_specification3']) || empty($_POST['product_specification3'])) {
+        //    $this->back_json(205, '请您填写产品规格3！');
+        //}
         $is_contact_person = $_POST["is_contact_person"];
         $company_name = isset($_POST["company_name"]) ? $_POST["company_name"] : '';
         $contact_name = isset($_POST["contact_name"]) ? $_POST["contact_name"] : '';
@@ -396,6 +397,7 @@ class Miniapi extends CI_Controller
         $company_name = empty($_POST['company_name'])?'':$_POST['company_name'];;
         $order_state = 0;
         $add_time = time();
+        
         $a=$this->mini->supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time,$aftid,$pdf_url);
         if(!$aftid){
             $this->mini->supplier_product_release_edit($prid);
@@ -732,7 +734,8 @@ class Miniapi extends CI_Controller
         if ($count_comlate<1){
             $this->back_json(205, '目前订单履历不全，不能完成！');
         }
-        $this->mini->member_complete_order($prid);
+        $overtime = time();
+        $this->mini->member_complete_order($prid,$overtime);
         $this->back_json(200, '操作成功', array());
     }
     //供应商和用户填写订单异常
@@ -877,6 +880,12 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['token']) || empty($_POST['token'])) {
             $this->back_json(205, '请您先去授权登录！');
         }
+        
+        $starttime=isset($_POST["starttime"]) ? $_POST["starttime"] : '';
+        $endtime=isset($_POST['endtime']) ? $_POST['endtime'] :'';
+        $pclassname=isset($_POST['classname']) ? $_POST['classname'] :'';
+        $proname=isset($_POST['proname']) ? $_POST['proname'] :'';
+
         $token = $_POST['token'];
         $member = $this->mini->getMemberInfotoken($token);
         if (empty($member)){
@@ -885,10 +894,11 @@ class Miniapi extends CI_Controller
         $mid = $member['mid'];
         $identity = $member['identity'];
         $page = isset($_POST["page"]) ? $_POST["page"] : 1;
+
         if (empty($identity)){
-            $product_release_list = $this->mini->product_release_list1($page,$mid);
+            $product_release_list = $this->mini->product_release_list1($page,$mid,$starttime,$endtime,$pclassname,$proname);
         }else{
-            $product_release_list = $this->mini->product_release_list2($page,$mid);
+            $product_release_list = $this->mini->product_release_list2($page,$mid,$starttime,$endtime,$pclassname,$proname);
         }
         foreach ($product_release_list as $k=>$v){
             $prid = $v['prid'];
@@ -904,6 +914,7 @@ class Miniapi extends CI_Controller
             $select_product_signmemberid = $this->mini->select_product_signmemberid($product_signmemberid);
             $product_release_list[$k]['company_name'] = $select_product_signmemberid['company_name'];
             $product_release_list[$k]['delivery_time'] = empty($v['delivery_time'])?'':$v['delivery_time'];
+            $product_release_list[$k]['product_overtime'] = date('Y-m-d',$v['product_overtime']);
         }
 
         $data['list'] = $product_release_list;
@@ -983,5 +994,6 @@ class Miniapi extends CI_Controller
         $data['setarr'] = $this->mini->getindustrynews($id);
         $this->back_json(200, '操作成功', $data);
     }
+    
 
 }

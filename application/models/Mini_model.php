@@ -37,6 +37,12 @@ class Mini_model extends CI_Model
     }
     public function register($identity,$openid,$mobile,$truename,$company_address,$company_name,$email,$sex,$business_typenames,$avater,$nickname,$token,$add_time,$audit_status,$business_license,$review_data,$business_type)
     {
+        if($identity==1){
+            $grade="一般供应商";
+        }else{
+            $grade="";
+        }
+        $grade = $this->db->escape($grade);
         $identity = $this->db->escape($identity);
         $openid = $this->db->escape($openid);
         $mobile = $this->db->escape($mobile);
@@ -54,7 +60,10 @@ class Mini_model extends CI_Model
         $business_license = $this->db->escape($business_license);
         $review_data = $this->db->escape($review_data);
         $business_type = $this->db->escape($business_type);
-        $sql = "INSERT INTO `member` (identity,openid,mobile,truename,company_address,company_name,email,sex,business_typenames,avater,nickname,token,add_time,audit_status,business_license,review_data,business_type) VALUES ($identity,$openid,$mobile,$truename,$company_address,$company_name,$email,$sex,$business_typenames,$avater,$nickname,$token,$add_time,$audit_status,$business_license,$review_data,$business_type)";
+
+        $sql = "INSERT INTO `member` (identity,openid,mobile,truename,company_address,company_name,email,sex,business_typenames,avater,nickname,token,add_time,audit_status,business_license,review_data,business_type,grade) VALUES ($identity,$openid,$mobile,$truename,$company_address,$company_name,$email,$sex,$business_typenames,$avater,$nickname,$token,$add_time,$audit_status,$business_license,$review_data,$business_type,$grade)";
+        
+        //return $sql;
         return $this->db->query($sql);
     }
     public function register_vcode($mobile,$expiration_time,$vcode,$add_time)
@@ -107,7 +116,7 @@ class Mini_model extends CI_Model
         $sql = "SELECT * FROM `industry_news` where inid=$inid ";
         return $this->db->query($sql)->row_array();
     }
-    public function fabu_list($pg,$date,$keyword)
+    public function fabu_list($pg,$date,$keyword,$pagecount)
     {
         $sqlw = " 1=1 and u.audit_status=1 and u.product_sort<2";
         if (!empty($date)) {
@@ -120,7 +129,14 @@ class Mini_model extends CI_Model
         $start = ($pg - 1) * 5;
         $stop = 5;
 
-        $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc LIMIT $start, $stop";
+        // $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc LIMIT $start, $stop";
+        
+
+        if($pagecount>0){
+            $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc LIMIT 0, $pagecount";            
+        }else{
+            $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc";
+        }
         
          //return $sql;
         // print_r($sql);die;
@@ -141,6 +157,8 @@ class Mini_model extends CI_Model
         $sql = "SELECT * FROM `member` where token = $token ";
         return $this->db->query($sql)->row_array();
     }
+    
+    
     public function product_release_add_save($product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name)
     {
         $mid = $this->db->escape($mid);
@@ -224,8 +242,9 @@ class Mini_model extends CI_Model
         return $this->db->query($sql);
     }
 
-    public function supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)
+    public function supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time,$aftid,$pdf_url)
     {
+        
         $mid = $this->db->escape($mid);
         $add_time = $this->db->escape($add_time);
         $contact_tel = $this->db->escape($contact_tel);
@@ -236,8 +255,14 @@ class Mini_model extends CI_Model
         $prid = $this->db->escape($prid);
         $order_state = $this->db->escape($order_state);
         $delivery_time = $this->db->escape($delivery_time);
-        $excel_url = $this->db->escape($excel_url);
-        $sql = "INSERT INTO `application_orders` (excel_url,delivery_time,mid,contact_tel,description,bidding_cost,bidder,company_name,prid,order_state,add_time) VALUES ($excel_url,$delivery_time,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)";
+        $excel_url = $this->db->escape($excel_url); ;
+        $pdf_url = $this->db->escape($pdf_url);   
+        
+        if($aftid){
+            $sql = "UPDATE `application_orders` SET delivery_time=$delivery_time,excel_url=$excel_url,pdf_url=$pdf_url,mid=$mid,contact_tel=$contact_tel,description=$description,bidding_cost=$bidding_cost,bidder=$bidder,company_name=$company_name WHERE aftid = $aftid";
+        }else{
+            $sql = "INSERT INTO `application_orders` (excel_url,pdf_url,delivery_time,mid,contact_tel,description,bidding_cost,bidder,company_name,prid,order_state,add_time) VALUES ($excel_url,$pdf_url,$delivery_time,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time)";            
+        }
         return $this->db->query($sql);
     }
 
@@ -265,14 +290,18 @@ class Mini_model extends CI_Model
     public function order_gongyingshang_list_new($pg,$mid,$product_sort)
     {
         $mid = $this->db->escape($mid);
-        $product_sort = $this->db->escape($product_sort);
-
+        //$product_sort = $this->db->escape($product_sort);
         $sqlw = " ao.mid=$mid and pr.product_sort=$product_sort and ao.order_state!=1 ";
+
+        if($product_sort>1){
+          $sqlw =$sqlw."and pr.product_signmemberid=$mid";  
+        }
 
         $start = ($pg - 1) * 10;
         $stop = 10;
 
         $sql = "SELECT * FROM `application_orders` ao left join `product_release` pr on pr.prid=ao.prid  where " . $sqlw . " order by ao.aftid desc LIMIT $start, $stop";
+        
         return $this->db->query($sql)->result_array();
     }
 
@@ -284,7 +313,7 @@ class Mini_model extends CI_Model
         $start = ($pg - 1) * 10;
         $stop = 10;
 
-        $sql = "SELECT *,u.mid as smid,u.company_name as gysname FROM `application_orders` u  left join `product_release` pr on pr.prid=u.prid  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
+        $sql = "SELECT *,u.mid as smid,u.company_name as gysname, u.bidding_cost as biddingcost,u.delivery_time,u.excel_url,u.add_time as pradd_time FROM `application_orders` u  left join `product_release` pr on pr.prid=u.prid  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
         return $this->db->query($sql)->result_array();
     }
 
@@ -296,7 +325,7 @@ class Mini_model extends CI_Model
         $start = ($pg - 1) * 10;
         $stop = 10;
 
-        $sql = "SELECT *,u.mid as smid,u.company_name as gysname FROM `application_orders` u  left join `product_release` pr on pr.prid=u.prid  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
+        $sql = "SELECT *,u.mid as smid,u.company_name as gysname, u.bidding_cost as biddingcost,u.delivery_time,u.excel_url FROM `application_orders` u  left join `product_release` pr on pr.prid=u.prid  where " . $sqlw . " order by u.aftid desc LIMIT $start, $stop";
         return $this->db->query($sql)->result_array();
     }
 
@@ -308,6 +337,7 @@ class Mini_model extends CI_Model
         $sqlw = " ao.mid=$mid and ao.order_state=$product_sort ";
 
         $start = ($pg - 1) * 10;
+        //$start = -5;
         $stop = 10;
 
         $sql = "SELECT * FROM `application_orders` ao left join `product_release` pr on pr.prid=ao.prid  where " . $sqlw . " order by ao.aftid desc LIMIT $start, $stop";
@@ -417,16 +447,17 @@ class Mini_model extends CI_Model
         return $number;
     }
 
-    public function member_complete_order($prid)
+    public function member_complete_order($prid,$overtime)
     {
         $prid = $this->db->escape($prid);
-        $sql = "UPDATE `product_release` SET product_sort=3 WHERE prid = $prid";
+        $overtime = $this->db->escape($overtime);
+        $sql = "UPDATE `product_release` SET product_sort=3,product_overtime=$overtime WHERE prid = $prid";
         return $this->db->query($sql);
     }
 
     public function geterrorarr()
     {
-        $sql = "SELECT error_news.enid,error_news.error_desc FROM `error_news` order by enid desc";
+        $sql = "SELECT error_news.enid,error_news.error_title FROM `error_news` order by enid desc";
         return $this->db->query($sql)->result_array();
     }
 
@@ -637,26 +668,57 @@ class Mini_model extends CI_Model
         
     }
 
-    public function product_release_list1($pg,$mid)
+    public function product_release_list1($page,$mid,$starttime,$endtime,$pclassname,$proname)
     {
         $sqlw = " 1=1 and product_sort=3 and mid=$mid";
-
-        $start = ($pg - 1) * 5;
+        if($starttime){
+            $stime=strtotime($starttime);
+            $sqlw = $sqlw. " and product_overtime>=$stime";
+        }
+        if($endtime){
+            $etime=strtotime($endtime);
+            $sqlw = $sqlw. " and product_overtime<=$etime";
+        }
+        if($pclassname){
+            $sqlw = $sqlw. " and product_class_name='".$pclassname."'";
+        }        
+        if($proname){
+            $sqlw = $sqlw. " and product_name like '%".$keyword."%'";
+        }  
+        
+        $start = ($page - 1) * 5;
+        //$start = -5;
         $stop = 5;
 
-        $sql = "SELECT prid,product_name,mid,product_signmemberid,bidding_cost,delivery_time,is_receipt_invoice FROM `product_release`  where " . $sqlw . " order by add_time desc LIMIT $start, $stop";
-
-        return $this->db->query($sql)->result_array();
+        $sql = "SELECT prid,product_name,product_class_name,mid,product_signmemberid,bidding_cost,delivery_time,is_receipt_invoice,product_overtime FROM `product_release`  where " . $sqlw . " order by product_overtime desc LIMIT $start, $stop";
+       
+       return $this->db->query($sql)->result_array();
     }
-    public function product_release_list2($pg,$mid)
+    public function product_release_list2($page,$mid,$starttime,$endtime,$pclassname,$proname)
     {
         $sqlw = " 1=1 and product_sort=3 and product_signmemberid=$mid";
 
-        $start = ($pg - 1) * 5;
+        if($starttime){
+            $stime=strtotime($starttime);
+            $sqlw = $sqlw. " and product_overtime>=$stime";
+        }
+        if($endtime){
+            $etime=strtotime($endtime);
+            $sqlw = $sqlw. " and product_overtime<=$etime";
+        }
+        if($pclassname){
+            $sqlw = $sqlw. " and product_class_name='".$pclassname."'";
+        }        
+        if($proname){
+            $proname=strtotime($proname);
+            $sqlw = $sqlw. " and product_name like '%".$keyword."%'";
+        } 
+
+        $start = ($page - 1) * 5;
+        //$start = -5;
         $stop = 5;
 
-        $sql = "SELECT prid,product_name,mid,product_signmemberid,bidding_cost,delivery_time,is_receipt_invoice FROM `product_release`  where " . $sqlw . " order by add_time desc LIMIT $start, $stop";
-
+        $sql = "SELECT prid,product_name,product_class_name,mid,product_signmemberid,bidding_cost,delivery_time,is_receipt_invoice,product_overtime FROM `product_release`  where " . $sqlw . " order by product_overtime desc LIMIT $start, $stop";
         return $this->db->query($sql)->result_array();
     }
 
@@ -694,4 +756,40 @@ class Mini_model extends CI_Model
         return $this->db->query($sqlu);
 
     }
+    
+        public function select_baojia($prid,$aftid)
+    {
+        $sql = "SELECT * from `application_orders` WHERE aftid = $aftid";
+        return $this->db->query($sql)->row();
+
+    }
+    
+        public function select_abnormal($prid)
+    {
+        $prid = $this->db->escape($prid);
+        $sql = "SELECT * from `product_abnormal` a,`error_news` b WHERE a.prid = $prid and a.errorid=b.enid";
+        return $this->db->query($sql)->row_array();
+    }
+    
+        //获取用户留言
+        public function select_commentlist($token,$identity,$pagenum,$size)
+    {
+        $token = $this->db->escape($token);
+        $start = ($pagenum - 1) * $size;
+        if($identity==0){
+            $sql = "select a.* from comment a,member b where a.kehu_id=b.mid and b.token=$token order by a.cid desc LIMIT $start, $size";
+        }else{
+            $sql = "select a.* from comment a,member b where a.gongyingshang_id=b.mid and b.token=$token order by a.cid desc LIMIT $start, $size";           
+        }
+        return $this->db->query($sql)->result_array();
+    }  
+    
+        //获取新闻信息
+        public function getindustrynews($id)
+    {
+        $sql = "SELECT * FROM `industry_news` where inid = $id";
+        return $this->db->query($sql)->row_array();
+    }
+
+    
 }

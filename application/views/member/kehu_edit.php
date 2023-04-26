@@ -98,7 +98,7 @@
 					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
 						<select name="status" id="status" lay-verify="sort">
 							<option value="1" <?php if($status=='1'){echo 'selected';}?>>未审核客户</option>
-							<option value="2" <?php if($status=='2'){echo 'selected';}?>>以通过客户</option>
+							<option value="2" <?php if($status=='2'){echo 'selected';}?>>已通过客户</option>
 							<option value="3" <?php if($status=='3'){echo 'selected';}?>>停权用户</option>
 						</select>
 					</div>

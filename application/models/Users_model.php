@@ -114,15 +114,14 @@ class Users_model extends CI_Model
         return $this->db->query($sql)->row_array();
     }
     //会員save
-    public function member_save($user_name, $user_pass, $rid, $user_state, $add_time,$pwd)
+    public function member_save($user_name, $user_pass, $rid, $user_state, $add_time)
     {
         $user_name = $this->db->escape($user_name);
         $user_pass = $this->db->escape($user_pass);
         $rid = $this->db->escape($rid);
         $user_state = $this->db->escape($user_state);
         $add_time = $this->db->escape($add_time);
-		$pwd = $this->db->escape($pwd);
-        $sql = "INSERT INTO `admin_user` (username,userpwd,rid,user_state,add_time,pwd) VALUES ($user_name,$user_pass,$rid,$user_state,$add_time,$pwd)";
+        $sql = "INSERT INTO `admin_user` (username,userpwd,rid,userstate,addtime) VALUES ($user_name,$user_pass,$rid,$user_state,$add_time)";
         return $this->db->query($sql);
     }
     //会員delete
@@ -141,7 +140,7 @@ class Users_model extends CI_Model
         $rid = $this->db->escape($rid);
         $user_state = $this->db->escape($user_state);
 
-        $sql = "UPDATE `admin_user` SET username=$user_name,userpwd=$user_pass,rid=$rid,user_state=$user_state WHERE id = $uid";
+        $sql = "UPDATE `admin_user` SET username=$user_name,userpwd=$user_pass,rid=$rid,userstate=$user_state WHERE id = $uid";
         return $this->db->query($sql);
     }
 

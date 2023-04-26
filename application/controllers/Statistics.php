@@ -163,16 +163,31 @@ class Statistics extends CI_Controller
         $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
         $gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$showlist=$this->statistics->getcommentshow($mid,$gongsi);
+		
 		foreach ($showlist as $k=>$v){
     		$list[$k]['proname']= $v['product_name']; 
-    		$list[$k]['kname']=$this->statistics->getmembername($v['kehu_id']);
-    		$list[$k]['knum']=$v['kehu_num'];  
-    		$list[$k]['ktime']=$v['kehu_addtime'];  
-    		$list[$k]['kdesc']=$v['kehu_desc']; 	    		
-    		$list[$k]['gname']=$this->statistics->getmembername($v['gongyingshang_id']);
-    		$list[$k]['gnum']=$v['gongyingshang_num'];  
-    		$list[$k]['gtime']=$v['gongyingshang_addtime'];  
-    		$list[$k]['gdesc']=$v['gongyingshang_desc'];      		
+    		if($v['kehu_id']){
+        		$list[$k]['kname']=$this->statistics->getmembername($v['kehu_id']);
+        		$list[$k]['knum']=$v['kehu_num'];  
+        		$list[$k]['ktime']=$v['kehu_addtime'];  
+        		$list[$k]['kdesc']=$v['kehu_desc']; 
+    		}else{
+        		$list[$k]['kname']="";
+        		$list[$k]['knum']="";
+        		$list[$k]['ktime']="";
+        		$list[$k]['kdesc']="";
+    		}
+    		if($v['gongyingshang_id']){
+        		$list[$k]['gname']=$this->statistics->getmembername($v['gongyingshang_id']);
+        		$list[$k]['gnum']=$v['gongyingshang_num'];  
+        		$list[$k]['gtime']=$v['gongyingshang_addtime'];  
+        		$list[$k]['gdesc']=$v['gongyingshang_desc']; 
+    		}else{
+    		    $list[$k]['gname']="";
+        		$list[$k]['gnum']="";
+        		$list[$k]['gtime']="";
+        		$list[$k]['gdesc']="";
+    		}     		
         }
         if(!$showlist){
             $list="";

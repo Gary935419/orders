@@ -25,7 +25,7 @@
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
 						<textarea placeholder="" id="desc" name="desc" class="layui-textarea"
-								  lay-verify="jianyi"><?=$list['error_desc'];?></textarea>
+								  lay-verify="jianyi"><?=$list['error_title'];?></textarea>
 				</div>
 			</div>
 			<div class="layui-form-item">

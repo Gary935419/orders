@@ -43,11 +43,11 @@ class Order extends CI_Controller
 
 			//获取项目进度
 			if($list[$k]['product_sort']==0){
-				$sortstr="以发布";
+				$sortstr="已发布";
 			}elseif($list[$k]['product_sort']==1){
-				$sortstr="以投标";
+				$sortstr="已投标";
 			}elseif($list[$k]['product_sort']==2){
-				$sortstr="以签约";
+				$sortstr="已签约";
 			}elseif($list[$k]['product_sort']==3){
 				$sortstr="已完成";
 			}else{
@@ -241,11 +241,11 @@ class Order extends CI_Controller
 
 			//获取项目进度
 			if($list[$k]['product_sort']==0){
-				$sortstr="以发布";
+				$sortstr="已发布";
 			}elseif($list[$k]['product_sort']==1){
-				$sortstr="以投标";
+				$sortstr="已投标";
 			}elseif($list[$k]['product_sort']==2){
-				$sortstr="以签约";
+				$sortstr="已签约";
 			}elseif($list[$k]['product_sort']==3){
 				$sortstr="已完成";
 			}else{
@@ -295,8 +295,31 @@ class Order extends CI_Controller
 		$data["allpage"] = $allpage;
 		$data["gongsiv"] = $gongsi;
 		$data["id"] = $id;
-		$data["list"]= $this->order->getOrderToubiaoAll($page, $gongsi,$id);
+		$toubiao=0;
+		$list= $this->order->getOrderToubiaoAll($page, $gongsi,$id);
+        foreach ($list as $k=>$v){
+            if($v['order_state']==1){
+                $toubiao=$v['aftid'];
+                break; 
+            }
+        }
+        $data["toubiao"]=$toubiao;
+        $data["list"]=$list;
 		$this->display("order/order_bid_toubiao_list", $data);
+	}
+	
+		//查看所有投标企业的信息
+	public function order_bid_toubiao_edit()
+	{
+        $id = isset($_POST['id']) ? $_POST['id'] : 0;
+        $str = isset($_POST['str']) ? $_POST['str'] : 0;
+        
+        //$a=$this->order->order_bid_toubiao_edit($id,$str);
+		if ($this->order->order_bid_toubiao_edit($id,$str)) {
+			echo json_encode(array('success' => true, 'msg' => "选择完成"));
+		} else {
+			echo json_encode(array('success' => false, 'msg' => "选择失败"));
+		}
 	}
 
 	/**-----------------------------------签约订单显示管理-----------------------------------------------------*/
@@ -322,11 +345,11 @@ class Order extends CI_Controller
 
 			//获取项目进度
 			if($list[$k]['product_sort']==0){
-				$sortstr="以发布";
+				$sortstr="已发布";
 			}elseif($list[$k]['product_sort']==1){
-				$sortstr="以投标";
+				$sortstr="已投标";
 			}elseif($list[$k]['product_sort']==2){
-				$sortstr="以签约";
+				$sortstr="已签约";
 			}elseif($list[$k]['product_sort']==3){
 				$sortstr="已完成";
 			}else{

@@ -57,6 +57,7 @@
 							<th style="">账号(手机号)</th>
 							<th style="">地址</th>
 							<th style="">所属行业</th>
+							<th style="">等级</th>
 							<th style="">状态</th>
 							<th style="">注册时间</th>
 							<th style="">操作</th>
@@ -71,6 +72,7 @@
 									<td><?= $once['mobile'] ?></td>
 									<td><?= $once['company_address'] ?></td>
 									<td><?= $once['business_typenames'] ?></td>
+									<td><?= $once['grade'] ?></td>
 									<?php if ($status == 0) { ?>
 										<td style="color: green">注册供应商</td>
 									<?php } elseif($status == 1) { ?>

@@ -154,7 +154,7 @@ class Login extends CI_Controller
                 $business_type = '';
                 $business_typenames = '';
                 // 注册操作
-                $this->mini->register($identity,$openid,$mobile,$truename,$company_address,$company_name,$email,$sex,$business_typenames,$avater,$nickname,$token,$add_time,$audit_status,$business_license,$review_data,$business_type);
+                $a=$this->mini->register($identity,$openid,$mobile,$truename,$company_address,$company_name,$email,$sex,$business_typenames,$avater,$nickname,$token,$add_time,$audit_status,$business_license,$review_data,$business_type);
                 $member_newinfo = $this->mini->getMemberInfomobile($mobile,$identity);
                 $member_newinfo['session_key'] = $resultnew['session_key'];
                 $liulanliangold = $this->mini->getsettinginfo();

@@ -61,23 +61,25 @@ class Member extends CI_Controller
 			return;
 		}
 		$sort=$_POST["sort"];
-		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : ' ';
-		$user = !empty($_POST["user"]) ? $_POST["user"] : ' ';
-		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : ' ';
-		$address = !empty($_POST["address"]) ? $_POST["address"] : ' ';
-		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : ' ';
-		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
+		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : '';
+		$user = !empty($_POST["user"]) ? $_POST["user"] : '';
+		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : '';
+		$address = !empty($_POST["address"]) ? $_POST["address"] : '';
+		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : '';
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : '';
 		//获取分类名称
 		$type = isset($_POST["type"]) ? $_POST["type"] : '';
+		$grade = $_POST["grade"];
+		
 		$typenames="";
 		if($type){
 			foreach ($type as $num => $once) {
 				$typename= $this->member->getProclassName($once);
-				$typenames=$typenames.",".$typename['industry_class_name'];
+				$typenames=$typenames.",".$typename;
 			}
+			$type =implode($type,",");
 		}
 		$typenames=substr($typenames,1);
-		$type =implode($type,",");
 		$status = $_POST["status"];
 		$add_time = time();
 
@@ -91,7 +93,8 @@ class Member extends CI_Controller
 			return;
 		}
 
-		$result = $this->member->Gongyingshang_save($sort,$gongsi,$user,$tel,$address,$mail,$gimg,$type,$typenames,$status,$add_time);
+		$result = $this->member->Gongyingshang_save($sort,$gongsi,$user,$tel,$address,$mail,$gimg,$type,$typenames,$status,$add_time,$grade);
+
 
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
@@ -151,6 +154,7 @@ class Member extends CI_Controller
 		$data['type'] = explode(",",$member_info['business_type']);
 		$data['status'] = $member_info['audit_status'];
 		$data['sort'] = $member_info['identity'];
+		$data['grade'] = $member_info['grade'];
 		$data["list"] = $this->member->getProclassAll();
 		$this->display("member/gongyingshang_edit", $data);
 	}
@@ -168,13 +172,16 @@ class Member extends CI_Controller
 		$id=$_POST["id"];
 		$sort=$_POST["sort"];
 		$tels =$_POST["tels"];
-		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : ' ';
-		$user = !empty($_POST["user"]) ? $_POST["user"] : ' ';
-		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : ' ';
-		$address = !empty($_POST["address"]) ? $_POST["address"] : ' ';
-		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : ' ';
-		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
+		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : '';
+		$user = !empty($_POST["user"]) ? $_POST["user"] : '';
+		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : '';
+		$address = !empty($_POST["address"]) ? $_POST["address"] : '';
+		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : '';
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : '';
 		$type = isset($_POST["type"]) ? $_POST["type"] : '';
+		$status = $_POST["status"];
+		$grade = $_POST["grade"];
+
 		//获取分类名称
 		$typenames="";
 		if($type){
@@ -182,17 +189,15 @@ class Member extends CI_Controller
 				$typename= $this->member->getProclassName($once);
 				$typenames=$typenames.",".$typename;
 			}
+			$type =implode($type,",");
 		}
-		
-		$type =implode($type,",");
-		$status = $_POST["status"];
 		$typenames=substr($typenames,1);
 
 		if (empty($gongsi) || empty($user) || empty($tel)) {
 			echo json_encode(array('error' => false, 'msg' => "请填写公司名或联系人姓名或手机！"));
 			return;
 		}
-
+		
 		if($tels<>$tel){
 			$gongsi_info = $this->member->getGongsiName($tel,$sort);
 			if ($gongsi_info) {
@@ -201,7 +206,7 @@ class Member extends CI_Controller
 			}
 		}
 
-		$result = $this->member->Gongyingshang_save_edit($id,$gongsi,$user,$tel,$address,$mail,$gimg,$type,$typenames,$status);
+		$result = $this->member->Gongyingshang_save_edit($id,$gongsi,$user,$tel,$address,$mail,$type,$typenames,$status,$grade);
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
 		} else {
@@ -273,12 +278,12 @@ class Member extends CI_Controller
 			return;
 		}
 
-		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : ' ';
-		$user = !empty($_POST["user"]) ? $_POST["user"] : ' ';
-		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : ' ';
-		$address = !empty($_POST["address"]) ? $_POST["address"] : ' ';
-		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : ' ';
-		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
+		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : '';
+		$user = !empty($_POST["user"]) ? $_POST["user"] : '';
+		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : '';
+		$address = !empty($_POST["address"]) ? $_POST["address"] : '';
+		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : '';
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : '';
 		$add_time = time();
 
 		if (empty($gongsi) || empty($user) || empty($tel)) {
@@ -333,12 +338,12 @@ class Member extends CI_Controller
 
 		$id=$_POST["id"];
 		$tels =$_POST["tels"];
-		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : ' ';
-		$user = !empty($_POST["user"]) ? $_POST["user"] : ' ';
-		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : ' ';
-		$address = !empty($_POST["address"]) ? $_POST["address"] : ' ';
-		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : ' ';
-		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
+		$gongsi = !empty($_POST["gongsi"]) ? $_POST["gongsi"] : '';
+		$user = !empty($_POST["user"]) ? $_POST["user"] : '';
+		$tel = !empty($_POST["tel"]) ? $_POST["tel"] : '';
+		$address = !empty($_POST["address"]) ? $_POST["address"] : '';
+		$mail = !empty($_POST["mail"]) ? $_POST["mail"] : '';
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : '';
 		$status = $_POST["status"];
 
 		if (empty($gongsi) || empty($user) || empty($tel)) {

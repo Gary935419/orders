@@ -65,7 +65,7 @@ class Users extends CI_Controller
             echo json_encode(array('error' => true, 'msg' => "该账号已经存在。"));
             return;
         }
-        $result = $this->users->member_save($user_name, $user_pass, $rid, $user_state, $add_time,$_POST["user_pass"]);
+        $result = $this->users->member_save($user_name, $user_pass, $rid, $user_state, $add_time);
         if ($result) {
             echo json_encode(array('success' => true, 'msg' => "操作成功。"));
         } else {

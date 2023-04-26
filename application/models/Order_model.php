@@ -85,7 +85,7 @@ class Order_model extends CI_Model
 		$sql = "INSERT INTO `product_release` 
 				(mid,product_class_name,product_name,quantity_purchased,purchasing_time,
 				end_time,product_caddress,product_jaddress,product_zmoney,product_specification1,
-				product_specification2,product_specification3,add_time,audit_status,product_sort,product_desc) 
+				product_specification2,product_specification3,add_time,audit_status,product_sort,product_description) 
 				VALUES
 				($username,$proclass,$productname,$productnum,$gettime,
 				$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,
@@ -129,7 +129,7 @@ class Order_model extends CI_Model
 		$sql = "UPDATE `product_release` SET 
 				mid=$username,product_class_name=$proclass,product_name=$productname,quantity_purchased=$productnum,purchasing_time=$gettime,  
 				end_time=$stoptime,product_caddress=$caddress,product_jaddress=$jaddress,product_zmoney=$zmoney,product_specification1=$pdfurl1,
-				product_specification2=$pdfurl2,product_specification3=$pdfurl3,add_time=$datetime,product_desc=$desc
+				product_specification2=$pdfurl2,product_specification3=$pdfurl3,add_time=$datetime,product_description=$desc
 				WHERE prid = $id";
 		//return $sql;
 		return $this->db->query($sql);
@@ -218,6 +218,17 @@ class Order_model extends CI_Model
 		$sql = "SELECT a.*,p.product_name FROM `application_orders` a,`product_release` p where a.prid=$id and a.prid = p.prid" . $sqlw . " order by a.aftid desc LIMIT $start, $stop";
 		return $this->db->query($sql)->result_array();
 	}
+	
+	//选定投标企业
+	public function order_bid_toubiao_edit($id,$str)
+	{
+		$id = $this->db->escape($id);
+		$str = $this->db->escape($str);
+		$sql = "UPDATE `application_orders` SET  order_state=$str WHERE aftid = $id";
+	    //return $sql;
+		return $this->db->query($sql);
+	}
+
 
 	//----------------------------中标订单列表-------------------------------------
 

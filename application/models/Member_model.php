@@ -73,7 +73,7 @@ class Member_model extends CI_Model
 	}
 
 	//会員save
-	public function Gongyingshang_save($sort,$gongsi,$user,$tel,$address,$mail,$gimg,$type,$typenames,$status,$add_time)
+	public function Gongyingshang_save($sort,$gongsi,$user,$tel,$address,$mail,$gimg,$type,$typenames,$status,$add_time,$grade)
 	{
 		$data = array(
 			'audit_status'=>$status,
@@ -86,9 +86,12 @@ class Member_model extends CI_Model
 			'mobile'=>$tel,
 			'email'=>$mail,
 			'identity'=>$sort,
-			'truename'=>$user
+			'truename'=>$user,
+			'grade'=>$grade
 		);
+		
 		return $this->db->insert('member',$data);
+		//return $this->db->last_query();
 	}
 
 	//会員信息获取
@@ -100,22 +103,23 @@ class Member_model extends CI_Model
 	}
 
 	//会員update
-	public function Gongyingshang_save_edit($id,$gongsi,$user,$tel,$address,$mail,$gimg,$type,$typenames,$status)
+	public function Gongyingshang_save_edit($id,$gongsi,$user,$tel,$address,$mail,$type,$typenames,$status,$grade)
 	{
-		$id = $this->db->escape($id);
-		$gongsi = $this->db->escape($gongsi);
-		$user = $this->db->escape($user);
-		$tel = $this->db->escape($tel);
-		$address = $this->db->escape($address);
-		$mail = $this->db->escape($mail);
-		$gimg = $this->db->escape($gimg);
-		$type = $this->db->escape($type);
-		$typenames = $this->db->escape($typenames);
-		$status = $this->db->escape($status);
 
-		$sql = "UPDATE `member`  SET business_license=$gimg,business_type=$type,business_typenames=$typenames,company_name=$gongsi,company_address=$address,mobile=$tel,email=$mail,audit_status=$status,truename=$user where mid=$id";
-				//return $sql;
-		return $this->db->query($sql);
+		$data = array(
+			'audit_status'=>$status,
+			'business_type'=>$type,
+			'business_typenames'=>$typenames,
+			'company_name'=>$gongsi,
+			'company_address'=>$address,
+			'mobile'=>$tel,
+			'email'=>$mail,
+			'truename'=>$user,
+			'grade'=>$grade
+		);
+
+        return $this->db->update('member',$data,array('mid'=>$id));
+        //return $this->db->last_query();
 	}
 
 

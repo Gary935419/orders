@@ -70,129 +70,148 @@
 </div>
 
 <script>
-	layui.use('upload', function(){
-		var $ = layui.jquery
-			,upload = layui.upload;
-
-		//普通图片上传
-		var uploadInst = upload.render({
-			elem: '#upload1'
-			,url: '<?= RUN . '/upload/pushFIle' ?>'
-			,before: function(obj){
-				//预读本地文件示例，不支持ie8
-				obj.preview(function(index, file, result){
-					$('#gimgimg').attr('src', result); //图片链接（base64）
-					var img = document.getElementById("gimgimg");
-					img.style.display="block";
-				});
-			}
-			,done: function(res){
-				if(res.code == 200){
-					$('#gimg').val(res.src); //图片链接（base64）
-					return layer.msg('上传成功');
-				}else {
-					return layer.msg('上传失败');
-				}
-			}
-			,error: function(){
-				//演示失败状态，并实现重传
-				var demoText = $('#demoText');
-				demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-				demoText.find('.demo-reload').on('click', function(){
-					uploadInst.upload();
-				});
-			}
-		});
-		//多图片上传
-		upload.render({
-			elem: '#uploads'
-			,url: '<?= RUN . '/upload/pushFIle' ?>'
-			,multiple: true
-			,before: function(obj){
-				//预读本地文件示例，不支持ie8
-				var timestamp = (new Date()).valueOf();
-				obj.preview(function(index, file, result){
-					$('#imgnew').append('<img id="avaterimg'+ timestamp +'" style="width:100px;height:100px;" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img"><p id="avaterimgp'+ timestamp +'" style="margin-top: -70px;margin-left: -43px;" class="layui-btn layui-btn-xs layui-btn-danger demo-delete" onclick="jusp('+ timestamp +')">删除</p>')
-				});
-			}
-			,done: function(res){
-				//上传完毕
-				if(res.code == 200){
-					var timestamp = (new Date()).valueOf();
-					$('#newinp').append('<input type="hidden" name="avater[]" id="avater'+ timestamp +'" value="'+ res.src +'">')
-					return layer.msg('上传成功');
-				}else {
-					return layer.msg('上传失败');
-				}
-			}
-		});
-	});
-	function jusp(index) {
-		$("#avater"+index).remove();
-		$("#avaterimg"+index).remove();
-		$("#avaterimgp"+index).remove();
-	}
+layui.use(['laydate', 'form'],
+        function() {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#starttime' //指定元素
+            });
+        });
 </script>
 <script>
-	layui.use(['form','layedit', 'layer'],
-		function () {
-			var form = layui.form,
-				layer = layui.layer;
-			var layedit = layui.layedit;
-			layedit.set({
-				uploadImage: {
-					url: '<?= RUN . '/upload/pushFIletextarea' ?>',
-					type: 'post',
-				}
-			});
-	
-			//自定义验证规则
-			form.verify({
-				title: function (value) {
-					if ($('#title').val() == "") {
-						return '请输入信息名称';
-					}
-				},
-				gcontent: function(value) {
-					// 将富文本编辑器的值同步到之前的textarea中
-					title.sync(editIndex1);
-					if ($('#gcontent').val() == "") {
-						return '请输入内容信息。';
-					}
-				},
-			});
+    layui.use('upload', function(){
+        var $ = layui.jquery
+            ,upload = layui.upload;
 
-			$("#tab").validate({
-				submitHandler: function (form) {
-					$.ajax({
-						cache: true,
-						type: "POST",
-						url: "<?= RUN . '/news/news_save' ?>",
-						data: $('#tab').serialize(),//
-						async: false,
-						error: function (request) {
-							alert("error");
-						},
-						success: function (data) {
-							var data = eval("(" + data + ")");
-							if (data.success) {
-								layer.msg(data.msg);
-								setTimeout(function () {
-									cancel();
-								}, 2000);
-							} else {
-								layer.msg(data.msg);
-							}
-						}
-					});
-				}
-			});
-		});
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#upload1'
+            ,url: '<?= RUN . '/upload/pushFIle' ?>'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#gimgimg').attr('src', result); //图片链接（base64）
+                    var img = document.getElementById("gimgimg");
+                    img.style.display="block";
+                });
+            }
+            ,done: function(res){
+                if(res.code == 200){
+                    $('#gimg').val(res.src); //图片链接（base64）
+                    return layer.msg('上传成功');
+                }else {
+                    return layer.msg('上传失败');
+                }
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+        //多图片上传
+        upload.render({
+            elem: '#uploads'
+            ,url: '<?= RUN . '/upload/pushFIle' ?>'
+            ,multiple: true
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                var timestamp = (new Date()).valueOf();
+                obj.preview(function(index, file, result){
+                    $('#imgnew').append('<img id="avaterimg'+ timestamp +'" style="width:100px;height:100px;" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img"><p id="avaterimgp'+ timestamp +'" style="margin-top: -70px;margin-left: -43px;" class="layui-btn layui-btn-xs layui-btn-danger demo-delete" onclick="jusp('+ timestamp +')">删除</p>')
+                });
+            }
+            ,done: function(res){
+                //上传完毕
+                if(res.code == 200){
+                    var timestamp = (new Date()).valueOf();
+                    $('#newinp').append('<input type="hidden" name="avater[]" id="avater'+ timestamp +'" value="'+ res.src +'">')
+                    return layer.msg('上传成功');
+                }else {
+                    return layer.msg('上传失败');
+                }
+            }
+        });
+    });
+    function jusp(index) {
+        $("#avater"+index).remove();
+        $("#avaterimg"+index).remove();
+        $("#avaterimgp"+index).remove();
+    }
+</script>
+<script>
+    layui.use(['form','layedit', 'layer'],
+        function () {
+            var form = layui.form,
+                layer = layui.layer;
+            var layedit = layui.layedit;
+            layedit.set({
+                uploadImage: {
+                    url: '<?= RUN . '/upload/pushFIletextarea' ?>',
+                    type: 'post',
+                }
+            });
+            var editIndex1 = layedit.build('gcontent', {
+                height: 300,
+            });
+            //自定义验证规则
+            form.verify({
+                gname: function (value) {
+                    if ($('#gname').val() == "") {
+                        return '请输入资讯名称。';
+                    }
+                },
 
-	function cancel() {
-		//关闭当前frame
-		xadmin.close();
-	}
+
+                gimg: function (value) {
+                    if ($('#gimg').val() == "") {
+                        return '请上传资讯列表图。';
+                    }
+                },
+                gcontent: function(value) {
+                    // 将富文本编辑器的值同步到之前的textarea中
+                    layedit.sync(editIndex1);
+                    if ($('#gcontent').val() == "") {
+                        return '请输入资讯简介。';
+                    }
+                },
+            });
+
+            $("#tab").validate({
+                submitHandler: function (form) {
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: "<?= RUN . '/goods/goods_save_zi' ?>",
+                        data: $('#tab').serialize(),
+                        async: false,
+                        error: function (request) {
+                            alert("error");
+                        },
+                        success: function (data) {
+                            var data = eval("(" + data + ")");
+                            if (data.success) {
+                                layer.msg(data.msg);
+                                setTimeout(function () {
+                                    cancel();
+                                }, 2000);
+                            } else {
+                                layer.msg(data.msg);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+    function cancel() {
+        //关闭当前frame
+        xadmin.close();
+    }
 </script>
 </body>
 </html>

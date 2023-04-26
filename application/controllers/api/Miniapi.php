@@ -69,8 +69,8 @@ class Miniapi extends CI_Controller
 
         $page = isset($_POST["page"]) ? $_POST["page"] : 1;
         $keyword = isset($_POST["keyword"]) ? $_POST["keyword"] : '';
-        $orderlist = $this->mini->fabu_list($page,time(),$keyword);
-        //$this->back_json(200, '操作成功', $orderlist);return;
+        $pagecount = isset($_POST["pagecount"]) ? $_POST["pagecount"] : '';
+        $orderlist = $this->mini->fabu_list($page,time(),$keyword,$pagecount);
         foreach ($orderlist as $k=>$v){
             $orderlist[$k]['add_time'] = empty($v['add_time'])?'':date('Y-m-d H:i:s',$v['add_time']);
             $orderlist[$k]['end_time']=empty($v['end_time'])?'':date('Y-m-d',$v['end_time']);
@@ -98,6 +98,7 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['token']) || empty($_POST['token'])) {
             $this->back_json(205, '请您先去授权登录！');
         }
+        $identity = $_POST['identity'];
         $token = $_POST['token'];
         $member = $this->mini->getMemberInfotoken($token);
         if (empty($member)){
@@ -129,10 +130,14 @@ class Miniapi extends CI_Controller
         }
         
         //获取投标人信息
-        $token = $_POST['token'];
-        $userlist=  $this->mini->getMemberInfotoken($token);
-        $userid=$userlist['mid'];
-        $data['toubiao'] = $this->mini->selectapplicationorders($prid,$userid);
+        if($identity==0){
+            $userid=$goodsdetails['product_signmemberid'];
+        }else{
+            $userid=$member['mid'];
+        }
+        
+        $data['toubiao'] = $this->mini->selectapplicationorders($prid,$userid); 
+                
         
         //获取发货信息
         $fahuolist = $this->mini->delivery_list($prid); 
@@ -364,6 +369,7 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['token']) || empty($_POST['token'])) {
             $this->back_json(205, '请您先去授权登录！');
         }
+        $aftid = $_POST['aftid'];
         $token = $_POST['token'];
         $member = $this->mini->getMemberInfotoken($token);
         if (empty($member)){
@@ -382,6 +388,7 @@ class Miniapi extends CI_Controller
 //        }
         $delivery_time = empty($_POST['delivery_time'])?'':$_POST['delivery_time'];
         $excel_url = empty($_POST['excel_url'])?'':$_POST['excel_url'];
+        $pdf_url = empty($_POST['pdf_url'])?'':$_POST['pdf_url'];
         $contact_tel = empty($_POST['contact_tel'])?'':$_POST['contact_tel'];
         $description = empty($_POST['description'])?'':$_POST['description'];
         $bidding_cost = empty($_POST['bidding_cost'])?'':$_POST['bidding_cost'];
@@ -389,9 +396,10 @@ class Miniapi extends CI_Controller
         $company_name = empty($_POST['company_name'])?'':$_POST['company_name'];;
         $order_state = 0;
         $add_time = time();
-        $this->mini->supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time);
-        $this->mini->supplier_product_release_edit($prid);
-
+        $a=$this->mini->supplier_bid_save($delivery_time,$excel_url,$mid,$contact_tel,$description,$bidding_cost,$bidder,$company_name,$prid,$order_state,$add_time,$aftid,$pdf_url);
+        if(!$aftid){
+            $this->mini->supplier_product_release_edit($prid);
+        }
         $this->back_json(200, '操作成功', array());
     }
     //用户和供应商订单list
@@ -920,4 +928,60 @@ class Miniapi extends CI_Controller
         $this->mini->modify_is_receipt_invoice($prid,$is_receipt_invoice);
         $this->back_json(200, '操作成功', array());
     }
+    
+    //获取用户报价信息
+    public function select_baojia(){
+        $prid = $_POST['prid'];
+        $aftid = $_POST['aftid'];
+        $data=$this->mini->select_baojia($prid,$aftid);
+        $this->back_json(200, '操作成功', $data);
+    }
+
+
+    //获取异常信息
+    public function select_abnormal(){
+        $prid = $_POST['prid'];
+        $data=$this->mini->select_abnormal($prid);
+        $data['error_addtime']=date('Y-m-d',$data['error_addtime']);
+        $this->back_json(200, '操作成功',$data);
+    }  
+    
+        //获取评价信息
+    public function select_commentlist(){
+        $token = $_POST['token'];
+        $identity = $_POST['identity'];
+        $pagenum = $_POST['pagenum'];
+        $size =$_POST['size'];;
+        $commentlist=$this->mini->select_commentlist($token,$identity,$pagenum,$size);
+        foreach ($commentlist as $key=>$value){
+            if($value['gongyingshang_addtime']){
+                $commentlist[$key]['gongyingshang_addtime']=date('Y-m-d',$value['gongyingshang_addtime']);    
+            }
+            if($value['kehu_addtime']){
+                $commentlist[$key]['kehu_addtime']=date('Y-m-d',$value['kehu_addtime']);                    
+            }
+            
+            $prid=$commentlist[$key]['prid'];
+            $proname=$this->mini->fabu_xiangqing($prid);
+            $commentlist[$key]['proname']=$proname['product_name'];
+        }
+        $data['list'] = $commentlist;
+        $this->back_json(200, '操作成功',$data);
+    }  
+    
+        //新闻信息
+    public function select_industrynews(){
+        if (!isset($_POST['token']) || empty($_POST['token'])) {
+            $this->back_json(205, '请您先去授权登录！');
+        }
+        $id = $_POST['id'];
+        $token = $_POST['token'];
+        $member = $this->mini->getMemberInfotoken($token);
+        if (empty($member)){
+            $this->back_json(205, '请您先去授权登录！');
+        }
+        $data['setarr'] = $this->mini->getindustrynews($id);
+        $this->back_json(200, '操作成功', $data);
+    }
+
 }

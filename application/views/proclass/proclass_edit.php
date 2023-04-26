@@ -59,6 +59,7 @@
 				</div>
 			</div>
 			<input type="hidden" name="uid" id="uid" value="<?php echo $id ?>">
+			<input type="hidden" name="namev" id="namev" value="<?php echo $name ?>">
 			<div class="layui-form-item">
 				<label for="L_repass" class="layui-form-label" style="width: 45%;">
 				</label>

@@ -41,10 +41,12 @@
 						</div>
 					</form>
 				</div>
+				<? if($status==0){?>
 				<button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;"
 						onclick="xadmin.open('添加','<?= RUN . '/order/order_add/'.$status ?>')"><i
 							class="layui-icon"></i>添加
 				</button>
+				<? }?>
 				<div class="layui-card-body ">
 					<table class="layui-table layui-form">
 						<thead>

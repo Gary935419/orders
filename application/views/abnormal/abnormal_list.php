@@ -58,8 +58,8 @@
 								<tr id="p<?= $once['enid'] ?>" sid="<?= $once['enid'] ?>">
 									<td><?= $num + 1 ?></td>
 									<td><?= $once['enid'] ?></td>
-									<td><?= $once['error_desc'] ?></td>
-									<td><?= date("Y-m-d",$once['error_addtime']) ?></td>
+									<td><?= $once['error_title'] ?></td>
+									<td><?= date("Y-m-d",$once['error_time']) ?></td>
 									<td><?=$once['num'];?>次</td>
 									<td class="td-manage">
 										<button class="layui-btn layui-btn-normal"

@@ -101,9 +101,9 @@ class Proclass extends CI_Controller
 		$data['ridlist'] = $ridlist;
 		$member_info = $this->proclass->getProClassEdit($uid);
 		$data['id'] = $uid;
-		$data['name'] = $member_info['industry_class_name'];
-		$data['desc'] = $member_info['industry_class_desc'];
-		$data['gimg'] = $member_info['industry_class_img'];
+		$data['name'] = $member_info['product_class_name'];
+		$data['desc'] = $member_info['product_desc'];
+		$data['gimg'] = $member_info['product_woimg'];
 		$this->display("proclass/proclass_edit", $data);
 	}
 
@@ -119,6 +119,7 @@ class Proclass extends CI_Controller
 		}
 		$uid = !empty($_POST["uid"]) ? $_POST["uid"] : ' ';
 		$name = !empty($_POST["name"]) ? $_POST["name"] : ' ';
+		$namev = !empty($_POST["namev"]) ? $_POST["namev"] : ' ';
 		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : ' ';
 		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
 		$datetime = time();
@@ -126,11 +127,14 @@ class Proclass extends CI_Controller
 			echo json_encode(array('error' => false, 'msg' => "请填写分类名称！"));
 			return;
 		}
-		$proclass_info = $this->proclass->getProClassName($name);
-		if ($proclass_info) {
-			echo json_encode(array('error' => true, 'msg' => "该分类名称已经存在,不能重复添加。"));
-			return;
-		}
+		
+		if(!$name==$namev){
+    		$proclass_info = $this->proclass->getProClassName($name);
+    		if ($proclass_info) {
+    			echo json_encode(array('error' => true, 'msg' => "该分类名称已经存在,不能重复添加。"));
+    			return;
+    		}
+	    }
 		$result = $this->proclass->proclass_save_edit($uid,$name,$gimg,$desc,$datetime);
 
 		if ($result) {

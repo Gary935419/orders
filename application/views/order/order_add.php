@@ -128,7 +128,7 @@
 					<span class="x-red"></span>说明文件2（pdf）：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<button type="button" class="layui-btn" id="upload1">上传文件</button> &nbsp;&nbsp;
+					<button type="button" class="layui-btn" id="upload2">上传文件</button> &nbsp;&nbsp;
 					<input type="text" readonly id="pdfurl2" name="pdfurl2" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M">
 				</div>
 			</div>
@@ -137,7 +137,7 @@
 					<span class="x-red"></span>说明文件3（pdf）：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<button type="button" class="layui-btn" id="upload1">上传文件</button> &nbsp;&nbsp;
+					<button type="button" class="layui-btn" id="upload3">上传文件</button> &nbsp;&nbsp;
 					<input type="text" readonly id="pdfurl3" name="pdfurl3" autocomplete="off" class="textpdf" placeholder="文件大小不能超过10M">
 				</div>
 			</div>
@@ -259,6 +259,46 @@
 				}
 			}
 		});
+        upload.render({ //允许上传的文件后缀
+            elem: '#upload2'
+            ,url: '<?= RUN . '/upload/pushFIlePdf' ?>'
+            ,accept: 'file' //普通文件
+            ,exts: 'pdf' //只允许上传压缩文件
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                console.log(res)
+                if(res.code == 200){
+                    console.log(res.src)
+                    $('#pdfurl2').val(res.src);
+                    return layer.msg('上传成功');
+                }else {
+                    return layer.msg('上传失败');
+                }
+            }
+        });
+        upload.render({ //允许上传的文件后缀
+            elem: '#upload3'
+            ,url: '<?= RUN . '/upload/pushFIlePdf' ?>'
+            ,accept: 'file' //普通文件
+            ,exts: 'pdf' //只允许上传压缩文件
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                console.log(res)
+                if(res.code == 200){
+                    console.log(res.src)
+                    $('#pdfurl3').val(res.src);
+                    return layer.msg('上传成功');
+                }else {
+                    return layer.msg('上传失败');
+                }
+            }
+        });
 		upload.render({
 			elem: '#test5'
 			,url: '/upload/'

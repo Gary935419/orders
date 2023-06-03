@@ -26,7 +26,7 @@
 		<div class="layui-col-md12">
 			<div class="layui-card">
 				<div class="layui-card-body ">
-					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/member/gongyingshang_list/1/'.$status ?>">
+					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/member/gongyingshang_list/1/'.$status.'/0' ?>">
 						<div class="layui-inline layui-show-xs-block">
 							<input type="text" name="gongsi" id="gongsi" value="<?php echo $gongsiv ?>"
 								   placeholder="公司名" autocomplete="off" class="layui-input">
@@ -66,7 +66,7 @@
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['mid'] ?>" sid="<?= $once['mid'] ?>">
-									<td><?= $num + 1 ?></td>
+									<td><?= ($page-1)*10+$num+1 ?></td>
 									<td><?= $once['company_name'] ?></td>
 									<td><?= $once['truename'] ?></td>
 									<td><?= $once['mobile'] ?></td>
@@ -87,7 +87,7 @@
 									<td><?=date("Y-m-d",$once['add_time']) ?></td>
 									<td class="td-manage">
 										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/member/gongyingshang_edit?id=' ?>'+<?= $once['mid'] ?>,900,800)">
+												onclick="xadmin.open('编辑','<?= RUN . '/member/gongyingshang_edit?id=' ?>'+<?= $once['mid'] ?>,900,500)">
 											<i class="layui-icon">&#xe642;</i>编辑
 										</button>
 										<?php if($once['audit_status']==1){?>

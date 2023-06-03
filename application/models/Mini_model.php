@@ -116,13 +116,14 @@ class Mini_model extends CI_Model
         $sql = "SELECT * FROM `industry_news` where inid=$inid ";
         return $this->db->query($sql)->row_array();
     }
-    public function fabu_list($pg,$date,$keyword,$pagecount)
+    public function fabu_list($pg,$date,$keyword,$pagecount,$businesstype)
     {
         $sqlw = " 1=1 and u.audit_status=1 and u.product_sort<2";
         if (!empty($date)) {
             $date = $this->db->escape($date);
             $sqlw .= " and u.end_time >=" . $date;
         }
+
         if (!empty($keyword)) {
             $sqlw.=" and (u.product_name like '%".$keyword."%' or u.product_class_name like '%".$keyword."%' ) ";
         }
@@ -159,8 +160,10 @@ class Mini_model extends CI_Model
     }
     
     
-    public function product_release_add_save($product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name)
+    public function product_release_add_save($pid1,$pid2,$product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name)
     {
+        $pid1 = $this->db->escape($pid1);
+        $pid2 = $this->db->escape($pid2);
         $mid = $this->db->escape($mid);
         $add_time = $this->db->escape($add_time);
         $audit_status = $this->db->escape($audit_status);
@@ -184,7 +187,7 @@ class Mini_model extends CI_Model
         $product_zmoney = $this->db->escape($product_zmoney);
         $product_jaddress = $this->db->escape($product_jaddress);
         $product_caddress = $this->db->escape($product_caddress);
-        $sql = "INSERT INTO `product_release` (product_sort,product_signtime,product_desc,product_zmoney,product_jaddress,product_caddress,mid,add_time,audit_status,company_name,contact_name,contact_tel,is_contact_person,product_specification1,product_specification2,product_specification3,product_description,end_time,purchasing_time,quantity_purchased,product_title,product_name,product_class_name) VALUES ($product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name)";
+        $sql = "INSERT INTO `product_release` (pid1,pid2,product_sort,product_signtime,product_desc,product_zmoney,product_jaddress,product_caddress,mid,add_time,audit_status,company_name,contact_name,contact_tel,is_contact_person,product_specification1,product_specification2,product_specification3,product_description,end_time,purchasing_time,quantity_purchased,product_title,product_name,product_class_name) VALUES ($pid1,$pid2,$product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name)";
         return $this->db->query($sql);
     }
 
@@ -791,5 +794,10 @@ class Mini_model extends CI_Model
         return $this->db->query($sql)->row_array();
     }
 
+    public function getProclasslist($id)
+    {
+        $sql = "SELECT * FROM `product_classification` where product_sort=$id";
+        return $this->db->query($sql)->result_array();
+    }
     
 }

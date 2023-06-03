@@ -53,7 +53,9 @@
 							<th>联系电话</th>
 							<th>报价查看</th>
 							<th>其他说明</th>
+							<? if($sort<2){?>
 							<th>选定供应商</th>
+							<? }?>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
@@ -66,11 +68,12 @@
 									<td><?= $once['bidding_cost'] ?></td>
 									<td><?= $once['delivery_time'] ?></td>
 									<td><?= $once['description'] ?></td>
-									<td><?if($once['order_state']==1){echo '已选定';}elseif($once['order_state']==3){echo '供应商取消';}else{echo '否';};?></td>
+									<td><?if($once['order_state']==1){echo '已选定';}elseif($once['order_state']==2){echo '已签约';}elseif($once['order_state']==3){echo '供应商取消';}else{echo '否';};?></td>
 									<td><?= $once['bidder'] ?></td>
 									<td><?= $once['contact_tel'] ?></td>
 									<td><a href="<?= $once['pdf_url'] ?>" download>下载</a></td>
 									<td><a href="<?= $once['excel_url'] ?>" download>下载</a></a></td>
+							<? if($sort<2){?>
 									<td class="td-manage">
 									    <? if($toubiao==0){?>
 										<button class="layui-btn layui-btn-danger"
@@ -82,6 +85,7 @@
 										</button>
 										<? }?>
 									</td>
+									<? }?>
 								</tr>
 							<?php endforeach; ?>
 						<?php } else { ?>

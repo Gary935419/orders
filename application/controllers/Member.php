@@ -25,6 +25,7 @@ class Member extends CI_Controller
 	 */
 	public function gongyingshang_list($sort,$status,$stop)
 	{
+
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$mobile = isset($_GET['mobile']) ? $_GET['mobile'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -46,7 +47,14 @@ class Member extends CI_Controller
 	 */
 	public function gongyingshang_add($sort)
 	{
-		$data["list"] = $this->member->getProclassAll();
+		$pids = $this->common->getProclasslist(0);
+		foreach($pids as $k =>$v){
+		    $pid2s=$this->common->getProclasslist($v['pid']);
+		    $pidlist[$k]['name']=$v['product_class_name'];
+		    $pidlist[$k]['pid2list']=$pid2s;		    
+		}
+		print_r($pidlist[0]['pid2list'][0]['pid']);
+		$data["list"]=$pidlist;
 		$data["sort"] = $sort;
 		$this->display("member/gongyingshang_add",$data);
 	}

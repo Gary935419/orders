@@ -13,9 +13,9 @@ class ProClass_model extends CI_Model
 	//----------------------------一级分类list列表-------------------------------------
 
 	//获取标签页数
-	public function getProclassAllPage($user_name)
+	public function getProclassAllPage($user_name,$sort)
 	{
-		$sqlw = " where 1=1 ";
+		$sqlw = " where product_sort=$sort ";
 		if (!empty($user_name)) {
 			$sqlw .= " and ( product_class_name like '%" . $user_name . "%' ) ";
 		}
@@ -25,9 +25,9 @@ class ProClass_model extends CI_Model
 	}
 
 	//获取标签信息
-	public function getProclassAll($pg, $user_name)
+	public function getProclassAll($pg, $user_name,$sort)
 	{
-		$sqlw = " where 1=1";
+		$sqlw = " where product_sort=$sort ";
 		if (!empty($user_name)) {
 			$sqlw .= " and ( product_class_name like '%" . $user_name . "%' ) ";
 		}
@@ -48,14 +48,15 @@ class ProClass_model extends CI_Model
 	}
 
 	//标签save
-	public function ProClass_save($name,$desc,$gimg,$datetime)
+	public function ProClass_save($name,$desc,$gimg,$datetime,$sort)
 	{
 		$name = $this->db->escape($name);
 		$desc = $this->db->escape($desc);
 		$gimg = $this->db->escape($gimg);
+				$sort = $this->db->escape($sort);
 		$datetime = $this->db->escape($datetime);
 
-		$sql = "INSERT INTO `product_classification` (product_class_name,product_woimg,product_desc,add_time) VALUES ($name,$gimg,$desc,$datetime)";
+		$sql = "INSERT INTO `product_classification` (product_class_name,product_woimg,product_desc,add_time,product_sort) VALUES ($name,$gimg,$desc,$datetime,$sort)";
 		//return $sql;
 		return $this->db->query($sql);
 	}
@@ -71,15 +72,16 @@ class ProClass_model extends CI_Model
 	}
 
 	//标签更新
-	public function proclass_save_edit($uid,$name,$gimg,$desc,$datetime)
+	public function proclass_save_edit($uid,$name,$gimg,$desc,$datetime,$sort)
 	{
 		$uid = $this->db->escape($uid);
 		$name = $this->db->escape($name);
 		$desc = $this->db->escape($desc);
 		$gimg = $this->db->escape($gimg);
+				$sort = $this->db->escape($sort);
 		$datetime = $this->db->escape($datetime);
 
-		$sql = "UPDATE `product_classification` SET product_class_name=$name,product_desc=$desc,product_woimg=$gimg,add_time=$datetime WHERE pid = $uid";
+		$sql = "UPDATE `product_classification` SET product_class_name=$name,product_desc=$desc,product_woimg=$gimg,add_time=$datetime,product_sort=$sort WHERE pid = $uid";
 		//return $sql;
 		return $this->db->query($sql);
 	}
@@ -105,6 +107,14 @@ class ProClass_model extends CI_Model
 	    $id = $this->db->escape($id);
 		$sql = "SELECT count(*) as number FROM `member`where identity=1 and find_in_set($id,business_type)";
 		return $this->db->query($sql)->row()->number;
+	}
+	
+		//获取各级分类信息
+	public function getProClassSort($id)
+	{
+	    $id = $this->db->escape($id);
+		$sql = "SELECT * FROM `product_classification` where product_sort = $id";
+		return $this->db->query($sql)->result_array();
 	}
 
 }

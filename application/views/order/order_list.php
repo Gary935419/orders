@@ -18,7 +18,7 @@
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a>
-              <cite>采购订单管理</cite></a>
+              <cite>已发布订单管理</cite></a>
           </span>
 </div>
 <div class="layui-fluid">
@@ -68,7 +68,7 @@
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['prid'] ?>" sid="<?= $once['prid'] ?>">
-									<td><?= $num + 1 ?></td>
+									<td><?= ($page-1)*10+$num + 1 ?></td>
 									<? if(!$status==1){?>
 											<? if($once['audit_status']==0){?>
 											<td>待审核</td>

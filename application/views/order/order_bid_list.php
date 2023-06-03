@@ -18,7 +18,7 @@
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a>
-              <cite>投标订单管理</cite></a>
+              <cite>已报价订单管理</cite></a>
           </span>
 </div>
 <div class="layui-fluid">
@@ -29,7 +29,7 @@
 					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/order/order_bid_list/'.$sort ?>">
 						<div class="layui-inline layui-show-xs-block">
 							<input type="text" name="gongsi" id="gongsi" value="<?php echo $gongsiv ?>"
-								   placeholder="投标项目名" autocomplete="off" class="layui-input">
+								   placeholder="报价项目名" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-input-inline layui-show-xs-block">
 							<input class="layui-input" placeholder="开始日期" value="<?php echo $start; ?>" name="start" id="start"></div>
@@ -46,21 +46,21 @@
 						<thead>
 						<tr>
 							<th>序号</th>
-							<th>发布时间</th>
+							<th width="80px">发布时间</th>
 							<th>订单状态</th>
 							<th>采购商品名称</th>
 							<th>所属分类</th>
 							<th>发布公司</th>
 							<th>采购数量</th>
-							<th>截止时间</th>
-							<th>投标数量</th>
+							<th width="80px">截止时间</th>
+							<th>报价数量</th>
 							<th>操作</th>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['prid'] ?>" sid="<?= $once['prid'] ?>">
-									<td><?= $num + 1 ?></td>
+									<td><?= ($page-1)*10+$num + 1 ?></td>
 									<td><?=date("Y-m-d",$once['add_time']) ?></td>
 									<td><?= $once['sortstr'] ?></td>
 									<td><?= $once['product_name'] ?></td>
@@ -76,7 +76,10 @@
 										</button>
 										<button class="layui-btn layui-btn-header"
 												onclick="xadmin.open('详情','<?= RUN . '/order/order_bid_toubiao_list/' ?>'+'<?= $once['prid'] ?>')">
-											查看投标单位
+											查看报价单位
+										</button>
+										<button class="layui-btn layui-btn-header" style="background-color:red; width:80px"
+	                                        onclick="order_bid_delete('<?= $once['prid'] ?>')"><i class="layui-icon">&#xe640;</i>订单作废
 										</button>
 									</td>
 
@@ -116,7 +119,7 @@
 			});
 </script>
 <script>
-	function order_update(id) {
+	function order_bid_delete(id) {
 		layer.confirm('您是否确认恢复订单？', {
 				title: '温馨提示',
 				btn: ['确认', '取消']
@@ -127,7 +130,7 @@
 					type: "post",
 					data: {"id": id},
 					dataType: "json",
-					url: "<?= RUN . '/order/order_del_update' ?>",
+					url: "<?= RUN . '/order/order_bid_delete' ?>",
 					success: function (data) {
 						if (data.success) {
 							$("#p" + id).remove();

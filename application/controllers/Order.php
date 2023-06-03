@@ -45,7 +45,7 @@ class Order extends CI_Controller
 			if($list[$k]['product_sort']==0){
 				$sortstr="已发布";
 			}elseif($list[$k]['product_sort']==1){
-				$sortstr="已投标";
+				$sortstr="已报价";
 			}elseif($list[$k]['product_sort']==2){
 				$sortstr="已签约";
 			}elseif($list[$k]['product_sort']==3){
@@ -54,6 +54,8 @@ class Order extends CI_Controller
 				$sortstr="异常订单";
 			}
 			$list[$k]['sortstr']=$sortstr;
+			$proclasslist = $this->common->getProclassName($v['pid2']);
+			$list[$k]['product_class_name'] = $proclasslist['product_class_name'];
 
 			//获取发布人
 			$prouserlist=$this->common->getKehuName($list[$k]['mid']);
@@ -88,10 +90,30 @@ class Order extends CI_Controller
 	public function order_add($status)
 	{
 		$data["userlist"] = $this->common->getKehuNamelist();
-		$data["proclasslist"] = $this->common->getProclassNamelist();
+		$data["proclasslist1"] = $this->common->getProclasslist(0);
+//		$data["proclasslist2"] = $this->common->getProclasslist(10);
+        $data["proclasslist2"] = array();
 		$data["status"] = $status;
 		$this->display("order/order_add", $data);
 	}
+
+    /**
+     * 获得二级分类
+     */
+    public function order_class_two()
+    {
+        if (empty($_SESSION['user_name'])) {
+            echo json_encode(array('error' => false, 'msg' => "无法添加数据"));
+            return;
+        }
+        $product_sort = !empty($_POST["product_sort"]) ? $_POST["product_sort"]:'';
+        $result = $this->common->getProclasslist($product_sort);
+        if ($result) {
+            echo json_encode(array('success' => true,'result' => $result,'msg' => "操作成功。"));
+        } else {
+            echo json_encode(array('error' => false,'result' => array(), 'msg' => "操作失败"));
+        }
+    }
 
 	/**
 	 * 订单添加提交
@@ -104,7 +126,8 @@ class Order extends CI_Controller
 		}
 
 		$username = !empty($_POST["username"]) ? $_POST["username"]:'';
-		$proclass = !empty($_POST["proclass"]) ? $_POST["proclass"]:'';
+		$proclass1 = !empty($_POST["proclass1"]) ? $_POST["proclass1"]:'';
+		$proclass2 = !empty($_POST["proclass2"]) ? $_POST["proclass2"]:'';
 		$productname = !empty($_POST["productname"]) ? $_POST["productname"]:'';
 
 		$productnum = !empty($_POST["productnum"]) ? $_POST["productnum"] : 0;
@@ -123,8 +146,15 @@ class Order extends CI_Controller
 
 		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : 0;
 		$datetime = time();
+		
+		$companys = $this->order->getMemberCompnay($username);
+		
+		$companyname = $companys['company_name'];
+		$truename = $companys['truename'];
+		$mobile=$companys['mobile'];
 
-		$result = $this->order->order_save($username,$proclass,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc);
+		$result = $this->order->order_save($username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$companyname,$truename,$mobile);
+		//echo json_encode(array('success' => true, 'msg' => $result));
 
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
@@ -145,6 +175,8 @@ class Order extends CI_Controller
 		$data['orderlsit']= $this->order->getOrderEdit($uid);
 		$data["userlist"] = $this->common->getKehuNamelist();
 		$data["proclasslist"] = $this->common->getProclassNamelist();
+        $data["proclasslist1"] = $this->common->getProclasslist(0);
+        $data["proclasslist2"] = $this->common->getProclasslist($data['orderlsit']['pid1']);
 		$data['id'] = $uid;
 		$this->display("order/order_edit", $data);
 	}
@@ -162,7 +194,8 @@ class Order extends CI_Controller
 		}
 		$id=$_POST['uid'];
 		$username = !empty($_POST["username"]) ? $_POST["username"] : '';
-		$proclass = !empty($_POST["proclass"]) ? $_POST["proclass"] : '';
+        $proclass2 = !empty($_POST["proclass2"]) ? $_POST["proclass2"] : '';
+        $proclass1 = !empty($_POST["proclass1"]) ? $_POST["proclass1"] : '';
 		$productname = !empty($_POST["productname"]) ? $_POST["productname"] : '';
 
 		$productnum = !empty($_POST["productnum"]) ? $_POST["productnum"] : 0;
@@ -181,7 +214,7 @@ class Order extends CI_Controller
 		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : 0;
 		$datetime = time();
 
-		$result = $this->order->order_update($id,$username,$proclass,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc);
+		$result = $this->order->order_update($id,$username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc);
 
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
@@ -202,6 +235,20 @@ class Order extends CI_Controller
 			echo json_encode(array('success' => false, 'msg' => "删除失败"));
 		}
 	}
+	
+		/**
+	 *订单删除显示
+	 */
+	public function order_sign_error()
+	{
+		$id = isset($_POST['id']) ? $_POST['id'] : 0;
+		if ($this->order->order_sign_error($id)) {
+			echo json_encode(array('success' => true, 'msg' => "删除成功"));
+		} else {
+			echo json_encode(array('success' => false, 'msg' => "删除失败"));
+		}
+	}
+
 
 	/**
 	 *订单审核显示
@@ -236,14 +283,14 @@ class Order extends CI_Controller
 		$list = $this->order->getOrderBidAll($page, $gongsi,$sort,$start,$end);
 		foreach ($list as $k=>$v){
 			//获取项目分类
-			//$proclasslist=$this->common->getProclassName($list[$k]['product_class_name']);
-			//$list[$k]['proclassname']=$proclasslist['product_class_name'];
+			$proclasslist = $this->common->getProclassName($v['pid2']);
+			$list[$k]['product_class_name'] = $proclasslist['product_class_name'];
 
 			//获取项目进度
 			if($list[$k]['product_sort']==0){
 				$sortstr="已发布";
 			}elseif($list[$k]['product_sort']==1){
-				$sortstr="已投标";
+				$sortstr="已报价";
 			}elseif($list[$k]['product_sort']==2){
 				$sortstr="已签约";
 			}elseif($list[$k]['product_sort']==3){
@@ -276,7 +323,7 @@ class Order extends CI_Controller
 		}else{
 			$data["end"] =$end;
 		}
-
+  
 		$data["sort"]=$sort;
 		$data["list"]=$list;
 		$data["gongsiv"] = $gongsi;
@@ -300,13 +347,37 @@ class Order extends CI_Controller
         foreach ($list as $k=>$v){
             if($v['order_state']==1){
                 $toubiao=$v['aftid'];
+                $sort=$v['product_sort'];
                 break; 
             }
+            $sort=$v['product_sort'];
         }
+        $data['sort']=$sort;
         $data["toubiao"]=$toubiao;
         $data["list"]=$list;
 		$this->display("order/order_bid_toubiao_list", $data);
 	}
+	
+		//查看所有投标企业的信息
+	public function order_sign_toubiao_list($id)
+	{
+		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
+		$allpage = $this->order->getOrderSignToubiaoAllPage($gongsi,$id);
+		$page = $allpage > $page ? $page : $allpage;
+		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
+		$data["page"] = $page;
+		$data["allpage"] = $allpage;
+		$data["gongsiv"] = $gongsi;
+		$data["id"] = $id;
+		$toubiao=0;
+		$list= $this->order->getOrderSignToubiaoAll($page, $gongsi,$id);
+
+        $data["toubiao"]=$toubiao;
+        $data["list"]=$list;
+		$this->display("order/order_sign_toubiao_list", $data);
+	}
+	
 	
 		//查看所有投标企业的信息
 	public function order_bid_toubiao_edit()
@@ -340,14 +411,14 @@ class Order extends CI_Controller
 		$list = $this->order->getOrderSignAll($page, $gongsi,$sort,$start,$end);
 		foreach ($list as $k=>$v){
 			//获取项目分类
-			//$proclasslist=$this->common->getProclassName($list[$k]['product_class_name']);
-			//$list[$k]['proclassname']=$proclasslist['product_class_name'];
+			$proclasslist = $this->common->getProclassName($v['pid2']);
+			$list[$k]['product_class_name'] = $proclasslist['product_class_name'];
 
 			//获取项目进度
 			if($list[$k]['product_sort']==0){
 				$sortstr="已发布";
 			}elseif($list[$k]['product_sort']==1){
-				$sortstr="已投标";
+				$sortstr="已报价";
 			}elseif($list[$k]['product_sort']==2){
 				$sortstr="已签约";
 			}elseif($list[$k]['product_sort']==3){
@@ -373,6 +444,17 @@ class Order extends CI_Controller
 		}else{
 			$data["end"] =$end;
 		}
+		
+		if($sort==2){
+		    $bannername="已签约订单管理";    
+		}elseif($sort==3){
+			$bannername="已完成订单管理";        
+		}elseif($sort==4){
+		    $bannername="异常订单管理";    
+		}
+		
+		
+		$data["bannername"]=$bannername;
 		$data["sort"]=$sort;
 		$data["list"]=$list;
 		$data["gongsiv"] = $gongsi;
@@ -394,6 +476,76 @@ class Order extends CI_Controller
 		
 		$this->display("order/order_sign_send_list", $data);
 	}
+
+	//查看中标企业的发货信息
+	public function order_sign_send_add()
+	{
+		$id = $_GET["id"];
+		$data["id"]= $id;
+		$this->display("order/order_sign_send_add", $data);
+	}
+
+	/**
+	 * 订单列表页
+	 */
+	public function order_sign_send_save()
+	{
+	    $id=$_POST['id'];
+		$moeny = !empty($_POST["moeny"]) ? $_POST["moeny"]:'';
+		$gettime = !empty($_POST["gettime"]) ? $_POST["gettime"]:'';
+		$gettime=strtotime($gettime);
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"]:'';
+		$number=$this->order->orderSignSendNumber($id);
+
+		$result = $this->order->order_sign_send_save($moeny,$gettime,$gimg,$id,$number);
+
+		if ($result) {
+			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
+		} else {
+			echo json_encode(array('error' => false, 'msg' => "操作失败"));
+		}
+	}
+
+
+	//查看中标企业的发货信息
+	public function order_sign_send_edit()
+	{
+		$id = $_GET["id"];
+		$data["id"]= $id;
+		$data["list"]= $this->order->getOrderSignSendEdit($id);
+		$this->display("order/order_sign_send_edit", $data);
+	}
+	
+		public function order_sign_send_update()
+	{
+	    $id=$_POST['id'];
+		$moeny = !empty($_POST["moeny"]) ? $_POST["moeny"]:'';
+		$gettime = !empty($_POST["gettime"]) ? $_POST["gettime"]:'';
+		$gettime=strtotime($gettime);
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"]:'';
+
+		$result = $this->order->order_sign_send_update($moeny,$gettime,$gimg,$id);
+		if ($result) {
+			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
+		} else {
+			echo json_encode(array('error' => false, 'msg' => "操作失败"));
+		}
+	}
+	
+		//查看中标企业的发货信息
+	public function order_sign_send_delete()
+	{
+	   		$id = isset($_POST['id']) ? $_POST['id'] : 0; 
+
+		if ($this->order->order_sign_send_delete($id)) {
+			echo json_encode(array('success' => true, 'msg' => "删除成功"));
+		} else {
+			echo json_encode(array('success' => false, 'msg' => "删除失败"));
+		}
+	}
+	
+
+
 
 	/**-----------------------------------完成订单评价显示管理-----------------------------------------------------*/
 	/**
@@ -459,9 +611,8 @@ class Order extends CI_Controller
 		$list = $this->order->getOrderDelAll($page, $gongsi,$sort,$start,$end);
 		foreach ($list as $k=>$v){
 			//获取项目分类
-			$proclasslist=$this->common->getProclassName($list[$k]['product_class_name']);
-			$list[$k]['proclassname']=$proclasslist['product_class_name'];
-
+			$proclasslist = $this->common->getProclassName($v['pid2']);
+			$list[$k]['product_class_name'] = $proclasslist['product_class_name'];
 			//获取发布人
 			$prouserlist=$this->common->getKehuName($list[$k]['mid']);
 			$list[$k]['prouser']=$prouserlist['company_name']."-".$prouserlist['truename'];
@@ -491,6 +642,18 @@ class Order extends CI_Controller
 	{
 		$id = isset($_POST['id']) ? $_POST['id'] : 0;
 		if ($this->order->order_del_update($id)) {
+			echo json_encode(array('success' => true, 'msg' => "恢复完成"));
+		} else {
+			echo json_encode(array('success' => false, 'msg' => "恢复失败"));
+		}
+	}
+	
+	
+	//恢复订单，恢复为未审核状态
+	public function order_bid_delete()
+	{
+		$id = isset($_POST['id']) ? $_POST['id'] : 0;
+		if ($this->order->order_bid_delete($id)) {
 			echo json_encode(array('success' => true, 'msg' => "恢复完成"));
 		} else {
 			echo json_encode(array('success' => false, 'msg' => "恢复失败"));

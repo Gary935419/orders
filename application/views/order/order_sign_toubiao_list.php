@@ -18,7 +18,7 @@
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a>
-              <cite>取消订单管理</cite></a>
+              <cite>报价企业列表</cite></a>
           </span>
 </div>
 <div class="layui-fluid">
@@ -26,18 +26,14 @@
 		<div class="layui-col-md12">
 			<div class="layui-card">
 				<div class="layui-card-body ">
-					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/order/order_del_list/'.$sort ?>">
+					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/order/order_toubiao_list/'.$id ?>">
 						<div class="layui-inline layui-show-xs-block">
 							<input type="text" name="gongsi" id="gongsi" value="<?php echo $gongsiv ?>"
-								   placeholder="采购商品名" autocomplete="off" class="layui-input">
+								   placeholder="报价企业名" autocomplete="off" class="layui-input">
 						</div>
-						<div class="layui-input-inline layui-show-xs-block">
-							<input class="layui-input" placeholder="开始日期" value="<?php echo $start; ?>" name="start" id="start"></div>
-						<div class="layui-input-inline layui-show-xs-block">
-							<input class="layui-input" placeholder="截止日期" value="<?php echo $end; ?>" name="end" id="end"></div>
 						<div class="layui-inline layui-show-xs-block">
 							<button class="layui-btn" lay-submit="" lay-filter="sreach"><i
-										class="layui-icon">&#xe615;</i></button>
+									class="layui-icon">&#xe615;</i></button>
 						</div>
 					</form>
 				</div>
@@ -45,37 +41,36 @@
 					<table class="layui-table layui-form">
 						<thead>
 						<tr>
-							<th style="width: 3%">序号</th>
-							<th style="width: 7%">发布时间</th>
-							<th style="width: 7%">订单状态</th>
-							<th style="width: 7%">采购商品名称</th>
-							<th style="width: 10%">所属分类</th>
-							<th style="width: 15%">发布公司</th>
-							<th style="width: 5%">采购数量</th>
-							<th style="width: 7%">截止时间</th>
-							<th style="width: 13%">操作</th>
+							<th>序号</th>
+							<th>报价项目</th>
+							<th>报价企业名</th>
+							<th>报价时间</th>
+							<th>报价价格</th>
+						    <th>交货时间</th>
+						    <th>备注说明</th>
+							<th>是否选定</th>
+							<th>联系人</th>
+							<th>联系电话</th>
+							<th>报价查看</th>
+							<th>其他说明</th>
+							</tr>
 						</thead>
 						<tbody>
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['prid'] ?>" sid="<?= $once['prid'] ?>">
-									<td><?= ($page-1)*10+$num + 1 ?></td>
-									<td><?=date("Y-m-d",$once['add_time']) ?></td>
-									<td style="color: #CC0000">取消订单</td>
+									<td><?= $num + 1 ?></td>
 									<td><?= $once['product_name'] ?></td>
-									<td><?= $once['product_class_name'] ?></td>
-									<td><?= $once['prouser'] ?></td>
-									<td><?= $once['quantity_purchased'] ?>件</td>
-									<td <? if($once['endtimetype']){echo 'style="color: #CC0000"';};?> ><?=date("Y-m-d",$once['end_time']) ?></td>
-									<td class="td-manage">
-										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/order/order_edit?id=' ?>'+<?= $once['prid'] ?>,900,800)">
-											<i class="layui-icon">&#xe642;</i>编辑
-										</button>
-										<button class="layui-btn layui-card-header"
-												onclick="order_update('<?= $once['prid'] ?>')"><i class="layui-icon">&#xe60e;</i>恢复订单
-										</button>
-									</td>
+									<td><?= $once['company_name'] ?></td>
+									<td><?= date("Y-m-d",$once['add_time']) ?></td>
+									<td><?= $once['bidding_cost'] ?></td>
+									<td><?= $once['delivery_time'] ?></td>
+									<td><?= $once['description'] ?></td>
+									<td><?if($once['order_state']==1){echo '已选定';}elseif($once['order_state']==2){echo '已签约';}elseif($once['order_state']==3){echo '供应商取消';}else{echo '否';};?></td>
+									<td><?= $once['bidder'] ?></td>
+									<td><?= $once['contact_tel'] ?></td>
+									<td><a href="<?= $once['pdf_url'] ?>" download>下载</a></td>
+									<td><a href="<?= $once['excel_url'] ?>" download>下载</a></a></td>
 								</tr>
 							<?php endforeach; ?>
 						<?php } else { ?>
@@ -98,22 +93,8 @@
 </div>
 </body>
 <script>
-	layui.use(['laydate', 'form'],
-			function() {
-				var laydate = layui.laydate;
-				//执行一个laydate实例
-				laydate.render({
-					elem: '#start' //指定元素
-				});
-				//执行一个laydate实例
-				laydate.render({
-					elem: '#end' //指定元素
-				});
-			});
-</script>
-<script>
-	function order_update(id) {
-		layer.confirm('您是否确认恢复订单？', {
+	function toubiao_edit(id,str) {
+		layer.confirm('您是否确认选中供应商？', {
 				title: '温馨提示',
 				btn: ['确认', '取消']
 				// 按钮
@@ -121,12 +102,12 @@
 			function (index) {
 				$.ajax({
 					type: "post",
-					data: {"id": id},
+					data: {"id": id,"str":str},
 					dataType: "json",
-					url: "<?= RUN . '/order/order_del_update' ?>",
+					url: "<?= RUN . '/order/order_bid_toubiao_edit' ?>",
 					success: function (data) {
 						if (data.success) {
-							$("#p" + id).remove();
+							location.reload();
 							layer.alert(data.msg, {
 									title: '温馨提示',
 									icon: 6,

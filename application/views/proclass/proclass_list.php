@@ -28,15 +28,28 @@
 				<div class="layui-card-body ">
 					<form class="layui-form layui-col-space5" method="get" action="<?= RUN, '/proclass/proclass_list' ?>">
 						<div class="layui-inline layui-show-xs-block">
-							<input type="text" name="gongsi" id="gongsi" value=""
+	   
+    						<select name="sort" id="sort" lay-verify="rid">
+    							<option value="0" <? if($sort==0){echo 'selected';};?>>一级分类</option>
+    							<?php foreach ($sortlist as $key => $value): ?>
+        							<option value="<?=$value['pid'];?>" <? if($sort==$value['pid']){echo 'selected';};?>><?=$value['product_class_name'];?></option>
+        						<?php endforeach; ?>
+    						</select>
+	   
+						</div>
+						<div class="layui-inline layui-show-xs-block">
+							<input type="text" name="mobile" id="mobile" value="<?php echo $gongsiv ?>"
 								   placeholder="分类名" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-inline layui-show-xs-block">
 							<button class="layui-btn" lay-submit="" lay-filter="sreach"><i
-										class="layui-icon">&#xe615;</i></button>
+									class="layui-icon">&#xe615;</i></button>
 						</div>
 					</form>
 				</div>
+				
+				
+				
 				<button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;"
 						onclick="xadmin.open('添加','<?= RUN . '/proclass/proclass_add' ?>',900,600)"><i
 							class="layui-icon"></i>添加
@@ -46,6 +59,7 @@
 						<thead>
 						<tr>
 							<th style="">序号</th>
+							<th style="">所属分类</th>
 							<th style="">分类名称</th>
 							<th style="">分类图片</th>
 							<th style="">分类说明</th>
@@ -57,6 +71,7 @@
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['pid'] ?>" sid="<?= $once['pid'] ?>">
 									<td><?= $num + 1 ?></td>
+									<td><?= $once['product_sort_name'] ?></td>
 									<td><?= $once['product_class_name'] ?></td>
 									<td><img class="layui-upload-img" src="<?php echo $once['product_woimg'] ?>" style="height: 50px;" ></td>
 									<td><?= $once['product_desc'] ?></td>
@@ -95,6 +110,13 @@
 	</div>
 </div>
 </body>
+<script>
+	layui.use(['form', 'layer'],
+			function () {
+				var form = layui.form,
+						layer = layui.layer;
+			});
+</script>
 <script>
 	function proclass_delete(id) {
 		layer.confirm('您是否确认删除？', {

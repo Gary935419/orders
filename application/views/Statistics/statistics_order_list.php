@@ -49,10 +49,10 @@
 						<thead>
 						<tr>
 							<th style="">月份</th>
-							<th style="">以发布量</th>
-							<th style="">以投标量</th>
-							<th style="">以签约量</th>
-							<th style="">以完成量</th>
+							<th style="">已发布量</th>
+							<th style="">已投标量</th>
+							<th style="">已签约量</th>
+							<th style="">已完成量</th>
 							<th style="">异常项目量</th>
 							<th style="">取消项目量</th>
 						</thead>

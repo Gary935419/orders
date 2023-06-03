@@ -21,6 +21,19 @@
 		<form method="post" class="layui-form" action="" name="basic_validate" id="tab">
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>所属分类：
+				</label>
+				<div class="layui-input-inline" style="width: 70%;">
+				<select name="sort" id="sort" lay-verify="rid">
+							<option value="0" <? if($sort==0){echo 'selected';};?>>一级分类</option>
+							<?php foreach ($list as $key => $value): ?>
+    							<option value="<?=$value['pid'];?>" <? if($sort==$value['pid']){echo 'selected';};?>><?=$value['product_class_name'];?></option>
+    						<?php endforeach; ?>
+						</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red">*</span>分类名称：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">

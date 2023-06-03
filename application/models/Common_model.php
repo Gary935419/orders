@@ -74,6 +74,21 @@ class Common_model extends CI_Model
 		$sql = "SELECT count(1) as number FROM `product_release` where mid=$id";
 		return $this->db->query($sql)->row()->number;
 	}
+	
+		//获取产品分类list
+	public function getProclasslist($id)
+	{
+		$sql = "SELECT * FROM `product_classification` where product_sort=$id";
+		return $this->db->query($sql)->result_array();
+	}
+
+    //获取产品分类一二级
+    	//获取供应商信息
+	public function getProclassarray()
+	{
+		$sql = "SELECT * FROM `product_classification` where product_sort=0";
+		return $this->db->query($sql)->result_array();
+	}
 
 
 }

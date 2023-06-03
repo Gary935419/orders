@@ -19,31 +19,27 @@
 <div class="layui-fluid" style="padding-top: 50px;">
 	<div class="layui-row">
 		<form method="post" class="layui-form" action="" name="basic_validate" id="tab">
-		    <div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>所属分类：
-				</label>
-				<div class="layui-input-inline" style="width: 70%;">
-				<select name="sort" id="sort" lay-verify="rid">
-							<option value="0">一级分类</option>
-							<?php foreach ($list as $key => $value): ?>
-    							<option value="<?=$value['pid'];?>"><?=$value['product_class_name'];?></option>
-    						<?php endforeach; ?>
-						</select>
-				</div>
-			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>分类名称：
+					<span class="x-red">*</span>打款费用：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
-					<input type="text" id="name" name="name" lay-verify="name"
+					<input type="text" id="moeny" name="moeny" value=""
 						   autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>图标
+					<span class="x-red">*</span>交货时间：
+				</label>
+				<div class="layui-input-inline" style="width: 70%;">
+					<input id="gettime" name="gettime" lay-verify="gettime"
+						   autocomplete="off" class="layui-input" value="">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>上传打款凭证：
 				</label>
 				<div class="layui-input-inline" style="width: 300px;">
 					<button type="button" class="layui-btn" id="upload1">上传图片</button>
@@ -56,21 +52,13 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red"></span>分类说明：
-				</label>
-				<div class="layui-input-inline" style="width: 70%;">
-						<textarea placeholder="" id="desc" name="desc" class="layui-textarea"
-								  lay-verify="jianyi"></textarea>
-				</div>
-			</div>
-			<div class="layui-form-item">
 				<label class="layui-form-label" style="width: 20%;">
 				</label>
 				<div class="layui-input-inline" style="width: 300px;">
 					<span class="x-red">※</span>请确认输入的数据是否正确。
 				</div>
 			</div>
+			<input type="hidden" id="id" name="id" value="<?=$id?>">
 			<div class="layui-form-item">
 				<label for="L_repass" class="layui-form-label" style="width: 45%;">
 				</label>
@@ -82,9 +70,19 @@
 	</div>
 </div>
 <script>
+	layui.use(['laydate', 'form'],
+	function() {
+		var laydate = layui.laydate;
+		//执行一个laydate实例
+		laydate.render({
+			elem: '#gettime' //指定元素
+		});
+	});
+</script>
+<script>
 	layui.use('upload', function(){
 		var $ = layui.jquery
-			,upload = layui.upload;
+				,upload = layui.upload;
 
 		//普通图片上传
 		var uploadInst = upload.render({
@@ -145,47 +143,46 @@
 		$("#avaterimgp"+index).remove();
 	}
 </script>
-
 <script>
 	layui.use(['form', 'layer'],
-		function () {
-			var form = layui.form,
-				layer = layui.layer;
-			//自定义验证规则
-			form.verify({
-				ltitle: function (value) {
-					if ($('#name').val() == "") {
-						return '请输入分类名。';
-					}
-				},
-			});
-
-			$("#tab").validate({
-				submitHandler: function (form) {
-					$.ajax({
-						cache: true,
-						type: "POST",
-						url: "<?= RUN . '/proclass/proclass_save' ?>",
-						data: $('#tab').serialize(),//
-						async: false,
-						error: function (request) {
-							alert("error");
-						},
-						success: function (data) {
-							var data = eval("(" + data + ")");
-							if (data.success) {
-								layer.msg(data.msg);
-								setTimeout(function () {
-									cancel();
-								}, 2000);
-							} else {
-								layer.msg(data.msg);
-							}
+			function () {
+				var form = layui.form,
+						layer = layui.layer;
+				//自定义验证规则
+				form.verify({
+					moeny: function (value) {
+						if ($('#moeny').val() == "") {
+							return '请输入打款金额';
 						}
-					});
-				}
+					},
+				});
+
+				$("#tab").validate({
+					submitHandler: function (form) {
+						$.ajax({
+							cache: true,
+							type: "POST",
+							url: "<?= RUN . '/order/order_sign_send_save' ?>",
+							data: $('#tab').serialize(),//
+							async: false,
+							error: function (request) {
+								alert("error");
+							},
+							success: function (data) {
+								var data = eval("(" + data + ")");
+								if (data.success) {
+									layer.msg(data.msg);
+									setTimeout(function () {
+										cancel();
+									}, 2000);
+								} else {
+									layer.msg(data.msg);
+								}
+							}
+						});
+					}
+				});
 			});
-		});
 
 	function cancel() {
 		//关闭当前frame

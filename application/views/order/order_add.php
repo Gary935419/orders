@@ -39,14 +39,25 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>采购产品分类：
+					<span class="x-red">*</span>采购产品一级分类：
 				</label>
 				<div class="layui-input-inline layui-show-xs-block">
 					<div style="width:600px;" class="layui-input-inline layui-show-xs-block">
-						<select name="proclass" id="proclass" lay-verify="proclass">
-							<?php foreach ($proclasslist as $num => $plist): ?>
-								<option value="<?=$plist['product_class_name'];?>"><?=$plist['product_class_name'];?></option>
+						<select name="proclass1" id="proclass1" lay-filter="proclass1" lay-verify="proclass1">
+							<?php foreach ($proclasslist1 as $num => $plist): ?>
+								<option value="<?=$plist['pid'];?>"><?=$plist['product_class_name'];?></option>
 							<? endforeach;?>
+						</select>
+					</div>
+				</div>
+			</div>
+						<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>采购产品二级分类：
+				</label>
+				<div class="layui-input-inline layui-show-xs-block">
+					<div style="width:600px;" class="layui-input-inline layui-show-xs-block">
+						<select name="proclass2" id="proclass2" lay-verify="proclass2">
 						</select>
 					</div>
 				</div>
@@ -174,9 +185,11 @@
 			var laydate = layui.laydate;
 			//执行一个laydate实例
 			laydate.render({
+			    trigger: 'click',
 				elem: '#gettime' //指定元素
 			});
 			laydate.render({
+			    trigger: 'click',
 				elem: '#stoptime' //指定元素
 			});
 		});
@@ -432,6 +445,39 @@
 			function () {
 				var form = layui.form,
 						layer = layui.layer;
+
+                $ = layui.jquery;
+
+                form.on('select(proclass1)', function (data) {
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: "<?= RUN . '/order/order_class_two' ?>",
+                        data: {
+                            "product_sort": data.value,
+                        },
+                        async: false,
+                        error: function (request) {
+                            alert("error");
+                        },
+                        success: function (data) {
+                            var data = eval("(" + data + ")");
+                            if (data.success) {
+                                console.log(data.result)
+                                var result=data.result;
+                                var proclass2=$("#proclass2");
+                                proclass2.empty();
+                                $.each(result,function(index,item){
+                                    proclass2.append("<option value="+item.pid+">"+item.product_class_name+"</option>");
+                                });
+                                form.render("select");
+                            } else {
+                                layer.msg(data.msg);
+                            }
+                        }
+                    });
+                });
+
 				//自定义验证规则
 				form.verify({
 					productname: function (value) {
@@ -505,6 +551,10 @@
 		//关闭当前frame
 		xadmin.close();
 	}
+
+    function selectChange(that) {
+        console.log(that.value);
+    }
 </script>
 </body>
 </html>

@@ -25,22 +25,31 @@ class Proclass extends CI_Controller
 	public function proclass_list()
 	{
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+		$sort = isset($_GET['sort']) ? $_GET['sort'] : 0;
 		$user = isset($_GET['user']) ? $_GET['user'] : '';
 		$status = isset($_GET['status']) ? $_GET['status'] : '0';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
-		$allpage = $this->proclass->getProClassAllPage($gongsi,$status);
+		$allpage = $this->proclass->getProClassAllPage($gongsi,$sort);
 		$page = $allpage > $page ? $page : $allpage;
 		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
 		$data["page"] = $page;
 		$data["allpage"] = $allpage;
-		$list = $this->proclass->getProClassAll($page, $gongsi,$status);
+		$list = $this->proclass->getProClassAll($page, $gongsi,$sort);
 		foreach ($list as $k=>$v){
 		    $list[$k]['gysclass']=$this->proclass->getProClassgys($v['pid']);
+		    if($v['product_sort']==0){
+		        $list[$k]['product_sort_name']="一级分类";   
+		    }else{
+		        $pros=$this->proclass->getProClassEdit($v['product_sort']);  
+		        $list[$k]['product_sort_name']=$pros['product_class_name'];
+		    }
 		}
 		$data["gongsiv"] = $gongsi;
 		$data["userv"] = $user;
 		$data["status"] = $status;
 		$data["list"]=$list; 
+		$data["sort"] = $sort;
+		$data["sortlist"] = $this->proclass->getProClassSort(0);
 		//$data["gysnum"] = $gysnum;		
 		$this->display("proclass/proclass_list", $data);
 	}
@@ -54,7 +63,8 @@ class Proclass extends CI_Controller
 	 */
 	public function proclass_add()
 	{
-		$this->display("proclass/proclass_add");
+	    $data["list"] = $this->proclass->getProClassSort(0);
+		$this->display("proclass/proclass_add",$data);
 	}
 
 	/**
@@ -66,7 +76,7 @@ class Proclass extends CI_Controller
 			echo json_encode(array('error' => false, 'msg' => "无法添加数据"));
 			return;
 		}
-
+		$sort = !empty($_POST["sort"]) ? $_POST["sort"] : ' ';
 		$name = !empty($_POST["name"]) ? $_POST["name"] : ' ';
 		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : ' ';
 		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
@@ -81,7 +91,7 @@ class Proclass extends CI_Controller
 			echo json_encode(array('error' => true, 'msg' => "该分类名已经存在,不能重复添加。"));
 			return;
 		}
-		$result = $this->proclass->ProClass_save($name,$desc,$gimg,$datetime);
+		$result = $this->proclass->ProClass_save($name,$desc,$gimg,$datetime,$sort);
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
 		} else {
@@ -104,6 +114,9 @@ class Proclass extends CI_Controller
 		$data['name'] = $member_info['product_class_name'];
 		$data['desc'] = $member_info['product_desc'];
 		$data['gimg'] = $member_info['product_woimg'];
+		$data['sort'] = $member_info['product_sort'];
+		$data["list"] = $this->proclass->getProClassSort(0);
+		
 		$this->display("proclass/proclass_edit", $data);
 	}
 
@@ -117,11 +130,12 @@ class Proclass extends CI_Controller
 			echo json_encode(array('error' => false, 'msg' => "无法添加数据"));
 			return;
 		}
-		$uid = !empty($_POST["uid"]) ? $_POST["uid"] : ' ';
-		$name = !empty($_POST["name"]) ? $_POST["name"] : ' ';
-		$namev = !empty($_POST["namev"]) ? $_POST["namev"] : ' ';
-		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : ' ';
-		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : ' ';
+		$uid = !empty($_POST["uid"]) ? $_POST["uid"] : '';
+		$name = !empty($_POST["name"]) ? $_POST["name"] : '';
+		$namev = !empty($_POST["namev"]) ? $_POST["namev"] : '';
+		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : '';
+		$gimg = !empty($_POST["gimg"]) ? $_POST["gimg"] : '';
+		$sort = !empty($_POST["sort"]) ? $_POST["sort"] : '';
 		$datetime = time();
 		if (empty($name)) {
 			echo json_encode(array('error' => false, 'msg' => "请填写分类名称！"));
@@ -135,7 +149,7 @@ class Proclass extends CI_Controller
     			return;
     		}
 	    }
-		$result = $this->proclass->proclass_save_edit($uid,$name,$gimg,$desc,$datetime);
+		$result = $this->proclass->proclass_save_edit($uid,$name,$gimg,$desc,$datetime,$sort);
 
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));

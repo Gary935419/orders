@@ -25,6 +25,14 @@
 	<div class="layui-row layui-col-space15">
 		<div class="layui-col-md12">
 			<div class="layui-card">
+			    
+	     
+			    <button class="layui-btn layui-card-header" style="margin-left:20px;margin-top:20px; width:100px"
+						onclick="xadmin.open('编辑','<?= RUN . '/order/order_sign_send_add?id=' ?>'+<?= $id; ?>,900,500)">
+					添加
+				</button>
+			
+			    
 				<div class="layui-card-body ">
 					<table class="layui-table layui-form">
 						<thead>
@@ -33,9 +41,9 @@
 							<th>服务</th>
 							<th>公司名</th>
 							<th>上传时间</th>
-							<th>发货量</th>
-							<th>快递记录</th>
-							<th>下载</th>
+							<th>发货量/打款金额</th>
+							<th>图片记录</th>
+							<th>操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -44,16 +52,31 @@
 							?>
 							<?php foreach ($list as $num => $once):
 								$snum=$snum+$once['delivery_number'];
+								$pics=explode(",",$once['express_img']);
+								
 								?>
-								<tr id="p<?= $once['prid'] ?>" sid="<?= $once['prid'] ?>">
+								<tr id="p<?= $once['did'] ?>" sid="<?= $once['did'] ?>">
 									<td><?= $num + 1 ?></td>
 									<td><? if($once['identity']==0){echo '打款记录';}else{echo '发货记录';};?></td>
 									<td><? if($once['identity']==0){echo $once['khname'];}else{echo $once['gysname'];};?></td>
 									<td><?= date("Y-m-d",$once['delivery_time']) ?></td>
-									<td><?= $once['delivery_number'] ?></td>
-									<td><img class="layui-upload-img" src="<?php echo $once['express_img'] ?>" style="height: 50px;" >
-									    </td>
-									<td><a href="<?= $once['express_img'] ?>" target="downloadFile">查看</a></td>
+									<td><? if($once['identity']==0){echo $once['payment_price'];}else{echo $once['delivery_number'];};?></td>
+									<td>
+									    <? for($i=0;$i<count($pics);$i++){?>
+									    <a href="<?= $pics[$i] ?>" target="downloadFile" style="padding-left:10px">
+									        <img class="layui-upload-img" src="<?php echo $pics[$i] ?>" style="height: 50px;" >
+									    </a>
+									    <? }?>
+									</td>
+									<td>
+									    <button class="layui-btn layui-btn-normal" style="width:80px"
+												onclick="xadmin.open('编辑','<?= RUN . '/order/order_sign_send_edit?id=' ?>'+<?= $once['did'] ?>,900,500)">
+											修改
+										</button>
+										<button class="layui-btn layui-btn-header" style="background-color:red; width:80px"
+	                                        onclick="order_sign_send_delete('<?= $once['did'] ?>')"><i class="layui-icon">&#xe640;</i>删除
+										</button>
+									</td>
 								</tr>
 							<?php endforeach; ?>
 							<tr>
@@ -79,18 +102,19 @@
 </div>
 </body>
 <script>
-	function order_update(id) {
-		layer.confirm('您是否确认恢复订单？', {
-				title: '温馨提示',
-				btn: ['确认', '取消']
-				// 按钮
-			},
+		function order_sign_send_delete(id) {
+		layer.confirm('您是否确认删除？', {
+					title: '温馨提示',
+					btn: ['确认', '取消']
+					// 按钮
+				},
+
 			function (index) {
 				$.ajax({
 					type: "post",
 					data: {"id": id},
 					dataType: "json",
-					url: "<?= RUN . '/order/order_del_update' ?>",
+					url: "<?= RUN . '/order/order_sign_send_delete' ?>",
 					success: function (data) {
 						if (data.success) {
 							$("#p" + id).remove();

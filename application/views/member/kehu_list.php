@@ -65,7 +65,7 @@
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['mid'] ?>" sid="<?= $once['mid'] ?>">
-									<td><?= $num + 1 ?></td>
+									<td><?= ($page-1)*10+$num+1 ?></td>
 									<td><?= $once['company_name'] ?></td>
 									<td><?= $once['truename'] ?></td>
 									<td><?= $once['mobile'] ?></td>

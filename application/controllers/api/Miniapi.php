@@ -29,8 +29,16 @@ class Miniapi extends CI_Controller
     //产品分类
     public function canpinfenlei_list()
     {
-        $page = isset($_POST["page"]) ? $_POST["page"] : 1;
-        $list = $this->mini->getproduct_classificationAll($page);
+//        $page = isset($_POST["page"]) ? $_POST["page"] : 1;
+//        $list = $this->mini->getproduct_classificationAll($page);
+        $list = $this->mini->getProclasslist(0);
+        foreach ($list as $k=>$v){
+            $Proclasslist = $this->mini->getProclasslist($v['pid']);
+            foreach ($Proclasslist as $kk=>$vv){
+                $Proclasslist[$kk]['parentId'] = $vv['product_sort'];
+            }
+            $list[$k]['list'] = $Proclasslist;
+        }
         $data["list"] = $list;
         $this->back_json(200, '操作成功', $data);
     }
@@ -70,8 +78,13 @@ class Miniapi extends CI_Controller
         $page = isset($_POST["page"]) ? $_POST["page"] : 1;
         $keyword = isset($_POST["keyword"]) ? $_POST["keyword"] : '';
         $pagecount = isset($_POST["pagecount"]) ? $_POST["pagecount"] : '';
-
-        $orderlist = $this->mini->fabu_list($page,time(),$keyword,$pagecount);
+        
+        $token = isset($_POST["token"]) ? $_POST["token"] : '';
+        
+        $usertype=$this->mini->getMemberInfotoken($token);
+        $businesstype=$usertype['business_type'];
+ 
+        $orderlist = $this->mini->fabu_list($page,time(),$keyword,$pagecount,$businesstype);
         foreach ($orderlist as $k=>$v){
             $orderlist[$k]['add_time'] = empty($v['add_time'])?'':date('Y-m-d H:i:s',$v['add_time']);
             $orderlist[$k]['end_time']=empty($v['end_time'])?'':date('Y-m-d',$v['end_time']);
@@ -189,12 +202,15 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['product_class_name']) || empty($_POST['product_class_name'])) {
             $this->back_json(205, '请您填写产品分类！');
         }
+        if (!isset($_POST['pid1']) || empty($_POST['pid1'])) {
+            $this->back_json(205, '请您填写产品一级分类！');
+        }
+        if (!isset($_POST['pid2']) || empty($_POST['pid2'])) {
+            $this->back_json(205, '请您填写产品二级分类！');
+        }
         if (!isset($_POST['product_name']) || empty($_POST['product_name'])) {
             $this->back_json(205, '请您填写产品名称！');
         }
-//        if (!isset($_POST['product_title']) || empty($_POST['product_title'])) {
-//            $this->back_json(205, '请您填写产品标题！');
-//        }
         if (!isset($_POST['quantity_purchased']) || empty($_POST['quantity_purchased'])) {
             $this->back_json(205, '请您填写采购数量！');
         }
@@ -213,9 +229,6 @@ class Miniapi extends CI_Controller
         if (!isset($_POST['product_specification2']) || empty($_POST['product_specification2'])) {
             $this->back_json(205, '请您填写产品规格2！');
         }
-        //if (!isset($_POST['product_specification3']) || empty($_POST['product_specification3'])) {
-        //    $this->back_json(205, '请您填写产品规格3！');
-        //}
         $is_contact_person = $_POST["is_contact_person"];
         $company_name = isset($_POST["company_name"]) ? $_POST["company_name"] : '';
         $contact_name = isset($_POST["contact_name"]) ? $_POST["contact_name"] : '';
@@ -230,6 +243,8 @@ class Miniapi extends CI_Controller
         $product_title = isset($_POST["product_title"]) ? $_POST["product_title"] : '';
         $product_name = isset($_POST["product_name"]) ? $_POST["product_name"] : '';
         $product_class_name = isset($_POST["product_class_name"]) ? $_POST["product_class_name"] : '';
+        $pid1 = isset($_POST["pid1"]) ? $_POST["pid1"] : '';
+        $pid2 = isset($_POST["pid2"]) ? $_POST["pid2"] : '';
         $product_caddress = isset($_POST["product_caddress"]) ? $_POST["product_caddress"] : '';
         $product_jaddress = isset($_POST["product_jaddress"]) ? $_POST["product_jaddress"] : '';
         $product_zmoney = isset($_POST["product_zmoney"]) ? $_POST["product_zmoney"] : '';
@@ -238,7 +253,7 @@ class Miniapi extends CI_Controller
         $add_time = time();
         $audit_status = 0;
         $product_sort = 0;
-        $this->mini->product_release_add_save($product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name);
+        $this->mini->product_release_add_save($pid1,$pid2,$product_sort,$product_signtime,$product_desc,$product_zmoney,$product_jaddress,$product_caddress,$mid,$add_time,$audit_status,$company_name,$contact_name,$contact_tel,$is_contact_person,$product_specification1,$product_specification2,$product_specification3,$product_description,$end_time,$purchasing_time,$quantity_purchased,$product_title,$product_name,$product_class_name);
         $data = array();
         $this->back_json(200, '操作成功', $data);
     }

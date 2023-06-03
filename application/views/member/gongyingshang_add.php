@@ -98,7 +98,13 @@
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
 					<?php foreach ($list as $num => $once): ?>
-						<input type="checkbox" name="type[]" lay-skin="primary" title="<?=$once['product_class_name']?>" value="<?=$once['pid']?>" checked>
+					    <div style="height:50px"><?=$once['name']?>
+					    <?php foreach ($list[$num]['pid2list'] as $num2 => $once2): ?>
+    					    <input type="checkbox" name="type[]" lay-skin="primary"
+    							   title="<?=$once2['product_class_name']?>" value="<?=$once2['pid']?>">
+					    <?php endforeach; ?>
+					    </div>
+
 					<?php endforeach; ?>
 				</div>
 			</div>

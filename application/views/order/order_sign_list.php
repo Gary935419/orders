@@ -18,7 +18,7 @@
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a>
-              <cite>取消订单管理</cite></a>
+              <cite><?=$bannername;?></cite></a>
           </span>
 </div>
 <div class="layui-fluid">
@@ -49,9 +49,10 @@
 							<th>订单状态</th>
 							<th>采购商品名称</th>
 							<th>所属分类</th>
-							<th>签约时间</th>
+							<th width="80px">签约时间</th>
 							<th>发布公司</th>
-							<th>中标公司</th>
+							<th>签约公司</th>
+							<th>订单金额</th>
 							<th>交货次数</th>
 							<th>交货总量</th>
 							<th>操作</th>
@@ -67,6 +68,7 @@
 									<td><?=date("Y-m-d",$once['product_signtime']) ?></td>
 									<td><?= $once['khname'] ?></td>
 									<td><?= $once['gysname'] ?></td>
+									<td><?= $once['bidding_cost'] ?></td>
 									<td><?= $once['signnums'] ?></td>
 									<td><?= $once['signsums'] ?></td>
 									<td class="td-manage">
@@ -75,9 +77,19 @@
 											查看订单
 										</button>
 										<button class="layui-btn layui-btn-header"
+												onclick="xadmin.open('详情','<?= RUN . '/order/order_sign_toubiao_list/' ?>'+'<?= $once['prid'] ?>')">
+											查看报价单位
+										</button>
+										<button class="layui-btn layui-btn-header"
 												onclick="xadmin.open('发货记录','<?= RUN . '/order/order_sign_send_list/' ?>'+'<?= $once['prid'] ?>')">
 											查看发货记录
 										</button>
+                                        <? if($sort==2){?>
+                                        <button class="layui-btn layui-btn-header" style="background-color:red"
+                                                onclick="order_sign_error('<?= $once['prid'] ?>')">
+                                            订单异常
+                                        </button>
+                                        <? }?>
 										<? if($sort==3){?>
 											<button class="layui-btn layui-btn-header"
 													onclick="xadmin.open('采购项目评价','<?= RUN . '/order/order_sign_comment/' ?>'+'<?= $once['prid'] ?>',900,600)">
@@ -86,7 +98,7 @@
 										<? }?>
 										<? if($sort==4){?>
 											<button class="layui-btn layui-btn-header"
-													onclick="xadmin.open('采购异常问题','<?= RUN . '/order/order_sign_abnormal/' ?>'+'<?= $once['prid'] ?>',900,600)">
+													onclick="xadmin.open('采购异常问题','<?= RUN . '/order/order_sign_error/' ?>'+'<?= $once['prid'] ?>',900,600)">
 												查看异常
 											</button>
 										<? }?>
@@ -130,37 +142,73 @@
 <script>
 	function order_update(id) {
 		layer.confirm('您是否确认恢复订单？', {
-					title: '温馨提示',
-					btn: ['确认', '取消']
-					// 按钮
+			title: '温馨提示',
+			btn: ['确认', '取消']
+			// 按钮
+		},
+		function (index) {
+			$.ajax({
+				type: "post",
+				data: {"id": id},
+				dataType: "json",
+				url: "<?= RUN . '/order/order_del_update' ?>",
+				success: function (data) {
+					if (data.success) {
+						$("#p" + id).remove();
+						layer.alert(data.msg, {
+									title: '温馨提示',
+									icon: 6,
+									btn: ['确认']
+								},
+						);
+					} else {
+						layer.alert(data.msg, {
+									title: '温馨提示',
+									icon: 5,
+									btn: ['确认']
+								},
+						);
+					}
 				},
-				function (index) {
-					$.ajax({
-						type: "post",
-						data: {"id": id},
-						dataType: "json",
-						url: "<?= RUN . '/order/order_del_update' ?>",
-						success: function (data) {
-							if (data.success) {
-								$("#p" + id).remove();
-								layer.alert(data.msg, {
-											title: '温馨提示',
-											icon: 6,
-											btn: ['确认']
-										},
-								);
-							} else {
-								layer.alert(data.msg, {
-											title: '温馨提示',
-											icon: 5,
-											btn: ['确认']
-										},
-								);
-							}
-						},
-					});
-				});
+			});
+		});
 	}
+	
+	 function order_sign_error(id) {
+        layer.confirm('您是否确认异常？', {
+            title: '温馨提示',
+            btn: ['确认', '取消']
+            // 按钮
+        },
+        function (index) {
+            $.ajax({
+                type: "post",
+                data: {
+                    "id": id,
+                },
+                dataType: "json",
+                url: "<?= RUN . '/order/order_sign_error' ?>",
+                success: function (data) {
+                    if (data.success) {
+                        $("#p" + id).remove();
+                        layer.alert(data.msg, {
+                                title: '温馨提示',
+                                icon: 6,
+                                btn: ['确认']
+                            },
+                        );
+                    } else {
+                        layer.alert(data.msg, {
+                                title: '温馨提示',
+                                icon: 5,
+                                btn: ['确认']
+                            },
+                        );
+                    }
+                },
+            });
+        });
+    }
 </script>
 </html>
 <?php

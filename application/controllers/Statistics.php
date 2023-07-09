@@ -15,6 +15,7 @@ class Statistics extends CI_Controller
 			header("Location:" . RUN . '/login/logout');
 		}
 		$this->load->model('Statistics_model', 'statistics');
+		$this->load->model('Common_model', 'common');
 		header("Content-type:text/html;charset=utf-8");
 	}
 
@@ -227,5 +228,59 @@ class Statistics extends CI_Controller
 		$data["list"]=$list;
 		$this->display("statistics/statistics_orderlist_show", $data);
 	}
+	
+	//对账管理
+		public function company_list()
+	{
+
+		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+		$mobile = isset($_GET['mobile']) ? $_GET['mobile'] : '';
+		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
+		$allpage = $this->statistics->getGongyingshangAllPage($gongsi,$mobile);
+		$page = $allpage > $page ? $page : $allpage;
+		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
+		$data["page"] = $page;
+		$data["allpage"] = $allpage;
+		$data["list"] = $this->statistics->getGongyingshangAll($page,$gongsi,$mobile);
+
+		$data["gongsiv"]=$gongsi;
+		$data["mobilev"] = $mobile;
+		$this->display("statistics/company_list", $data);
+	}
+	
+		
+	//对账管理
+		public function duizhang_list($mid)
+	{
+		$sdate = isset($_GET['sdate']) ? strtotime($_GET['sdate']) : strtotime(date('Y-01-01', strtotime(date("Y-m-d"))));
+		$edate = isset($_GET['edate']) ? strtotime($_GET['edate']) : strtotime(date("Y-m-d"));
+		//$mid = isset($_GET['mid']) ? $_GET['mid'] : '';
+		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
+		$allpage = $this->statistics->getDuizhangAllPage($sdate,$edate,$mid);
+		$page = $allpage > $page ? $page : $allpage;
+		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
+		$data["page"] = $page;
+		$data["allpage"] = $allpage;
+		$list = $this->statistics->getDuizhangAll($page,$sdate,$edate,$mid);
+		foreach ($list as $k =>$v){
+		    $gys=$this->common->getKehuName($v['product_signmemberid']);
+		    $list[$k]['gysname']=$gys['company_name'];
+		    
+		    //发货数量
+		    $gysfhs=$this->common->getdeliverynum($v['prid'],1);
+		    $list[$k]['gysfhs']=$gysfhs;
+		    //打款金额
+		    $gysdks=$this->common->getdeliverynum($v['prid'],0);
+		    $list[$k]['gysdks']=$gysdks;
+		}
+		$data["list"]=$list;
+		$data["sdate"]=date("Y-m-d", $sdate);
+		$data["edate"]=date("Y-m-d", $edate);
+		//$data["edate"] = $edate;
+		$data["mid"] = $mid;
+		$this->display("statistics/duizhang_list", $data);
+	}
+
+	
 	
 }

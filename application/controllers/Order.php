@@ -25,7 +25,7 @@ class Order extends CI_Controller
 	 */
 	public function order_list($status,$sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-01-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -124,10 +124,10 @@ class Order extends CI_Controller
 			echo json_encode(array('error' => false, 'msg' => "无法添加数据"));
 			return;
 		}
-
 		$username = !empty($_POST["username"]) ? $_POST["username"]:'';
 		$proclass1 = !empty($_POST["proclass1"]) ? $_POST["proclass1"]:'';
 		$proclass2 = !empty($_POST["proclass2"]) ? $_POST["proclass2"]:'';
+		$number = !empty($_POST["number"]) ? $_POST["number"]:'';
 		$productname = !empty($_POST["productname"]) ? $_POST["productname"]:'';
 
 		$productnum = !empty($_POST["productnum"]) ? $_POST["productnum"] : 0;
@@ -153,8 +153,8 @@ class Order extends CI_Controller
 		$truename = $companys['truename'];
 		$mobile=$companys['mobile'];
 
-		$result = $this->order->order_save($username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$companyname,$truename,$mobile);
-		//echo json_encode(array('success' => true, 'msg' => $result));
+
+		$result = $this->order->order_save($username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$companyname,$truename,$mobile,$number);
 
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
@@ -196,6 +196,7 @@ class Order extends CI_Controller
 		$username = !empty($_POST["username"]) ? $_POST["username"] : '';
         $proclass2 = !empty($_POST["proclass2"]) ? $_POST["proclass2"] : '';
         $proclass1 = !empty($_POST["proclass1"]) ? $_POST["proclass1"] : '';
+        		$number = !empty($_POST["number"]) ? $_POST["number"]:'';
 		$productname = !empty($_POST["productname"]) ? $_POST["productname"] : '';
 
 		$productnum = !empty($_POST["productnum"]) ? $_POST["productnum"] : 0;
@@ -214,7 +215,7 @@ class Order extends CI_Controller
 		$desc = !empty($_POST["desc"]) ? $_POST["desc"] : 0;
 		$datetime = time();
 
-		$result = $this->order->order_update($id,$username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc);
+		$result = $this->order->order_update($id,$username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$number);
 
 		if ($result) {
 			echo json_encode(array('success' => true, 'msg' => "操作成功。"));
@@ -271,7 +272,7 @@ class Order extends CI_Controller
 	 */
 	public function order_bid_list($sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-01-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -399,16 +400,18 @@ class Order extends CI_Controller
 	 */
 	public function order_sign_list($sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-01-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+		$title = isset($_GET['title']) ? $_GET['title'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;
-		$allpage = $this->order->getOrderSignAllPage($gongsi,$sort,$start,$end);
+		$allpage = $this->order->getOrderSignAllPage($gongsi,$sort,$start,$end,$title);
 		$page = $allpage > $page ? $page : $allpage;
 		$data["pagehtml"] = $this->getpage($page, $allpage, $_GET);
 		$data["page"] = $page;
 		$data["allpage"] = $allpage;
-		$list = $this->order->getOrderSignAll($page, $gongsi,$sort,$start,$end);
+		$list = $this->order->getOrderSignAll($page, $gongsi,$sort,$start,$end,$title);
+
 		foreach ($list as $k=>$v){
 			//获取项目分类
 			$proclasslist = $this->common->getProclassName($v['pid2']);
@@ -458,6 +461,7 @@ class Order extends CI_Controller
 		$data["sort"]=$sort;
 		$data["list"]=$list;
 		$data["gongsiv"] = $gongsi;
+		$data["title"] = $title;
 		$this->display("order/order_sign_list", $data);
 	}
 
@@ -599,7 +603,7 @@ class Order extends CI_Controller
 	 */
 	public function order_del_list($sort)
 	{
-		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
+		$start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime(date('Y-01-01', strtotime(date("Y-m-d"))));
 		$end = isset($_GET['end']) ? strtotime($_GET['end']) : "";
 		$gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
 		$page = isset($_GET["page"]) ? $_GET["page"] : 1;

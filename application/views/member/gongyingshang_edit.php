@@ -78,6 +78,22 @@
 					</div>
 				</div>
 			</div>
+						<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>当前状态：
+				</label>
+				<div class="layui-input-inline layui-show-xs-block">
+					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
+						<select name="status" id="status" lay-verify="sort">
+							<option value="0" <?php if($status=='0'){echo 'selected';}?>>普通供应商</option>
+							<option value="1" <?php if($status=='1'){echo 'selected';}?>>待审核供应商</option>
+							<option value="2" <?php if($status=='2'){echo 'selected';}?>>高级供应商</option>
+							<option value="1" <?php if($status=='3'){echo 'selected';}?>>审核未通过供应商</option>
+							<option value="4" <?php if($status=='4'){echo 'selected';}?>>暂停使用</option>
+						</select>
+					</div>
+				</div>
+			</div>
 			<? if($gimg1){?>
     			<div class="layui-form-item">
     				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
@@ -95,34 +111,27 @@
     				</div>
     			</div>
 			<? }?>
+			
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red">*</span>所属分类：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
 					<?php foreach ($list as $num => $once): ?>
-						<input type="checkbox" name="type[]" lay-skin="primary"
-							   title="<?=$once['product_class_name']?>" value="<?=$once['pid']?>"
-							<?php if(in_array($once['pid'],$type)){echo 'checked';}?>>
+					    <div style=" display: flex">
+					        <div style="width:100px; padding-top:10px"><?=$once['name']?></div>
+					        <div style=" width:100%;">		    
+    					        <?php foreach ($list[$num]['pid2list'] as $num2 => $once2): ?>
+            					    <input type="checkbox" name="type[]" lay-skin="primary"
+            							   title="<?=$once2['product_class_name']?>" value="<?=$once2['pid']?>"
+            							   <?php if(in_array($once2['pid'],$type)){echo 'checked';}?>>
+        					    <?php endforeach; ?>
+                            </div>
+					    </div>
 					<?php endforeach; ?>
 				</div>
 			</div>
-			<div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>当前状态：
-				</label>
-				<div class="layui-input-inline layui-show-xs-block">
-					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
-						<select name="status" id="status" lay-verify="sort">
-							<option value="0" <?php if($status=='0'){echo 'selected';}?>>普通供应商</option>
-							<option value="1" <?php if($status=='1'){echo 'selected';}?>>待审核供应商</option>
-							<option value="2" <?php if($status=='2'){echo 'selected';}?>>高级供应商</option>
-							<option value="1" <?php if($status=='3'){echo 'selected';}?>>审核未通过供应商</option>
-							<option value="4" <?php if($status=='4'){echo 'selected';}?>>暂停使用</option>
-						</select>
-					</div>
-				</div>
-			</div>
+			
 			<div class="layui-form-item">
 				<label class="layui-form-label" style="width: 20%;">
 				</label>

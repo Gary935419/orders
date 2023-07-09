@@ -42,6 +42,63 @@ class Member extends CI_Controller
 		$this->display("member/gongyingshang_list", $data);
 	}
 
+    public function dowgongyingshang_list($sort,$status,$stop)
+    {
+
+        $gongsi = isset($_GET['gongsi']) ? $_GET['gongsi'] : '';
+        $mobile = isset($_GET['mobile']) ? $_GET['mobile'] : '';
+        $page = isset($_GET["page"]) ? $_GET["page"] : 1;
+
+        $allpage = $this->member->getGongyingshangAllPage($gongsi,$mobile,$sort,$status,$stop);
+        $page = $allpage > $page ? $page : $allpage;
+        $search_request = $this->member->getGongyingshangAll($page,$gongsi,$mobile,$sort,$status,$stop);
+
+        $assoc_data = array();
+        foreach ($search_request as $k=>$v) {
+            $assoc_data[] = array(
+                '序号' => $k+1,
+                '企业名' => $v['company_name'],
+                '地址' => $v['company_address'],
+                '账号(手机号)' => $v['mobile'],
+                '联系人' => $v['truename'],
+                '所属行业' => $v['business_typenames'],
+            );
+        }
+
+        $csv_header = array(
+            '序号',
+            '企业名',
+            '地址',
+            '账号(手机号)',
+            '联系人',
+            '所属行业',
+        );
+
+        $csv_header_ = $csv_header;
+        mb_convert_variables('GBK', 'UTF-8', $csv_header_);
+
+        $file_name = "csv_".date('YmdHis').".csv";
+
+        set_time_limit(0);
+        ini_set('memory_limit','2048M');
+        header('Content-Type: application/force-download');
+        header("Content-Disposition: attachment; filename={$file_name}");
+
+        $stream = fopen('php://output', 'w');
+        fputcsv($stream, $csv_header_);
+
+        foreach ($assoc_data as $assoc_row) {
+            $numeric_row = array();
+            foreach ($csv_header as $header_name) {
+                mb_convert_variables('GBK', 'UTF-8', $assoc_row[$header_name]);
+                $numeric_row[] = $assoc_row[$header_name];
+            }
+            fputcsv($stream, $numeric_row);
+        }
+
+        exit();
+    }
+
 	/**
 	 * 角色添加页
 	 */
@@ -53,7 +110,6 @@ class Member extends CI_Controller
 		    $pidlist[$k]['name']=$v['product_class_name'];
 		    $pidlist[$k]['pid2list']=$pid2s;		    
 		}
-		print_r($pidlist[0]['pid2list'][0]['pid']);
 		$data["list"]=$pidlist;
 		$data["sort"] = $sort;
 		$this->display("member/gongyingshang_add",$data);
@@ -163,7 +219,15 @@ class Member extends CI_Controller
 		$data['status'] = $member_info['audit_status'];
 		$data['sort'] = $member_info['identity'];
 		$data['grade'] = $member_info['grade'];
-		$data["list"] = $this->member->getProclassAll();
+		//$data["list"] = $this->member->getProclassAll();
+		
+		$pids = $this->common->getProclasslist(0);
+		foreach($pids as $k =>$v){
+		    $pid2s=$this->common->getProclasslist($v['pid']);
+		    $pidlist[$k]['name']=$v['product_class_name'];
+		    $pidlist[$k]['pid2list']=$pid2s;		    
+		}
+		$data["list"]=$pidlist;
 		$this->display("member/gongyingshang_edit", $data);
 	}
 

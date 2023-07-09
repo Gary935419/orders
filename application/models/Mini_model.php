@@ -116,16 +116,37 @@ class Mini_model extends CI_Model
         $sql = "SELECT * FROM `industry_news` where inid=$inid ";
         return $this->db->query($sql)->row_array();
     }
-    public function fabu_list($pg,$date,$keyword,$pagecount,$businesstype)
+    public function fabu_list($pg,$date,$keyword,$pagecount,$businesstype,$identity,$pid)
     {
         $sqlw = " 1=1 and u.audit_status=1 and u.product_sort<2";
         if (!empty($date)) {
             $date = $this->db->escape($date);
             $sqlw .= " and u.end_time >=" . $date;
         }
+        
+        if (!empty($pid)) {
+            $pid = $this->db->escape($pid);
+            $sqlw .= " and u.pid1 =" . $pid;
+        }
 
-        if (!empty($keyword)) {
-            $sqlw.=" and (u.product_name like '%".$keyword."%' or u.product_class_name like '%".$keyword."%' ) ";
+//        if (!empty($keyword) && empty($identity)) {
+////            $sqlw.=" and (u.product_name like '%".$keyword."%' or u.pid1 like '%".$keyword."%' or u.pid2 like '%".$keyword."%') ";
+//            $sqlw.=" and (u.product_name like '%".$keyword."%' or u.pid1=".$keyword." or u.pid2=".$keyword.") ";
+//        }else{
+//            $sqlw.=" and u.pid2 in ($businesstype)";
+//        }
+        if (empty($identity)){
+            if (!empty($keyword)){
+                $sqlw.=" and (u.product_name like '%".$keyword."%' or u.pid1=".$keyword." or u.pid2=".$keyword.") ";
+            }else{
+                $sqlw.=" and (u.pid1=".$keyword." or u.pid2=".$keyword.") ";
+            }
+        }else{
+            if (!empty($keyword)){
+                $sqlw.=" and u.product_name like '%".$keyword."%' and u.pid2 in ($businesstype)";
+            }else{
+                $sqlw.=" and u.pid2 in ($businesstype)";
+            }
         }
         $start = ($pg - 1) * 5;
         $stop = 5;
@@ -140,9 +161,23 @@ class Mini_model extends CI_Model
         }
         
          //return $sql;
-        // print_r($sql);die;
+//         print_r($sql);die;
         return $this->db->query($sql)->result_array();
     }
+    
+     public function fabu_index_list($date)
+    {
+        $sqlw = " 1=1 and u.audit_status=1 and u.product_sort<2";
+        if (!empty($date)) {
+            $date = $this->db->escape($date);
+            $sqlw .= " and u.end_time >=" . $date;
+        }
+            $sql = "SELECT r.nickname,r.avater,u.* FROM `product_release` u left join `member` r on u.mid=r.mid  where " . $sqlw . " order by u.prid desc LIMIT 0,5";            
+        return $this->db->query($sql)->result_array();
+    }   
+    
+    
+    
     public function fabu_xiangqing($prid)
     {
         $prid = $this->db->escape($prid);

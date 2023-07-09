@@ -41,9 +41,12 @@
 						</div>
 					</form>
 				</div>
+                <a href="<?= RUN . '/member/dowgongyingshang_list/1/'.$status.'/0' ?>">
+                <button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;">导出</button>
+                </a>
 				<? if($status==0){?>
 					<button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;"
-							onclick="xadmin.open('添加','<?= RUN . '/member/gongyingshang_add/1' ?>',900,800)"><i
+							onclick="xadmin.open('添加','<?= RUN . '/member/gongyingshang_add/1' ?>')"><i
 							class="layui-icon"></i>添加
 					</button>
 				<? }?>
@@ -87,7 +90,7 @@
 									<td><?=date("Y-m-d",$once['add_time']) ?></td>
 									<td class="td-manage">
 										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/member/gongyingshang_edit?id=' ?>'+<?= $once['mid'] ?>,900,500)">
+												onclick="xadmin.open('编辑','<?= RUN . '/member/gongyingshang_edit?id=' ?>'+<?= $once['mid'] ?>)">
 											<i class="layui-icon">&#xe642;</i>编辑
 										</button>
 										<?php if($once['audit_status']==1){?>

@@ -57,6 +57,7 @@
 							<? }?>
 							<th style="">发布时间</th>
 							<th style="">订单状态</th>
+							<th style="">订单编号</th>
 							<th style="">采购商品名称</th>
 							<th style="">所属分类</th>
 							<th style="">发布公司</th>
@@ -78,6 +79,7 @@
 									<? }?>
 									<td><?=date("Y-m-d",$once['add_time']) ?></td>
 									<td><?=$once['sortstr']?></td>
+																		<td><?= $once['number'] ?></td>
 									<td><?= $once['product_name'] ?></td>
 									<td><?= $once['product_class_name'] ?></td>
 									<td><?= $once['prouser'] ?></td>

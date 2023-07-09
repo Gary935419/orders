@@ -69,11 +69,25 @@
 					<span class="x-red">*</span>供应商等级：
 				</label>
 				<div class="layui-input-inline layui-show-xs-block">
-					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
+					<div style="width: 800px" class="layui-input-inline layui-show-xs-block">
 						<select name="grade" id="grade" lay-verify="sort">
 						    <option value="一般供应商">一般供应商</option>
 							<option value="优质供应商">优质供应商</option>
 							<option value="优选供应商">优选供应商</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>当前状态：
+				</label>
+				<div class="layui-input-inline layui-show-xs-block">
+					<div style="width: 800px" class="layui-input-inline layui-show-xs-block">
+						<select name="status" id="status" lay-verify="sort">
+							<option value="0">普通供应商</option>
+							<option value="2">高级供应商</option>
+							<option value="4">暂停使用</option>
 						</select>
 					</div>
 				</div>
@@ -92,34 +106,23 @@
 					</div>
 				</div>
 			</div>
+			
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red">*</span>所属分类：
 				</label>
 				<div class="layui-input-inline" style="width: 70%;">
 					<?php foreach ($list as $num => $once): ?>
-					    <div style="height:50px"><?=$once['name']?>
-					    <?php foreach ($list[$num]['pid2list'] as $num2 => $once2): ?>
-    					    <input type="checkbox" name="type[]" lay-skin="primary"
-    							   title="<?=$once2['product_class_name']?>" value="<?=$once2['pid']?>">
-					    <?php endforeach; ?>
+					    <div style=" display: flex">
+					        <div style="width:100px; padding-top:10px"><?=$once['name']?></div>
+					        <div style=" width:100%;">		    
+    					        <?php foreach ($list[$num]['pid2list'] as $num2 => $once2): ?>
+            					    <input type="checkbox" name="type[]" lay-skin="primary"
+            							   title="<?=$once2['product_class_name']?>" value="<?=$once2['pid']?>">
+        					    <?php endforeach; ?>
+                            </div>
 					    </div>
-
 					<?php endforeach; ?>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
-					<span class="x-red">*</span>当前状态：
-				</label>
-				<div class="layui-input-inline layui-show-xs-block">
-					<div style="width: 610px" class="layui-input-inline layui-show-xs-block">
-						<select name="status" id="status" lay-verify="sort">
-							<option value="0">普通供应商</option>
-							<option value="2">高级供应商</option>
-							<option value="4">暂停使用</option>
-						</select>
-					</div>
 				</div>
 			</div>
 			<div class="layui-form-item">

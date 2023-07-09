@@ -89,6 +89,24 @@ class Common_model extends CI_Model
 		$sql = "SELECT * FROM `product_classification` where product_sort=0";
 		return $this->db->query($sql)->result_array();
 	}
+	
+			//获取发货打款统计
+	public function getdeliverynum($prid,$sort)
+	{
+		if($sort==1){
+		    $sql = "SELECT sum(delivery_number) as name FROM `delivery` where prid=$prid";
+		}else{
+		    $sql = "SELECT sum(payment_price) as name FROM `delivery` where prid=$prid";		    
+		}
+		return $this->db->query($sql)->row()->name;
+	}
+	
+		//获取产品分类名称
+	public function getxiaoName($id)
+	{
+		$sql = "SELECT product_class_name as name FROM `product_classification` where pid=$id";
+		return $this->db->query($sql)->row()->name;
+	}
 
 
 }

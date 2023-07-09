@@ -51,7 +51,7 @@
 				
 				
 				<button class="layui-btn layui-card-header" style="float: right;margin-top: -40px;margin-right: 20px;"
-						onclick="xadmin.open('添加','<?= RUN . '/proclass/proclass_add' ?>',900,600)"><i
+						onclick="xadmin.open('添加','<?= RUN . '/proclass/proclass_add' ?>',900,500)"><i
 							class="layui-icon"></i>添加
 				</button>
 				<div class="layui-card-body ">
@@ -82,7 +82,7 @@
 											<i class="layui-icon">&#xe615;</i>查看供应商
 										</button>
 										<button class="layui-btn layui-btn-normal"
-												onclick="xadmin.open('编辑','<?= RUN . '/proclass/proclass_edit?id=' ?>'+<?= $once['pid'] ?>,900,600)">
+												onclick="xadmin.open('编辑','<?= RUN . '/proclass/proclass_edit?id=' ?>'+<?= $once['pid'] ?>,900,500)">
 											<i class="layui-icon">&#xe642;</i>编辑
 										</button>
 										<button class="layui-btn layui-btn-danger"

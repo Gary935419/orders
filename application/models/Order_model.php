@@ -62,11 +62,12 @@ class Order_model extends CI_Model
 
 	//----------------------------一订单add添加-------------------------------------
 	//订单save
-	public function order_save($username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$companyname,$truename,$mobile)
+	public function order_save($username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$companyname,$truename,$mobile,$number)
 	{
 		$username = $this->db->escape($username);
 		$proclass1 = $this->db->escape($proclass1);
 		$proclass2 = $this->db->escape($proclass2);
+				$number = $this->db->escape($number);
 		$productname = $this->db->escape($productname);
 
 		$productnum = $this->db->escape($productnum);
@@ -92,11 +93,11 @@ class Order_model extends CI_Model
 		$sql = "INSERT INTO `product_release` 
 				(mid,pid1,pid2,product_name,quantity_purchased,purchasing_time,
 				end_time,product_caddress,product_jaddress,product_zmoney,product_specification1,
-				product_specification2,product_specification3,add_time,audit_status,product_sort,product_description,company_name,contact_name,contact_tel) 
+				product_specification2,product_specification3,add_time,audit_status,product_sort,product_description,company_name,contact_name,contact_tel,number) 
 				VALUES
 				($username,$proclass1,$proclass2,$productname,$productnum,$gettime,
 				$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,
-				$pdfurl2,$pdfurl3,$datetime,1,0,$desc,$companyname,$truename,$mobile)";
+				$pdfurl2,$pdfurl3,$datetime,1,0,$desc,$companyname,$truename,$mobile,$number)";
 		//return $sql;
 		return $this->db->query($sql);
 	}
@@ -112,12 +113,13 @@ class Order_model extends CI_Model
 	}
 
 	//标签更新
-	public function order_update($id,$username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc)
+	public function order_update($id,$username,$proclass1,$proclass2,$productname,$productnum,$gettime,$stoptime,$caddress,$jaddress,$zmoney,$pdfurl1,$pdfurl2,$pdfurl3,$datetime,$desc,$number)
 	{
 		$id = $this->db->escape($id);
 		$username = $this->db->escape($username);
 		$proclass1 = $this->db->escape($proclass1);
 		$proclass2 = $this->db->escape($proclass2);
+						$number = $this->db->escape($number);
 		$productname = $this->db->escape($productname);
 
 		$productnum = $this->db->escape($productnum);
@@ -137,7 +139,7 @@ class Order_model extends CI_Model
 		$sql = "UPDATE `product_release` SET 
 				mid=$username,pid1=$proclass1,pid2=$proclass2,product_name=$productname,quantity_purchased=$productnum,purchasing_time=$gettime,  
 				end_time=$stoptime,product_caddress=$caddress,product_jaddress=$jaddress,product_zmoney=$zmoney,product_specification1=$pdfurl1,
-				product_specification2=$pdfurl2,product_specification3=$pdfurl3,add_time=$datetime,product_description=$desc
+				product_specification2=$pdfurl2,product_specification3=$pdfurl3,add_time=$datetime,product_description=$desc,number=$number
 				WHERE prid = $id";
 		//return $sql;
 		return $this->db->query($sql);
@@ -275,31 +277,40 @@ class Order_model extends CI_Model
 	//----------------------------中标订单列表-------------------------------------
 
 	//获取投标项目标签页数
-	public function getOrderSignAllPage($user_name,$sort,$start,$end)
+	public function getOrderSignAllPage($user_name,$sort,$start,$end,$title)
 	{
-		$sqlw = " where product_sort=$sort";
+		$sqlw = " ";
 		if ($start) {
-			$sqlw .= " and add_time>=$start";
+			$sqlw .= " and p.add_time>=$start";
 		}
 		if ($end) {
-			$sqlw .= " and add_time<=$end";
+			$sqlw .= " and p.add_time<=$end";
 		}
 
 		if (!empty($user_name)) {
-			$sqlw .= " and ( product_name like '%" . $user_name . "%' ) ";
+			$sqlw .= " and ( p.product_name like '%" . $user_name . "%' ) ";
 		}
-		$sql = "SELECT count(1) as number FROM `product_release` " . $sqlw;
+		if (!empty($title)) {
+			$sqlw .= " and ( a.company_name like '%" . $title . "%' ) ";
+		}
+		
+		$sql = "SELECT count(1) as number FROM `product_release` p,`application_orders` a where p.product_sort=$sort and p.prid=a.prid and a.order_state=2  " . $sqlw ;
+		
 		$number = $this->db->query($sql)->row()->number;
 		return ceil($number / 10) == 0 ? 1 : ceil($number / 10);
 	}
 
 	//获取投标项目标签信息
-	public function getOrderSignAll($pg, $user_name,$sort,$start,$end)
+	public function getOrderSignAll($pg, $user_name,$sort,$start,$end,$title)
 	{
 		$sqlw = " ";
 		if (!empty($user_name)) {
-			$sqlw .= " and ( product_name like '%" . $user_name . "%' ) ";
+			$sqlw .= " and ( p.product_name like '%" . $user_name . "%' ) ";
 		}
+				if (!empty($title)) {
+			$sqlw .= " and ( a.company_name like '%" . $title . "%' ) ";
+		}
+		
 		if ($start) {
 			$sqlw .= " and p.add_time>=$start";
 		}
@@ -309,7 +320,7 @@ class Order_model extends CI_Model
 
 		$start = ($pg - 1) * 10;
 		$stop = 10;
-		$sql = "SELECT p.*,a.company_name as gysname FROM `product_release` p,`application_orders` a where p.product_sort=$sort and p.prid=a.prid and a.order_state=2" . $sqlw . " order by p.prid desc LIMIT $start, $stop";
+		$sql = "SELECT p.*,a.company_name as gysname FROM `product_release` p,`application_orders` a where p.product_sort=$sort and p.prid=a.prid and a.order_state=2  " . $sqlw . " order by p.prid desc LIMIT $start, $stop";
 		return $this->db->query($sql)->result_array();
 	}
 

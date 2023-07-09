@@ -74,6 +74,15 @@
 						   autocomplete="off" class="layui-input" value="<?=$orderlsit['product_name'];?>">
 				</div>
 			</div>
+									<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
+					<span class="x-red">*</span>项目编号：
+				</label>
+				<div class="layui-input-inline" style="width: 70%;">
+					<input type="text" id="number" name="number" lay-verify="productname"
+						   autocomplete="off" class="layui-input" value="<?=$orderlsit['number'];?>">
+				</div>
+			</div>
 			<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label" style="width: 20%; font-size: 14px">
 					<span class="x-red">*</span>采购数量：

@@ -240,6 +240,14 @@
 							</a>
 						</li>
 					</ul>
+										<ul class="sub-menu">
+						<li>
+							<a onclick="changeSrc('<?= RUN . '/statistics/company_list' ?>')">
+								<i class="iconfont">&#xe6a7;</i>
+								<cite>订单对账</cite>
+							</a>
+						</li>
+					</ul>
 				</li>
 				<li>
 					<a href="javascript:;">

@@ -17,6 +17,7 @@ class Miniapi extends CI_Controller
 		parent::__construct();
 		// 加载数据库类
 		$this->load->model('Mini_model', 'mini');
+		$this->load->model('Common_model', 'common');		
 	}
 	//设定信息
     public function get_set_info(){
@@ -76,6 +77,8 @@ class Miniapi extends CI_Controller
     public function fabu_list(){
 
         $page = isset($_POST["page"]) ? $_POST["page"] : 1;
+        $pid = isset($_POST["pid"]) ? $_POST["pid"] : '';
+        
         $keyword = isset($_POST["keyword"]) ? $_POST["keyword"] : '';
         $pagecount = isset($_POST["pagecount"]) ? $_POST["pagecount"] : '';
         
@@ -83,9 +86,13 @@ class Miniapi extends CI_Controller
         
         $usertype=$this->mini->getMemberInfotoken($token);
         $businesstype=$usertype['business_type'];
+        $identity = $usertype['identity'];
  
-        $orderlist = $this->mini->fabu_list($page,time(),$keyword,$pagecount,$businesstype);
+        $orderlist = $this->mini->fabu_list($page,time(),$keyword,$pagecount,$businesstype,$identity,$pid);
+
         foreach ($orderlist as $k=>$v){
+
+            $orderlist[$k]['product_class_name'] = $this->common->getxiaoName($v['pid2']);
             $orderlist[$k]['add_time'] = empty($v['add_time'])?'':date('Y-m-d H:i:s',$v['add_time']);
             $orderlist[$k]['end_time']=empty($v['end_time'])?'':date('Y-m-d',$v['end_time']);
             $orderlist[$k]['purchasing_time']=empty($v['purchasing_time'])?'':date('Y-m-d',$v['purchasing_time']);
@@ -106,6 +113,23 @@ class Miniapi extends CI_Controller
         $data['list'] = $orderlist;
         $this->back_json(200, '操作成功', $data);
     }
+    
+    //首页显示
+    //发布list
+    public function fabu_index_list(){
+
+        $orderlist = $this->mini->fabu_index_list(time());
+        foreach ($orderlist as $k=>$v){
+
+            $orderlist[$k]['product_class_name'] = $this->common->getxiaoName($v['pid2']);
+            $orderlist[$k]['add_time'] = empty($v['add_time'])?'':date('Y-m-d H:i:s',$v['add_time']);
+            $orderlist[$k]['end_time']=empty($v['end_time'])?'':date('Y-m-d',$v['end_time']);
+            $orderlist[$k]['purchasing_time']=empty($v['purchasing_time'])?'':date('Y-m-d',$v['purchasing_time']);
+        }
+        $data['list'] = $orderlist;
+        $this->back_json(200, '操作成功', $data);
+    }    
+
     //发布详情
     public function fabu_xiangqing(){
         //验证loginCode是否传递
@@ -129,6 +153,9 @@ class Miniapi extends CI_Controller
         $goodsdetails['add_time']=date('Y-m-d',$goodsdetails['add_time']);
         $goodsdetails['end_time']=date('Y-m-d',$goodsdetails['end_time']);
         $goodsdetails['purchasing_time']=date('Y-m-d',$goodsdetails['purchasing_time']);
+        
+        $goodsdetails['product_class_name'] = $this->common->getxiaoName($goodsdetails['pid2']);
+        
         if ($goodsdetails['product_sort']==0){
             $goodsdetails['product_sort_str'] = "已发布";
         }elseif ($goodsdetails['product_sort']==1){

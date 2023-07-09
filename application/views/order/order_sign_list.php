@@ -31,6 +31,10 @@
 							<input type="text" name="gongsi" id="gongsi" value="<?php echo $gongsiv ?>"
 								   placeholder="采购商品名" autocomplete="off" class="layui-input">
 						</div>
+												<div class="layui-inline layui-show-xs-block">
+							<input type="text" name="title" id="title" value="<?php echo $title ?>"
+								   placeholder="企业名称" autocomplete="off" class="layui-input">
+						</div>
 						<div class="layui-input-inline layui-show-xs-block">
 							<input class="layui-input" placeholder="开始日期" value="<?php echo $start; ?>" name="start" id="start"></div>
 						<div class="layui-input-inline layui-show-xs-block">
@@ -46,7 +50,8 @@
 						<thead>
 						<tr>
 							<th>序号</th>
-							<th>订单状态</th>
+							<th width="50px">订单状态</th>
+							<th>订单编号</th>
 							<th>采购商品名称</th>
 							<th>所属分类</th>
 							<th width="80px">签约时间</th>
@@ -61,8 +66,9 @@
 						<?php if (isset($list) && !empty($list)) { ?>
 							<?php foreach ($list as $num => $once): ?>
 								<tr id="p<?= $once['prid'] ?>" sid="<?= $once['prid'] ?>">
-									<td><?= $num + 1 ?></td>
+									<td><?= ($page-1)*10+$num + 1 ?></td>
 									<td><?= $once['sortstr'] ?></td>
+									<td><?= $once['number'] ?></td>
 									<td><?= $once['product_name'] ?></td>
 									<td><?= $once['product_class_name'] ?></td>
 									<td><?=date("Y-m-d",$once['product_signtime']) ?></td>

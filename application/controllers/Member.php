@@ -49,9 +49,9 @@ class Member extends CI_Controller
         $mobile = isset($_GET['mobile']) ? $_GET['mobile'] : '';
         $page = isset($_GET["page"]) ? $_GET["page"] : 1;
 
-        $allpage = $this->member->getGongyingshangAllPage($gongsi,$mobile,$sort,$status,$stop);
-        $page = $allpage > $page ? $page : $allpage;
-        $search_request = $this->member->getGongyingshangAll($page,$gongsi,$mobile,$sort,$status,$stop);
+        //$allpage = $this->member->getGongyingshangAllPage($gongsi,$mobile,$sort,$status,$stop);
+        //$page = $allpage > $page ? $page : $allpage;
+        $search_request = $this->member->getGongyingshangsAll($gongsi,$mobile,$sort,$status,$stop);
 
         $assoc_data = array();
         foreach ($search_request as $k=>$v) {

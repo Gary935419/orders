@@ -7,12 +7,12 @@ namespace Composer\Autoload;
 class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'd767e4fc2dc52fe66584ab8c6684783e' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     );
 
@@ -25,11 +25,9 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         array (
             'WechatPay\\GuzzleMiddleware\\' => 27,
             'Webmozart\\Assert\\' => 17,
-            'WeChatPay\\' => 10,
         ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
         ),
@@ -39,9 +37,12 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
             'Psr\\Http\\Client\\' => 16,
             'Prophecy\\' => 9,
         ),
+        'O' => 
+        array (
+            'OneSm\\' => 6,
+        ),
         'G' => 
         array (
-            'GuzzleHttp\\UriTemplate\\' => 23,
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
@@ -50,6 +51,19 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         array (
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
+            'Darabonba\\OpenApi\\' => 18,
+            'Darabonba\\GatewaySpi\\' => 21,
+        ),
+        'A' => 
+        array (
+            'AlibabaCloud\\Tea\\XML\\' => 21,
+            'AlibabaCloud\\Tea\\Utils\\' => 23,
+            'AlibabaCloud\\Tea\\' => 17,
+            'AlibabaCloud\\SDK\\Dysmsapi\\V20170525\\' => 36,
+            'AlibabaCloud\\OpenApiUtil\\' => 25,
+            'AlibabaCloud\\Endpoint\\' => 22,
+            'AlibabaCloud\\Credentials\\' => 25,
+            'Adbar\\' => 6,
         ),
     );
 
@@ -67,14 +81,6 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
-        ),
-        'WeChatPay\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/wechatpay/wechatpay/src',
-        ),
-        'Symfony\\Polyfill\\Php80\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
@@ -97,9 +103,9 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
-        'GuzzleHttp\\UriTemplate\\' => 
+        'OneSm\\' => 
         array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/uri-template/src',
+            0 => __DIR__ . '/..' . '/lizhichao/one-sm/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -121,6 +127,46 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Darabonba\\OpenApi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/darabonba-openapi/src',
+        ),
+        'Darabonba\\GatewaySpi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/gateway-spi/src',
+        ),
+        'AlibabaCloud\\Tea\\XML\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/tea-xml/src',
+        ),
+        'AlibabaCloud\\Tea\\Utils\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/tea-utils/src',
+        ),
+        'AlibabaCloud\\Tea\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/tea/src',
+        ),
+        'AlibabaCloud\\SDK\\Dysmsapi\\V20170525\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/dysmsapi-20170525/src',
+        ),
+        'AlibabaCloud\\OpenApiUtil\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/openapi-util/src',
+        ),
+        'AlibabaCloud\\Endpoint\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/endpoint-util/src',
+        ),
+        'AlibabaCloud\\Credentials\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alibabacloud/credentials/src',
+        ),
+        'Adbar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/adbario/php-dot-notation/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -134,7 +180,7 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
     );
 
     public static $classMap = array (
-        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
@@ -520,7 +566,6 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         'PHP_Token_XOR_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
-        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'SebastianBergmann\\CodeCoverage\\CodeCoverage' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/CodeCoverage.php',
         'SebastianBergmann\\CodeCoverage\\CoveredCodeNotExecutedException' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Exception/CoveredCodeNotExecutedException.php',
         'SebastianBergmann\\CodeCoverage\\Driver\\Driver' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Driver/Driver.php',
@@ -600,10 +645,7 @@ class ComposerStaticInitb24f7f6f46c9d29425cd4c4588f32ade
         'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => __DIR__ . '/..' . '/sebastian/recursion-context/src/InvalidArgumentException.php',
         'SebastianBergmann\\ResourceOperations\\ResourceOperations' => __DIR__ . '/..' . '/sebastian/resource-operations/src/ResourceOperations.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
-        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
-        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
-        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

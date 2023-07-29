@@ -59,7 +59,7 @@
 							<th style="">联系人</th>
 							<th style="">账号(手机号)</th>
 							<th style="">地址</th>
-							<th style="">所属行业</th>
+							<th style="width:15%">所属行业</th>
 							<th style="">等级</th>
 							<th style="">状态</th>
 							<th style="">注册时间</th>

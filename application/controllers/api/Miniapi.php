@@ -7,9 +7,23 @@
  * **********************************************************************
  */
 require_once 'vendor/autoload.php';
+
+use AlibabaCloud\Tea\Model;
 use GuzzleHttp\Exception\RequestException;
 use WechatPay\GuzzleMiddleware\WechatPayMiddleware;
 use WechatPay\GuzzleMiddleware\Util\PemUtil;
+
+use AlibabaCloud\SDK\Dysmsapi\V20170525\Dysmsapi;
+use AlibabaCloud\Darabonba\Env\Env;
+use AlibabaCloud\Tea\Utils\Utils;
+use AlibabaCloud\Tea\Console\Console;
+use AlibabaCloud\Darabonba\String\StringUtil;
+use AlibabaCloud\Darabonba\Time\Time;
+
+use Darabonba\OpenApi\Models\Config;
+use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\SendSmsRequest;
+use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\QuerySendDetailsRequest;
+
 class Miniapi extends CI_Controller
 {
 	public function __construct()
@@ -19,6 +33,111 @@ class Miniapi extends CI_Controller
 		$this->load->model('Mini_model', 'mini');
 		$this->load->model('Common_model', 'common');		
 	}
+    /**
+     * 使用AK&SK初始化账号Client
+     * @param string $accessKeyId
+     * @param string $accessKeySecret
+     * @return Dysmsapi
+     */
+    public static function createClient(){
+        $config = new Config([]);
+        $config->accessKeyId = "LTAI5tMnwetvspkjSHHNqAJ1";
+        $config->accessKeySecret = "xi1K0WUrL4sdCBb4Ui3Erixn0vSmDD";
+        return new Dysmsapi($config);
+    }
+
+    /**
+     * 验证手机号
+     * @param $value
+     * @param string $match
+     * @return bool|int
+     */
+    function is_mobile($value, $match = "/^1[3|4|5|7|8|9|][0-9]{9}$/")
+    {
+        $v = trim($value);
+        if (empty($v)) {
+            return false;
+        }
+        return preg_match($match, $v);
+    }
+
+    //发送短信
+    public function send_verification_code(){
+        //验证mobile是否传递
+        if (!isset($_POST['mobile']) || empty($_POST['mobile'])) {
+            $this->back_json(201, '未传递mobile');
+        }
+        $mobile = empty($_POST['mobile'])?'':$_POST['mobile'];
+        if (!$this->is_mobile($mobile)) {
+            $this->back_json(201, '手机号格式不正确');
+        }
+
+        $identity = empty($_POST['identity']) ? 0 : 1;
+        $is_login = empty($_POST['is_login'])?0:$_POST['is_login'];
+        if (!empty($is_login)){
+            $member_info_one = $this->mini->getMemberInfomobile($mobile,$identity);
+            if (empty($member_info_one)){
+                $this->back_json(205, '当前手机号没有注册，请先去注册。',array());
+            }
+        }
+
+        //生成随机验证码
+        $vcode = "";
+        for ($i = 0; $i < 4; $i++) {
+            if($i == 0){
+                $vcode .= rand(1, 9);
+            }
+            else{
+                $vcode .= rand(0, 9);
+            }
+        }
+        $add_time = time();
+        $expiration_time = $add_time + 300;
+        // 注册操作
+        $this->mini->register_vcode($mobile,$expiration_time,$vcode,$add_time);
+
+        $client = self::createClient();
+
+        //签名
+        $signName='大连华晓科技有限公司';
+        //模板
+        $templateCode='SMS_461825486';
+
+        //短信参数
+        $templateParam = array();
+        $templateParam['code'] = $vcode;
+
+        if(!empty($templateParam)){
+            //有参数
+            $sendSmsRequest = new SendSmsRequest([
+                "phoneNumbers" => $mobile,
+                "signName" => $signName,
+                "templateCode" => $templateCode,
+                "templateParam" => json_encode($templateParam)
+            ]);
+        }else{
+            //无参数
+            $sendSmsRequest = new SendSmsRequest([
+                "phoneNumbers" => $mobile,
+                "signName" => $signName,
+                "templateCode" => $templateCode,
+            ]);
+        }
+
+        $result = $client->sendSms($sendSmsRequest);
+        if ($result->body->message == 'OK' && $result->body->code == 'OK') {
+            $member_info = array();
+            $member_info['vcode'] = $vcode;
+            $member_info['mobile'] = $mobile;
+            $member_info['expiration_time'] = $add_time + 300;
+            $this->back_json(200, '操作成功',$member_info);
+        }
+        if ($result->body->code == 'isv.MOBILE_NUMBER_ILLEGAL') {
+            $this->back_json(205, '手机号码格式不正确');
+        }
+        $this->back_json(205, '短信发送失败，网络繁忙');
+
+    }
 	//设定信息
     public function get_set_info(){
         $data['setarr'] = $this->mini->getsettinginfo();

@@ -49,6 +49,23 @@ class Member_model extends CI_Model
 		$sql = "SELECT * FROM `member` " . $sqlw . " order by mid desc LIMIT $start, $stop";
 		return $this->db->query($sql)->result_array();
 	}
+	
+		//获取所有供应商信息
+	public function getGongyingshangsAll($gongsi,$mobile,$sort,$status,$stop)
+	{
+		$sqlw = " where identity=$sort and company_stop=$stop";
+		if($status<4){
+			$sqlw .= " and audit_status=$status";
+		}
+		if (!empty($gongsi)) {
+			$sqlw .= " and ( company_name like '%" . $gongsi . "%' ) ";
+		}
+		if (!empty($mobile)) {
+			$sqlw .= " and ( mobile like '%" . $mobile . "%' ) ";
+		}
+		$sql = "SELECT * FROM `member` " . $sqlw . " order by mid desc";
+		return $this->db->query($sql)->result_array();
+	}
 
 	//获取供应商信息
 	public function getProclassAll()

@@ -181,7 +181,7 @@ class Login extends CI_Controller
      * @param string $match
      * @return bool|int
      */
-    function is_mobile($value, $match = "/^1[3|4|5|7|8|][0-9]{9}$/")
+    function is_mobile($value, $match = "/^1[3|4|5|7|8|9|][0-9]{9}$/")
     {
         $v = trim($value);
         if (empty($v)) {
